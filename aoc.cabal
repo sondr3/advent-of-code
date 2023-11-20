@@ -1,0 +1,57 @@
+cabal-version: 3.4
+name: aoc
+version: 0.1.0
+author: Sondre Aasemoen
+maintainer: sondre@eons.io
+synopsis: Advent of Code 2023
+description: Solutions for Advent of Code 2023
+category: Fun
+license: MIT
+license-file: LICENSE
+extra-doc-files: CHANGELOG.md
+build-type: Simple
+
+common config
+  build-depends: base >=4.15 && <5
+  default-language: GHC2021
+  default-extensions: DerivingStrategies DuplicateRecordFields LambdaCase MultiWayIf OverloadedStrings
+  ghc-options:
+    -Weverything
+    -Wno-unsafe
+    -Wno-implicit-prelude
+    -Wno-missing-safe-haskell-mode
+    -Werror=missing-deriving-strategies
+    -fhide-source-paths
+    -fwrite-ide-info
+
+library
+  import: config
+  hs-source-dirs: src
+  exposed-modules: AoC
+  build-depends:
+    , clock ^>=0.8
+    , containers ^>=0.7
+    , formatting ^>=7.2
+    , megaparsec ^>=9.6
+    , mtl ^>=2.3
+    , parser-combinators ^>=1.3
+    , text ^>=2.1
+
+executable aoc
+  import: config
+  hs-source-dirs: app
+  main-is: Main.hs
+  build-depends: aoc, text ^>=2.1
+
+test-suite aoc-test
+  import: config
+  type: exitcode-stdio-1.0
+  hs-source-dirs: test
+  main-is: Spec.hs
+  other-modules: DaySpec
+  build-depends: aoc, hspec ^>=2.11
+  build-tool-depends: hspec-discover:hspec-discover ^>=2.11
+
+source-repository head
+  type: git
+  location: https://github.com/sondr3/advent-of-code-2023.git
