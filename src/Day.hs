@@ -5,20 +5,20 @@ import Parsers (Parser, pLines)
 import Universum
 import Utils (padNum)
 
+diffTime :: UTCTime -> UTCTime -> Text
+diffTime start end = show $ diffUTCTime end start
+
 data AoC = forall i o.
   (Eq o, Show o) =>
   MkAoC
   { parse :: Parser i,
     part1 :: i -> o,
     part2 :: i -> o,
-    answers :: [o],
+    answers :: NonEmpty [o],
     solve :: Int -> Text -> IO ()
   }
 
-diffTime :: UTCTime -> UTCTime -> Text
-diffTime start end = show $ diffUTCTime end start
-
-mkAoC :: (Eq o, Show o) => Parser i -> (i -> o) -> (i -> o) -> [o] -> AoC
+mkAoC :: (Eq o, Show o) => Parser i -> (i -> o) -> (i -> o) -> NonEmpty [o] -> AoC
 mkAoC p p1 p2 ans =
   MkAoC
     { parse = p,

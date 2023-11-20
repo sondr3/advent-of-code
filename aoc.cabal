@@ -40,7 +40,13 @@ library
   import: config
   hs-source-dirs: src
   exposed-modules: AoC Day Parsers Utils
-  build-depends: filepath ^>=1.4, megaparsec ^>=9.6, parser-combinators ^>=1.3, text ^>=2, time ^>=1.12
+  build-depends:
+    , directory ^>=1.3
+    , filepath ^>=1.4
+    , megaparsec ^>=9.6
+    , parser-combinators ^>=1.3
+    , text ^>=2
+    , time ^>=1.12
 
 executable aoc
   import: config
