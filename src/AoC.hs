@@ -1,6 +1,10 @@
-module AoC (hello) where
+{-# OPTIONS_GHC -Wno-missing-import-lists #-}
 
-import Data.Text (Text)
+module AoC
+  ( module Parsers,
+    module Day,
+  )
+where
 
-hello :: Text
-hello = "Hello, world!"
+import Day
+import Parsers
