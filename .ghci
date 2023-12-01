@@ -3,3 +3,5 @@
 :set -XTypeFamilies
 import Universum
 import Text.Megaparsec
+import Text.Megaparsec qualified as M
+import Data.Text qualified as T

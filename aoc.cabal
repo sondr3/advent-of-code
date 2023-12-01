@@ -39,7 +39,7 @@ common config
 library
   import: config
   hs-source-dirs: src
-  exposed-modules: AoC Day Parsers Utils
+  exposed-modules: AoC Day Day.Day01 Parsers Utils
   build-depends:
     , directory ^>=1.3
     , filepath ^>=1.4

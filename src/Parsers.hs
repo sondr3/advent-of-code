@@ -53,8 +53,8 @@ numInputs = fromList . groupBy ((==) `on` (\(_, _, d) -> d)) <$> inputs
 inputName :: Int -> InputKind -> FilePath
 inputName day kind = toString $ "inputs/day" <> padNum day <> inputExtension kind
 
-getInput :: Int -> InputKind -> Parser a -> IO a
-getInput i kind p = do
+parseInput :: Int -> InputKind -> Parser a -> IO a
+parseInput i kind p = do
   input <- readFile $ inputName i kind
   pLines p input
 
