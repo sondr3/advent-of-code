@@ -1,4 +1,4 @@
-module Day (AoC, mkAoC) where
+module Day (AoC, mkAoC, runDay) where
 
 import Data.Time (UTCTime, diffUTCTime, getCurrentTime)
 import Parsers (Parser, pLines)
@@ -7,6 +7,9 @@ import Utils (padNum)
 
 diffTime :: UTCTime -> UTCTime -> Text
 diffTime start end = show $ diffUTCTime end start
+
+runDay :: Int -> Text -> AoC -> IO ()
+runDay day input MkAoC {solve} = solve day input
 
 data AoC = forall i o.
   (Eq o, Show o) =>
