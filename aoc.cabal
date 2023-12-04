@@ -47,6 +47,7 @@ library
     Day.Day03
     Day.Day04
     Parsers
+    TOML
     Utils
 
   build-depends:
@@ -69,8 +70,8 @@ test-suite aoc-test
   type: exitcode-stdio-1.0
   hs-source-dirs: test
   main-is: Spec.hs
-  other-modules: DaySpec
-  build-depends: aoc, hspec ^>=2.11
+  other-modules: DaySpec TOMLSpec
+  build-depends: aoc, hspec ^>=2.11, hspec-megaparsec ^>=2.2, megaparsec ^>=9.6
   build-tool-depends: hspec-discover:hspec-discover ^>=2.11
 
 source-repository head
