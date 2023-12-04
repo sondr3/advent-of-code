@@ -11,9 +11,9 @@ where
 
 import Control.Monad.Combinators.NonEmpty qualified as NE
 import Text.Megaparsec hiding (many, some)
-import Text.Megaparsec.Char (alphaNumChar, char, space1, spaceChar)
+import Text.Megaparsec.Char (alphaNumChar, space1, spaceChar)
 import Text.Megaparsec.Char.Lexer qualified as L
-import Universum
+import Universum hiding (try)
 
 data Answer = Answer
   { p1 :: Int,
@@ -22,7 +22,7 @@ data Answer = Answer
   deriving stock (Eq, Show)
 
 data Input = Input
-  { name :: Text,
+  { comment :: Maybe Text,
     answers :: Answer,
     input :: Text
   }
@@ -52,13 +52,13 @@ parseTitle :: Parser Text
 parseTitle = symbol "title" *> symbol "=" *> lexeme (textBetween quoted)
 
 textBetween :: (Parser Text -> Parser Text) -> Parser Text
-textBetween bt = bt (toText <$> some (alphaNumChar <|> spaceChar <|> char '_'))
+textBetween bt = bt (toText <$> some (alphaNumChar <|> spaceChar))
 
 quoted :: Parser a -> Parser a
 quoted = between (symbol "\"") (symbol "\"")
 
-brackets :: Parser a -> Parser a
-brackets = between (symbol "[") (symbol "]")
+doubleBrackets :: Parser a -> Parser a
+doubleBrackets = between (symbol "[[") (symbol "]]")
 
 braces :: Parser a -> Parser a
 braces = between (symbol "{") (symbol "}")
@@ -74,7 +74,8 @@ parseTextBlock = symbol "\"\"\"" >> toText <$> manyTill L.charLiteral (symbol "\
 
 parseInput :: Parser Input
 parseInput = do
-  name <- lexeme (textBetween brackets)
+  void $ doubleBrackets (symbol "input")
+  comment <- optional (symbol "comment" >> symbol "=" >> lexeme (textBetween quoted))
   ans <- lexeme "answers" >> symbol "=" >> parseAnswers
   input <- lexeme "input" >> symbol "=" >> parseTextBlock
-  pure $ Input name ans input
+  pure $ Input comment ans input
