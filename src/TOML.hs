@@ -2,6 +2,8 @@ module TOML
   ( Answer (..),
     Input (..),
     Document (..),
+    getInputs,
+    getTextInputAt,
     parseDocument,
     parseTitle,
     parseAnswers,
@@ -14,6 +16,7 @@ import Text.Megaparsec hiding (many, some)
 import Text.Megaparsec.Char (alphaNumChar, space1, spaceChar)
 import Text.Megaparsec.Char.Lexer qualified as L
 import Universum hiding (try)
+import Universum.Unsafe qualified as NE
 
 data Answer = Answer
   { p1 :: Maybe Int,
@@ -79,3 +82,9 @@ parseInput = do
   ans <- lexeme "answers" >> symbol "=" >> parseAnswers
   input <- lexeme "input" >> symbol "=" >> parseTextBlock
   pure $ Input comment ans input
+
+getInputs :: Document -> NonEmpty Input
+getInputs Document {inputs} = inputs
+
+getTextInputAt :: Int -> Document -> Text
+getTextInputAt i Document {inputs} = input $ toList inputs NE.!! i

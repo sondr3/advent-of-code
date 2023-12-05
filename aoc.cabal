@@ -46,14 +46,13 @@ library
     Day.Day02
     Day.Day03
     Day.Day04
+    Day.Day05
     Parsers
     TOML
     Utils
 
   build-depends:
     , containers ^>=0.6
-    , directory ^>=1.3
-    , filepath ^>=1.4
     , megaparsec ^>=9.6
     , parser-combinators ^>=1.3
     , text ^>=2
