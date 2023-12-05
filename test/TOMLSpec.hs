@@ -12,9 +12,11 @@ spec = parallel $ do
     parse parseTitle "" "title = \"Day 01\"" `shouldParse` "Day 01"
     parse parseTitle "" "title = \"day 123 OTHER\"" `shouldParse` "day 123 OTHER"
   it "should parse answers" $ do
-    parse parseAnswers "" "{ p1 = 123, p2 = 456 }" `shouldParse` Answer 123 456
-    parse parseAnswers "" "{p1 =123, p2= 456}" `shouldParse` Answer 123 456
-    parse parseAnswers "" "{p1=5360891,p2=0}" `shouldParse` Answer 5360891 0
+    parse parseAnswers "" "{ p1 = 123, p2 = 456 }" `shouldParse` Answer (Just 123) (Just 456)
+    parse parseAnswers "" "{p1 =123, p2= 456}" `shouldParse` Answer (Just 123) (Just 456)
+    parse parseAnswers "" "{p1=5360891,p2=0}" `shouldParse` Answer (Just 5360891) (Just 0)
+    parse parseAnswers "" "{p1=9876}" `shouldParse` Answer (Just 9876) Nothing
+    parse parseAnswers "" "{p2=5432}" `shouldParse` Answer Nothing (Just 5432)
   it "should parse inputs" $ do
-    parse parseInput "" "[[input]]\nanswers = { p1 = 123, p2 = 456 }\ninput = \"\"\"input\"\"\"" `shouldParse` Input Nothing (Answer 123 456) "input"
-    parse parseInput "" "[[input]]\ncomment = \"some comment\"\nanswers = {p1=1, p2= 412}\ninput = \"\"\"input\nwith a bunch\nof\nnewlines\"\"\"" `shouldParse` Input (Just "some comment") (Answer 1 412) "input\nwith a bunch\nof\nnewlines"
+    parse parseInput "" "[[input]]\nanswers = { p1 = 123, p2 = 456 }\ninput = \"\"\"input\"\"\"" `shouldParse` Input Nothing (Answer (Just 123) (Just 456)) "input"
+    parse parseInput "" "[[input]]\ncomment = \"some comment\"\nanswers = {p1=1, p2= 412}\ninput = \"\"\"input\nwith a bunch\nof\nnewlines\"\"\"" `shouldParse` Input (Just "some comment") (Answer (Just 1) (Just 412)) "input\nwith a bunch\nof\nnewlines"

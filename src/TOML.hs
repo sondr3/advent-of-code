@@ -11,13 +11,13 @@ where
 
 import Control.Monad.Combinators.NonEmpty qualified as NE
 import Text.Megaparsec hiding (many, some)
-import Text.Megaparsec.Char (alphaNumChar, space1, spaceChar)
+import Text.Megaparsec.Char (alphaNumChar, char, space1, spaceChar)
 import Text.Megaparsec.Char.Lexer qualified as L
 import Universum hiding (try)
 
 data Answer = Answer
-  { p1 :: Int,
-    p2 :: Int
+  { p1 :: Maybe Int,
+    p2 :: Maybe Int
   }
   deriving stock (Eq, Show)
 
@@ -64,10 +64,10 @@ braces :: Parser a -> Parser a
 braces = between (symbol "{") (symbol "}")
 
 parseAnswers :: Parser Answer
-parseAnswers = braces $ Answer <$> ansParser "p1" <* symbol "," <*> ansParser "p2"
+parseAnswers = braces $ Answer <$> ansParser "p1" <* optional (symbol ",") <*> ansParser "p2"
   where
-    ansParser :: Text -> Parser Int
-    ansParser p = symbol p *> symbol "=" *> lexeme L.decimal
+    ansParser :: Text -> Parser (Maybe Int)
+    ansParser p = optional (symbol p *> symbol "=" *> lexeme L.decimal)
 
 parseTextBlock :: Parser Text
 parseTextBlock = symbol "\"\"\"" >> toText <$> manyTill L.charLiteral (symbol "\"\"\"")
