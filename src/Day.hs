@@ -2,44 +2,63 @@ module Day (AoC, mkAoC, runDay) where
 
 import Data.Time (UTCTime, diffUTCTime, getCurrentTime)
 import Parsers (Parser, pLines)
-import Universum
+import TOML (Document, Input, answers, comment, input, inputs, p1, p2, parseDocument)
+import Text.Megaparsec (runParser)
+import Universum hiding ((^.))
 import Utils (padNum)
 
 diffTime :: UTCTime -> UTCTime -> Text
 diffTime start end = show $ diffUTCTime end start
 
-runDay :: Int -> Text -> AoC -> IO ()
-runDay day input MkAoC {solve} = solve day input
+runDay :: Int -> AoC -> IO ()
+runDay day MkAoC {solve} = solve day
 
-data AoC = forall i o.
-  (Eq o, Show o) =>
+getDayDocument :: Int -> IO Document
+getDayDocument day = do
+  file <- readFile filename
+  case runParser parseDocument filename file of
+    Left err -> error $ "Failed to parse TOML file: " <> show err
+    Right doc -> pure doc
+  where
+    filename = toString $ "inputs/day" <> padNum day <> ".toml"
+
+runPart :: (i -> Int) -> i -> Int -> Int -> IO ()
+runPart solver i expected part = do
+  start <- getCurrentTime
+  let res = solver i
+  stop <- getCurrentTime
+
+  when (res /= expected) $ do
+    error $ "Part " <> show part <> " failed: expected " <> show expected <> " but got " <> show res
+
+  putTextLn $ "  Part " <> show part <> ": " <> show res <> " in " <> diffTime start stop
+
+solveInput :: Input -> AoC -> IO ()
+solveInput i MkAoC {parse, part1, part2} = do
+  parsed <- pLines parse (input i)
+
+  whenJust (p1 $ answers i) $ \p -> runPart part1 parsed p 1
+  whenJust (p2 $ answers i) $ \p -> runPart part2 parsed p 2
+
+data AoC = forall i.
+  (Show i) =>
   MkAoC
   { parse :: Parser i,
-    part1 :: i -> o,
-    part2 :: i -> o,
-    answers :: NonEmpty [o],
-    solve :: Int -> Text -> IO ()
+    part1 :: i -> Int,
+    part2 :: i -> Int,
+    solve :: Int -> IO ()
   }
 
-mkAoC :: (Eq o, Show o) => Parser i -> (i -> o) -> (i -> o) -> NonEmpty [o] -> AoC
-mkAoC p p1 p2 ans =
+mkAoC :: (Show i) => Parser i -> (i -> Int) -> (i -> Int) -> AoC
+mkAoC p p1 p2 =
   MkAoC
     { parse = p,
       part1 = p1,
       part2 = p2,
-      answers = ans,
-      solve = \day input -> do
-        parsed <- pLines p input
-
-        p1Time <- getCurrentTime
-        let p1Res = p1 parsed
-        p1Elapsed <- getCurrentTime
-
-        p2Time <- getCurrentTime
-        let p2Res = p2 parsed
-        p2Elapsed <- getCurrentTime
-
+      solve = \day -> do
         putTextLn $ "Solution for day " <> padNum day
-        putTextLn $ "  Part 1: " <> show p1Res <> " in " <> diffTime p1Elapsed p1Time
-        putTextLn $ "  Part 2: " <> show p2Res <> " in " <> diffTime p2Elapsed p2Time
+        docs <- getDayDocument day
+        forM_ (inputs docs) $ \input -> do
+          whenJust (comment input) $ \c -> putTextLn $ ">> " <> c
+          solveInput input (mkAoC p p1 p2)
     }

@@ -39,4 +39,4 @@ gameParser = do
   pure (winning, yours)
 
 day04 :: AoC
-day04 = mkAoC parser partA partB (pure [])
+day04 = mkAoC parser partA partB
