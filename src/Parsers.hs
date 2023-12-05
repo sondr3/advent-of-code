@@ -61,9 +61,9 @@ parseInput i kind p = do
 number :: (Integral a) => Parser a
 number = L.signed pass L.decimal
 
-pLines :: (MonadThrow m) => Parser a -> Text -> m a
+pLines :: (Applicative f) => Parser a -> Text -> f a
 pLines parser input = case M.parse (M.many eol *> parser <* M.many eol) "" input of
-  Left err -> throwM err
+  Left err -> error (toText $ M.errorBundlePretty err)
   Right a -> pure a
 
 getRight :: Either a b -> b

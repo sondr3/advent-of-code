@@ -1,4 +1,4 @@
-module Day (AoC, mkAoC, runDay) where
+module Day (AoC (..), mkAoC, runDay, getDayDocument) where
 
 import Data.Time (UTCTime, diffUTCTime, getCurrentTime)
 import Parsers (Parser, pLines)
