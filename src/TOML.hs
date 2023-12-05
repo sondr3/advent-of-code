@@ -11,7 +11,7 @@ where
 
 import Control.Monad.Combinators.NonEmpty qualified as NE
 import Text.Megaparsec hiding (many, some)
-import Text.Megaparsec.Char (alphaNumChar, char, space1, spaceChar)
+import Text.Megaparsec.Char (alphaNumChar, space1, spaceChar)
 import Text.Megaparsec.Char.Lexer qualified as L
 import Universum hiding (try)
 
