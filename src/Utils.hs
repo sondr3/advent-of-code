@@ -1,4 +1,4 @@
-module Utils (padNum, isDigit, pairs, intListToText, read, getRight) where
+module Utils (padNum, isDigit, pairs, intListToText, read, getRight, compareLengths) where
 
 import Data.Text qualified as T
 import Data.Text.Read (decimal)
@@ -24,3 +24,6 @@ read = getRight . readEither . toString
 getRight :: Either a b -> b
 getRight (Right x) = x
 getRight _ = error "getRight called with Left value"
+
+compareLengths :: (Container t1, Container t2) => t1 -> t2 -> Ordering
+compareLengths a b = compare (length b) (length a)

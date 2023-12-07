@@ -1,4 +1,13 @@
-module Day (AoC (..), mkAoC, runDay, getDayDocument, parseDay, parseExample) where
+module Day
+  ( AoC (..),
+    mkAoC,
+    runDay,
+    getDayDocument,
+    testParseDay,
+    testParseExample,
+    parseExample,
+  )
+where
 
 import Data.Time (UTCTime, diffUTCTime, getCurrentTime)
 import Parsers (Parser, parseInput, testParseInput)
@@ -14,15 +23,21 @@ diffTime start end = show $ diffUTCTime end start
 runDay :: Int -> AoC -> IO ()
 runDay day MkAoC {solve} = solve day
 
-parseExample :: (Show a) => Int -> Parser a -> IO ()
-parseExample d parser = do
-  day <- getDayDocument d
-  case testParseInput parser (Just "example") (input $ head $ inputs day) of
+testParseExample :: (Show a) => Int -> Parser a -> IO ()
+testParseExample d parser = do
+  res <- parseExample d parser
+
+  case res of
     Left err -> error $ "Failed to parse input: " <> err
     Right ast -> prettyPrint ast
 
-parseDay :: (Show a) => Int -> Parser a -> IO ()
-parseDay d parser = do
+parseExample :: Int -> Parser a -> IO (Either Text a)
+parseExample d parser = do
+  day <- getDayDocument d
+  pure $ testParseInput parser (Just "example") (input $ head $ inputs day)
+
+testParseDay :: (Show a) => Int -> Parser a -> IO ()
+testParseDay d parser = do
   day <- getDayDocument d
   forM_ (inputs day) $ \i -> do
     case testParseInput parser (comment i) (input i) of
