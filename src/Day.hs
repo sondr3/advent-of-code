@@ -48,7 +48,7 @@ getDayDocument day = do
     Left err -> error $ "Failed to parse TOML file: " <> toText (errorBundlePretty err)
     Right doc -> pure doc
   where
-    filename = toString $ "inputs/day" <> padNum day <> ".toml"
+    filename = toString $ "inputs/2023/day" <> padNum day <> ".toml"
 
 runPart :: (i -> Int) -> i -> Int -> Int -> IO ()
 runPart solver i expected part = do
