@@ -2,9 +2,6 @@
 :set -XOverloadedStrings
 :set -XTypeFamilies
 import Universum
-import Utils
-import PrettyPrint (prettyPrint)
 import Text.Megaparsec
 import Text.Megaparsec qualified as M
 import Data.Text qualified as T
-import Text.Pretty.Simple (pPrint)

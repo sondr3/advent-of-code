@@ -8,16 +8,22 @@ import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L
 import Universum
-import Utils (intListToText)
+import Utils (readConcat)
 
 partA :: [(Int, Int)] -> Int
 partA xs = product $ map numWins xs
 
 partB :: [(Int, Int)] -> Int
-partB xs = numWins (intListToText (map fst xs), intListToText (map snd xs))
+partB xs = numWins (readConcat (map fst xs), readConcat (map snd xs))
 
 numWins :: (Int, Int) -> Int
-numWins (t, d) = length [n | n <- [1 .. t], n * (t - n) > d]
+numWins (a, b) = abs (x1 - x2) + 1
+  where
+    t = fromIntegral a :: Double
+    d = fromIntegral b
+    delta = t * t - 4 * d
+    x1 = ceiling $ (t + sqrt delta) / 2 - 1
+    x2 = 1 + floor ((t - sqrt delta) / 2)
 
 parser :: Parser [(Int, Int)]
 parser = zip <$> lineParser "Time:" <*> lineParser "Distance:"

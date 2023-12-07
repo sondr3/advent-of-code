@@ -1,7 +1,15 @@
-module Utils (padNum, isDigit, pairs, intListToText, read, getRight, compareLengths) where
+module Utils
+  ( padNum,
+    isDigit,
+    pairs,
+    read,
+    getRight,
+    compareLengths,
+    readConcat,
+  )
+where
 
 import Data.Text qualified as T
-import Data.Text.Read (decimal)
 import Universum
 
 padNum :: Int -> Text
@@ -15,8 +23,8 @@ pairs [] = []
 pairs (a : b : xs) = (a, b) : pairs xs
 pairs _ = error "uneven list"
 
-intListToText :: (Show (Element c), Container c, Integral a) => c -> a
-intListToText i = fst $ getRight $ decimal $ toText $ concatMap show i
+readConcat :: (Read a, Show a) => [a] -> a
+readConcat xs = read $ foldl (<>) "" $ map show xs
 
 read :: (Read a) => Text -> a
 read = getRight . readEither . toString
