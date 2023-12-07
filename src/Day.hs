@@ -9,16 +9,13 @@ module Day
   )
 where
 
-import Data.Time (UTCTime, diffUTCTime, getCurrentTime)
+import Chronos (SubsecondPrecision (SubsecondPrecisionAuto), encodeTimespan, stopwatch)
 import Parsers (Parser, parseInput, testParseInput)
 import PrettyPrint (prettyPrint)
 import TOML (Document, Input, answers, comment, input, inputs, p1, p2, parseDocument)
 import Text.Megaparsec (errorBundlePretty, runParser)
 import Universum hiding ((^.))
 import Utils (padNum)
-
-diffTime :: UTCTime -> UTCTime -> Text
-diffTime start end = show $ diffUTCTime end start
 
 runDay :: Int -> AoC -> IO ()
 runDay day MkAoC {solve} = solve day
@@ -55,14 +52,12 @@ getDayDocument day = do
 
 runPart :: (i -> Int) -> i -> Int -> Int -> IO ()
 runPart solver i expected part = do
-  start <- getCurrentTime
-  let res = solver i
-  stop <- getCurrentTime
+  (duration, res) <- stopwatch (pure $ solver i)
 
   when (res /= expected) $ do
-    error $ "Part " <> show part <> " failed: expected " <> show expected <> " but got " <> show res
+    putTextLn $ "Part " <> show part <> " failed: expected " <> show expected <> " but got " <> show res
 
-  putTextLn $ "  Part " <> show part <> ": " <> show res <> " in " <> diffTime start stop
+  putTextLn $ "   Part " <> show part <> ": " <> show res <> " in " <> encodeTimespan SubsecondPrecisionAuto duration <> "ms"
 
 solveInput :: Input -> AoC -> IO ()
 solveInput i MkAoC {parse, part1, part2} = do
