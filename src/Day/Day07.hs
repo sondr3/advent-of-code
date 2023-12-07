@@ -12,26 +12,19 @@ import Utils (compareLengths)
 data Card = Two | Three | Four | Five | Six | Seven | Eight | Nine | T | J | Q | K | A
   deriving stock (Show, Eq, Ord, Enum, Bounded)
 
-data JokerCard = J' | Two' | Three' | Four' | Five' | Six' | Seven' | Eight' | Nine' | T' | Q' | K' | A'
-  deriving stock (Show, Eq, Ord, Enum, Bounded)
+newtype JCard = JCard Card deriving stock (Show, Eq)
+
+instance Ord JCard where
+  compare (JCard J) (JCard J) = EQ
+  compare (JCard J) _ = LT
+  compare _ (JCard J) = GT
+  compare (JCard x) (JCard y) = compare x y
 
 data Hand = HighCard | Pair | TwoPair | Threes | FullHouse | FourOfAKind | FiveOfAKind
   deriving stock (Show, Eq, Ord)
 
-cardToJokerCard :: Card -> JokerCard
-cardToJokerCard Two = Two'
-cardToJokerCard Three = Three'
-cardToJokerCard Four = Four'
-cardToJokerCard Five = Five'
-cardToJokerCard Six = Six'
-cardToJokerCard Seven = Seven'
-cardToJokerCard Eight = Eight'
-cardToJokerCard Nine = Nine'
-cardToJokerCard T = T'
-cardToJokerCard J = J'
-cardToJokerCard Q = Q'
-cardToJokerCard K = K'
-cardToJokerCard A = A'
+cardToJokerCard :: Card -> JCard
+cardToJokerCard = JCard
 
 cardsToHand :: [Card] -> Hand
 cardsToHand cs = case map length cards of
@@ -51,7 +44,7 @@ compareHands (h1, cs1, _) (h2, cs2, _) = case compare h1 h2 of
   EQ -> compare cs1 cs2
   x -> x
 
-jokerHands :: Hand -> [JokerCard] -> Hand
+jokerHands :: Hand -> [JCard] -> Hand
 jokerHands hand cs = case (hand, numJ) of
   (FiveOfAKind, _) -> FiveOfAKind
   (FourOfAKind, n) -> if n `elem` [1, 4] then FiveOfAKind else FourOfAKind
@@ -63,22 +56,19 @@ jokerHands hand cs = case (hand, numJ) of
   (Pair, n) -> if n `elem` [1, 2] then Threes else Pair
   (HighCard, n) -> if n == 1 then Pair else HighCard
   where
-    numJ = length $ filter (== J') cs
+    numJ = length $ filter (== JCard J) cs
 
-buildHand :: [([Card], c)] -> [(Hand, [Card], c)]
-buildHand xs = zipWith (\a (b, c) -> (a, b, c)) (map (cardsToHand . fst) xs) xs
+buildHand :: (Card -> b) -> [([Card], c)] -> [(Hand, [b], c)]
+buildHand f xs = zipWith (\a (b, c) -> (a, map f b, c)) (map (cardsToHand . fst) xs) xs
 
 partA :: [([Card], Int)] -> Int
-partA xs = sum $ zipWith (curry (\((_, _, bid), rnk) -> rnk * bid)) (sortBy compareHands $ buildHand xs) [1 ..]
+partA xs = sum $ zipWith (curry (\((_, _, bid), rnk) -> rnk * bid)) (sortBy compareHands $ buildHand id xs) [1 ..]
 
 partB :: [([Card], Int)] -> Int
-partB xs = sum $ zipWith (curry (\((_, _, bid), rnk) -> rnk * bid)) (sortBy compareHands $ map (\(h, cs, bid) -> (jokerHands h (map cardToJokerCard cs), map cardToJokerCard cs, bid)) $ buildHand xs) [1 ..]
+partB xs = sum $ zipWith (curry (\((_, _, bid), rnk) -> rnk * bid)) (sortBy compareHands $ map (\(h, cs, bid) -> (jokerHands h cs, cs, bid)) $ buildHand cardToJokerCard xs) [1 ..]
 
 parser :: Parser [([Card], Int)]
-parser = some $ do
-  cards <- some cardParser <* hspace
-  bid <- number <* optional eol
-  pure (cards, bid)
+parser = some $ (,) <$> some cardParser <* hspace <*> number <* optional eol
 
 cardParser :: Parser Card
 cardParser = choice [A <$ char 'A', K <$ char 'K', Q <$ char 'Q', J <$ char 'J', T <$ char 'T', Nine <$ char '9', Eight <$ char '8', Seven <$ char '7', Six <$ char '6', Five <$ char '5', Four <$ char '4', Three <$ char '3', Two <$ char '2']
