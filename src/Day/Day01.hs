@@ -5,13 +5,13 @@ module Day.Day01 where
 import Data.Text qualified as T
 import Data.Text.Read (decimal)
 import Day (AoC, mkAoC)
-import Parsers (Parser, getRight)
+import Parsers (Parser)
 import Text.Megaparsec
 import Text.Megaparsec qualified as M
 import Text.Megaparsec.Char
 import Universum hiding (some)
 import Universum.Unsafe (fromJust)
-import Utils (isDigit)
+import Utils (getRight, isDigit)
 
 partA :: [Text] -> Int
 partA xs = sum $ map fst $ rights $ map (decimal . (\t -> toText [T.head t, T.head (T.reverse t)]) . T.filter isDigit) xs

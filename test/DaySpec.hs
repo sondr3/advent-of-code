@@ -9,7 +9,8 @@ import Day.Day03 (day03)
 import Day.Day04 (day04)
 import Day.Day05 (day05)
 import Day.Day06 (day06)
-import Parsers (pLines)
+import Day.Day07 (day07)
+import Parsers (parseInput)
 import TOML
 import Test.Hspec (Spec, describe, it, parallel, runIO, shouldBe)
 import Universum
@@ -23,7 +24,7 @@ testDay day MkAoC {parse, part1, part2} = describe (toString $ "day " <> padNum 
 
 testInput :: Input -> AoC -> Spec
 testInput i MkAoC {parse, part1, part2} = do
-  parsed <- pLines parse (input i)
+  parsed <- parseInput parse (comment i) (input i)
 
   let name = fromMaybe "input" (comment i)
   it (toString $ "should parse " <> name) $ do
@@ -38,3 +39,4 @@ spec = parallel $ do
   testDay 4 day04
   testDay 5 day05
   testDay 6 day06
+  testDay 7 day07

@@ -1,8 +1,7 @@
-module Utils (padNum, isDigit, pairs, intListToText, read) where
+module Utils (padNum, isDigit, pairs, intListToText, read, getRight) where
 
 import Data.Text qualified as T
 import Data.Text.Read (decimal)
-import Parsers (getRight)
 import Universum
 
 padNum :: Int -> Text
@@ -21,3 +20,7 @@ intListToText i = fst $ getRight $ decimal $ toText $ concatMap show i
 
 read :: (Read a) => Text -> a
 read = getRight . readEither . toString
+
+getRight :: Either a b -> b
+getRight (Right x) = x
+getRight _ = error "getRight called with Left value"

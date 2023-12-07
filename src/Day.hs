@@ -1,9 +1,10 @@
-module Day (AoC (..), mkAoC, runDay, getDayDocument) where
+module Day (AoC (..), mkAoC, runDay, getDayDocument, parseDay) where
 
 import Data.Time (UTCTime, diffUTCTime, getCurrentTime)
-import Parsers (Parser, pLines)
+import Parsers (Parser, parseInput, testParseInput)
 import TOML (Document, Input, answers, comment, input, inputs, p1, p2, parseDocument)
 import Text.Megaparsec (runParser)
+import Text.Pretty.Simple (pPrint)
 import Universum hiding ((^.))
 import Utils (padNum)
 
@@ -12,6 +13,14 @@ diffTime start end = show $ diffUTCTime end start
 
 runDay :: Int -> AoC -> IO ()
 runDay day MkAoC {solve} = solve day
+
+parseDay :: (Show a) => Int -> Parser a -> IO ()
+parseDay d parser = do
+  day <- getDayDocument d
+  forM_ (inputs day) $ \i -> do
+    case testParseInput parser (comment i) (input i) of
+      Left err -> error $ "Failed to parse input: " <> show err
+      Right ast -> pPrint ast
 
 getDayDocument :: Int -> IO Document
 getDayDocument day = do
@@ -35,7 +44,7 @@ runPart solver i expected part = do
 
 solveInput :: Input -> AoC -> IO ()
 solveInput i MkAoC {parse, part1, part2} = do
-  parsed <- pLines parse (input i)
+  parsed <- parseInput parse (comment i) (input i)
 
   whenJust (p1 $ answers i) $ \p -> runPart part1 parsed p 1
   whenJust (p2 $ answers i) $ \p -> runPart part2 parsed p 2

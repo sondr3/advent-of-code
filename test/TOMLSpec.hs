@@ -18,5 +18,5 @@ spec = parallel $ do
     parse parseAnswers "" "{p1=9876}" `shouldParse` Answer (Just 9876) Nothing
     parse parseAnswers "" "{p2=5432}" `shouldParse` Answer Nothing (Just 5432)
   it "should parse inputs" $ do
-    parse parseInput "" "[[input]]\nanswers = { p1 = 123, p2 = 456 }\ninput = \"\"\"input\"\"\"" `shouldParse` Input Nothing (Answer (Just 123) (Just 456)) "input"
-    parse parseInput "" "[[input]]\ncomment = \"some comment\"\nanswers = {p1=1, p2= 412}\ninput = \"\"\"input\nwith a bunch\nof\nnewlines\"\"\"" `shouldParse` Input (Just "some comment") (Answer (Just 1) (Just 412)) "input\nwith a bunch\nof\nnewlines"
+    parse parseDocumentInput "" "[[input]]\nanswers = { p1 = 123, p2 = 456 }\ninput = \"\"\"input\"\"\"" `shouldParse` Input Nothing (Answer (Just 123) (Just 456)) "input"
+    parse parseDocumentInput "" "[[input]]\ncomment = \"some comment\"\nanswers = {p1=1, p2= 412}\ninput = \"\"\"input\nwith a bunch\nof\nnewlines\"\"\"" `shouldParse` Input (Just "some comment") (Answer (Just 1) (Just 412)) "input\nwith a bunch\nof\nnewlines"

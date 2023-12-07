@@ -7,7 +7,7 @@ module TOML
     parseDocument,
     parseTitle,
     parseAnswers,
-    parseInput,
+    parseDocumentInput,
   )
 where
 
@@ -49,7 +49,7 @@ symbol :: Text -> Parser Text
 symbol = L.symbol sc
 
 parseDocument :: Parser Document
-parseDocument = Document <$> parseTitle <*> NE.some parseInput
+parseDocument = Document <$> parseTitle <*> NE.some parseDocumentInput
 
 parseTitle :: Parser Text
 parseTitle = symbol "title" *> symbol "=" *> lexeme (textBetween quoted)
@@ -75,8 +75,8 @@ parseAnswers = braces $ Answer <$> ansParser "p1" <* optional (symbol ",") <*> a
 parseTextBlock :: Parser Text
 parseTextBlock = symbol "\"\"\"" >> toText <$> manyTill L.charLiteral (symbol "\"\"\"")
 
-parseInput :: Parser Input
-parseInput = do
+parseDocumentInput :: Parser Input
+parseDocumentInput = do
   void $ doubleBrackets (symbol "input")
   comment <- optional (symbol "comment" >> symbol "=" >> lexeme (textBetween quoted))
   ans <- lexeme "answers" >> symbol "=" >> parseAnswers

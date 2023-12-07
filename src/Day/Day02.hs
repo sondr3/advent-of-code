@@ -29,7 +29,7 @@ partB xs = sum $ map go xs
     go ys = Map.foldr (*) 1 $ Map.fromListWith max $ concatMap toList ys
 
 parser :: Parser (NonEmpty (NonEmpty (NonEmpty (Text, Int))))
-parser = NE.some (void "Game " >> T.some digitChar >> ": " >> gameParser <* eol)
+parser = NE.some (void "Game " >> T.some digitChar >> ": " >> gameParser <* optional eol)
   where
     gameParser = bagParser `NE.sepBy1` "; "
     bagParser = colorParser `NE.sepBy1` ", "

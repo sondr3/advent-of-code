@@ -2,9 +2,10 @@
 
 module Parsers where
 
+import Data.Text qualified as T
 import Text.Megaparsec (Parsec)
 import Text.Megaparsec qualified as M hiding (getInput)
-import Text.Megaparsec.Char (eol, hspace)
+import Text.Megaparsec.Char (hspace)
 import Text.Megaparsec.Char.Lexer qualified as L
 import Universum
 
@@ -19,11 +20,10 @@ symbol = L.symbol hspace
 number :: (Integral a) => Parser a
 number = L.signed pass L.decimal
 
-pLines :: (Applicative f) => Parser a -> Text -> f a
-pLines parser input = case M.parse (M.many eol *> parser <* M.many eol) "" input of
-  Left err -> error (toText $ M.errorBundlePretty err)
-  Right a -> pure a
+testParseInput :: Parser a -> Maybe Text -> Text -> Either Text a
+testParseInput parser name input = case M.parse parser (toString $ fromMaybe "input" name) (T.strip input) of
+  Left err -> Left $ toText (M.errorBundlePretty err)
+  Right a -> Right a
 
-getRight :: Either a b -> b
-getRight (Right x) = x
-getRight _ = error "getRight called with Left value"
+parseInput :: (Applicative f) => Parser a -> Maybe Text -> Text -> f a
+parseInput parser name input = either error pure $ testParseInput parser name input
