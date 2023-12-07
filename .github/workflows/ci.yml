@@ -9,6 +9,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.REPO_TOKEN }}
+          submodules: true
 
       - name: Setup Haskell
         id: setup
