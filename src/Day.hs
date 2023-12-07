@@ -1,10 +1,10 @@
-module Day (AoC (..), mkAoC, runDay, getDayDocument, parseDay) where
+module Day (AoC (..), mkAoC, runDay, getDayDocument, parseDay, parseExample) where
 
 import Data.Time (UTCTime, diffUTCTime, getCurrentTime)
 import Parsers (Parser, parseInput, testParseInput)
+import PrettyPrint (prettyPrint)
 import TOML (Document, Input, answers, comment, input, inputs, p1, p2, parseDocument)
-import Text.Megaparsec (runParser)
-import Text.Pretty.Simple (pPrint)
+import Text.Megaparsec (errorBundlePretty, runParser)
 import Universum hiding ((^.))
 import Utils (padNum)
 
@@ -14,19 +14,26 @@ diffTime start end = show $ diffUTCTime end start
 runDay :: Int -> AoC -> IO ()
 runDay day MkAoC {solve} = solve day
 
+parseExample :: (Show a) => Int -> Parser a -> IO ()
+parseExample d parser = do
+  day <- getDayDocument d
+  case testParseInput parser (Just "example") (input $ head $ inputs day) of
+    Left err -> error $ "Failed to parse input: " <> err
+    Right ast -> prettyPrint ast
+
 parseDay :: (Show a) => Int -> Parser a -> IO ()
 parseDay d parser = do
   day <- getDayDocument d
   forM_ (inputs day) $ \i -> do
     case testParseInput parser (comment i) (input i) of
-      Left err -> error $ "Failed to parse input: " <> show err
-      Right ast -> pPrint ast
+      Left err -> error $ "Failed to parse input: " <> err
+      Right ast -> prettyPrint ast
 
 getDayDocument :: Int -> IO Document
 getDayDocument day = do
   file <- readFile filename
   case runParser parseDocument filename file of
-    Left err -> error $ "Failed to parse TOML file: " <> show err
+    Left err -> error $ "Failed to parse TOML file: " <> toText (errorBundlePretty err)
     Right doc -> pure doc
   where
     filename = toString $ "inputs/day" <> padNum day <> ".toml"
