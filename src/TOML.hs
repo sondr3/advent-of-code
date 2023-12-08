@@ -12,6 +12,7 @@ module TOML
 where
 
 import Control.Monad.Combinators.NonEmpty qualified as NE
+import Data.Text qualified as T
 import Text.Megaparsec hiding (many, some)
 import Text.Megaparsec.Char (alphaNumChar, space1, spaceChar)
 import Text.Megaparsec.Char.Lexer qualified as L
@@ -87,4 +88,4 @@ getInputs :: Document -> NonEmpty Input
 getInputs Document {inputs} = inputs
 
 getTextInputAt :: Int -> Document -> Text
-getTextInputAt i Document {inputs} = input $ toList inputs NE.!! i
+getTextInputAt i Document {inputs} = T.strip $ input $ toList inputs NE.!! i
