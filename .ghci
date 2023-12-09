@@ -2,6 +2,6 @@
 :set -XOverloadedStrings
 :set -XTypeFamilies
 import Universum
-import Text.Megaparsec
+import Text.Megaparsec hiding (many, some)
 import Text.Megaparsec qualified as M
 import Data.Text qualified as T
