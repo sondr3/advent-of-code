@@ -51,6 +51,7 @@ library
     Day.Day07
     Day.Day08
     Day.Day09
+    Day.Day10
     PrettyPrint
     Parsers
     TOML
