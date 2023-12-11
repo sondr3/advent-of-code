@@ -4,8 +4,8 @@ module Day.Day10 where
 
 import Data.Map qualified as Map
 import Data.Set qualified as Set
-import Data.Text qualified as T
 import Day (AoC, mkAoC)
+import Grid (gridify)
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
@@ -51,11 +51,8 @@ filterGround = Map.filter (/= Ground)
 findStart :: Map (Int, Int) Cell -> (Int, Int)
 findStart m = U.head $ Map.keys $ Map.filter (== Start) m
 
-matrix :: [[a]] -> Map (Int, Int) a
-matrix xs = Map.fromList [((j, i), x) | (i, row) <- zip [0 ..] xs, (j, x) <- zip [0 ..] row]
-
 partA :: [[Cell]] -> Int
-partA xs = length (dfs $ matrix xs) `div` 2
+partA xs = length (dfs $ gridify xs) `div` 2
 
 shoelaceArea :: [(Int, Int)] -> Int
 shoelaceArea pts = abs $ (`div` 2) $ sum [x1 * y2 - y1 * x2 | ((x1, y1), (x2, y2)) <- zip pts (U.tail pts ++ [U.head pts])]
@@ -63,19 +60,10 @@ shoelaceArea pts = abs $ (`div` 2) $ sum [x1 * y2 - y1 * x2 | ((x1, y1), (x2, y2
 cellsPretty :: Map (Int, Int) Cell -> Map (Int, Int) Text
 cellsPretty = Map.map prettyCell
 
-printGrid :: (MonadIO m) => [[a]] -> (a -> Text) -> m ()
-printGrid xs prettify = mapM_ (putTextLn . T.concat) (createGrid (map prettify $ matrix xs))
-
-createGrid :: Map (Int, Int) a -> [[a]]
-createGrid grid =
-  let (maxX, maxY) = fst $ Map.findMax grid
-      (minX, minY) = fst $ Map.findMin grid
-   in [[(Map.!) grid (x, y) | x <- [minX .. maxX]] | y <- [minY .. maxY]]
-
 partB :: [[Cell]] -> Int
 partB xs = (abs (shoelaceArea area * 2) - length area - 1 + 3) `div` 2
   where
-    area = dfs (matrix xs)
+    area = dfs (gridify xs)
 
 parser :: Parser [[Cell]]
 parser = pipeParser `sepEndBy` eol

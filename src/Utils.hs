@@ -6,6 +6,7 @@ module Utils
     getRight,
     compareLengths,
     readConcat,
+    pick,
   )
 where
 
@@ -35,3 +36,8 @@ getRight _ = error "getRight called with Left value"
 
 compareLengths :: (Container t1, Container t2) => t1 -> t2 -> Ordering
 compareLengths a b = compare (length b) (length a)
+
+pick :: Int -> [a] -> [[a]]
+pick 0 _ = [[]]
+pick _ [] = []
+pick k (x : xs) = map (x :) (pick (k - 1) xs) <> pick k xs
