@@ -25,4 +25,4 @@ parser :: Parser [[Int]]
 parser = (number `sepBy` hspace) `sepBy` eol
 
 day09 :: AoC
-day09 = mkAoC parser partA partB
+day09 = mkAoC parser partA partB 9 2023

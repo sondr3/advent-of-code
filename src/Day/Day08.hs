@@ -44,4 +44,4 @@ dirParser :: Parser [Dir]
 dirParser = some $ choice [R <$ char 'R', L <$ char 'L']
 
 day08 :: AoC
-day08 = mkAoC parser partA partB
+day08 = mkAoC parser partA partB 8 2023

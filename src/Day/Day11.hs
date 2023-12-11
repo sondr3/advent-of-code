@@ -54,4 +54,4 @@ parser :: Parser (Map (Int, Int) Space)
 parser = gridify <$> some (choice [Empty <$ char '.', Galaxy <$ char '#']) `sepEndBy` eol
 
 day11 :: AoC
-day11 = mkAoC parser partA partB
+day11 = mkAoC parser partA partB 11 2023

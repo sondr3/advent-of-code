@@ -74,4 +74,4 @@ parsePeriod :: Parser Part
 parsePeriod = Period <$ char '.'
 
 day03 :: AoC
-day03 = mkAoC parser partA partB
+day03 = mkAoC parser partA partB 3 2023

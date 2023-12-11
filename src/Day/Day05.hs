@@ -50,4 +50,4 @@ parseMap :: Parser [Range]
 parseMap = takeWhileP Nothing (/= ':') >> char ':' >> eol >> parseRange `sepEndBy1` "\n"
 
 day05 :: AoC
-day05 = mkAoC parser partA partB
+day05 = mkAoC parser partA partB 5 2023

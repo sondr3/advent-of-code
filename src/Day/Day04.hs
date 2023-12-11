@@ -39,4 +39,4 @@ gameParser = do
   pure (winning, yours)
 
 day04 :: AoC
-day04 = mkAoC parser partA partB
+day04 = mkAoC parser partA partB 4 2023

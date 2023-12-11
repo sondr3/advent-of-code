@@ -17,38 +17,38 @@ import Text.Megaparsec (errorBundlePretty, runParser)
 import Universum hiding ((^.))
 import Utils (padNum)
 
-runDay :: Int -> AoC -> IO ()
-runDay day MkAoC {solve} = solve day
+runDay :: Int -> Int -> AoC -> IO ()
+runDay day year MkAoC {solve} = solve day year
 
-testParseExample :: (Show a) => Int -> Parser a -> IO ()
-testParseExample d parser = do
-  res <- parseExample d parser
+testParseExample :: (Show a) => Int -> Int -> Parser a -> IO ()
+testParseExample d year parser = do
+  res <- parseExample d year parser
 
   case res of
     Left err -> error $ "Failed to parse input: " <> err
     Right ast -> prettyPrint ast
 
-parseExample :: Int -> Parser a -> IO (Either Text a)
-parseExample d parser = do
-  day <- getDayDocument d
+parseExample :: Int -> Int -> Parser a -> IO (Either Text a)
+parseExample d year parser = do
+  day <- getDayDocument d year
   pure $ testParseInput parser (Just "example") (input $ head $ inputs day)
 
-testParseDay :: (Show a) => Int -> Parser a -> IO ()
-testParseDay d parser = do
-  day <- getDayDocument d
+testParseDay :: (Show a) => Int -> Int -> Parser a -> IO ()
+testParseDay d year parser = do
+  day <- getDayDocument d year
   forM_ (inputs day) $ \i -> do
     case testParseInput parser (comment i) (input i) of
       Left err -> error $ "Failed to parse input: " <> err
       Right ast -> prettyPrint ast
 
-getDayDocument :: Int -> IO Document
-getDayDocument day = do
+getDayDocument :: Int -> Int -> IO Document
+getDayDocument day year = do
   file <- readFile filename
   case runParser parseDocument filename file of
     Left err -> error $ "Failed to parse TOML file: " <> toText (errorBundlePretty err)
     Right doc -> pure doc
   where
-    filename = toString $ "inputs/2023/day" <> padNum day <> ".toml"
+    filename = toString $ "inputs/" <> show year <> "/day" <> padNum day <> ".toml"
 
 runPart :: (i -> Int) -> i -> Int -> Int -> IO ()
 runPart solver i expected part = do
@@ -72,19 +72,35 @@ data AoC = forall i.
   { parse :: Parser i,
     part1 :: i -> Int,
     part2 :: i -> Int,
-    solve :: Int -> IO ()
+    day :: Int,
+    year :: Int,
+    solve :: Int -> Int -> IO ()
   }
 
-mkAoC :: (Show i) => Parser i -> (i -> Int) -> (i -> Int) -> AoC
-mkAoC p p1 p2 =
+mkAoC ::
+  (Show i) =>
+  -- | Parser
+  Parser i ->
+  -- | Part 1
+  (i -> Int) ->
+  -- | Part 2
+  (i -> Int) ->
+  -- | Day
+  Int ->
+  -- | Year
+  Int ->
+  AoC
+mkAoC p p1 p2 d y =
   MkAoC
     { parse = p,
       part1 = p1,
       part2 = p2,
-      solve = \day -> do
-        putTextLn $ "Solution for day " <> padNum day
-        docs <- getDayDocument day
+      day = d,
+      year = y,
+      solve = \day year -> do
+        putTextLn $ "Solution for " <> show year <> ", day " <> padNum day
+        docs <- getDayDocument day year
         forM_ (inputs docs) $ \input -> do
           whenJust (comment input) $ \c -> putTextLn $ ">> " <> c
-          solveInput input (mkAoC p p1 p2)
+          solveInput input (mkAoC p p1 p2 d y)
     }

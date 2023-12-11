@@ -20,11 +20,11 @@ import Test.Hspec (Spec, describe, it, parallel, runIO, shouldBe)
 import Universum
 import Utils (padNum)
 
-testDay :: Int -> AoC -> Spec
-testDay day MkAoC {parse, part1, part2} = describe (toString $ "day " <> padNum day) $ do
-  docs <- runIO (getDayDocument day)
+testDay :: AoC -> Spec
+testDay MkAoC {parse, part1, part2, day, year} = describe (toString $ "day " <> padNum day) $ do
+  docs <- runIO (getDayDocument day year)
   forM_ (inputs docs) $ \input -> do
-    testInput input (mkAoC parse part1 part2)
+    testInput input (mkAoC parse part1 part2 day year)
 
 testInput :: Input -> AoC -> Spec
 testInput i MkAoC {parse, part1, part2} = do
@@ -37,14 +37,14 @@ testInput i MkAoC {parse, part1, part2} = do
 
 spec :: Spec
 spec = parallel $ do
-  testDay 1 day01
-  testDay 2 day02
-  testDay 3 day03
-  testDay 4 day04
-  testDay 5 day05
-  testDay 6 day06
-  testDay 7 day07
-  testDay 8 day08
-  testDay 9 day09
-  testDay 10 day10
-  testDay 11 day11
+  testDay day01
+  testDay day02
+  testDay day03
+  testDay day04
+  testDay day05
+  testDay day06
+  testDay day07
+  testDay day08
+  testDay day09
+  testDay day10
+  testDay day11

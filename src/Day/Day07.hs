@@ -74,4 +74,4 @@ cardParser :: Parser Card
 cardParser = choice [A <$ char 'A', K <$ char 'K', Q <$ char 'Q', J <$ char 'J', T <$ char 'T', Nine <$ char '9', Eight <$ char '8', Seven <$ char '7', Six <$ char '6', Five <$ char '5', Four <$ char '4', Three <$ char '3', Two <$ char '2']
 
 day07 :: AoC
-day07 = mkAoC parser partA partB
+day07 = mkAoC parser partA partB 7 2023

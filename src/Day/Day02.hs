@@ -37,4 +37,4 @@ parser = NE.some (void "Game " >> T.some digitChar >> ": " >> gameParser <* opti
     colorParser = L.decimal >>= \num -> void " " *> (toText <$> T.many lowerChar) >>= \color -> pure (color, num)
 
 day02 :: AoC
-day02 = mkAoC parser partA partB
+day02 = mkAoC parser partA partB 2 2023

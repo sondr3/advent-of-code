@@ -82,4 +82,4 @@ pipeParser =
     ]
 
 day10 :: AoC
-day10 = mkAoC parser partA partB
+day10 = mkAoC parser partA partB 10 2023
