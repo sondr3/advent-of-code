@@ -5,6 +5,7 @@ module Day
     mkAoC,
     runDay,
     getDayDocument,
+    getAoCDocument,
     testParseDay,
   )
 where

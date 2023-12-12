@@ -53,6 +53,7 @@ library
     Day.Day09
     Day.Day10
     Day.Day11
+    Day.Day12
     Grid
     PrettyPrint
     Parsers
@@ -63,6 +64,7 @@ library
     , containers ^>=0.6
     , chronos ^>=1.1
     , megaparsec ^>=9.6
+    , MemoTrie ^>=0.6
     , parser-combinators ^>=1.3
     , pretty-simple ^>=4.1
     , text ^>=2
