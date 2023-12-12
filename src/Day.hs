@@ -1,45 +1,34 @@
+{-# LANGUAGE ScopedTypeVariables #-}
+
 module Day
   ( AoC (..),
     mkAoC,
     runDay,
     getDayDocument,
     testParseDay,
-    testParseExample,
-    parseExample,
   )
 where
 
 import Chronos (SubsecondPrecision (SubsecondPrecisionAuto), encodeTimespan, stopwatch)
 import Parsers (Parser, parseInput, testParseInput)
-import PrettyPrint (prettyPrint)
 import TOML (Document, Input, answers, comment, input, inputs, p1, p2, parseDocument)
 import Text.Megaparsec (errorBundlePretty, runParser)
 import Universum hiding ((^.))
 import Utils (padNum)
 
-runDay :: Int -> Int -> AoC -> IO ()
-runDay day year MkAoC {solve} = solve day year
+runDay :: AoC -> IO ()
+runDay MkAoC {solve, year, day} = solve day year
 
-testParseExample :: (Show a) => Int -> Int -> Parser a -> IO ()
-testParseExample d year parser = do
-  res <- parseExample d year parser
-
-  case res of
-    Left err -> error $ "Failed to parse input: " <> err
-    Right ast -> prettyPrint ast
-
-parseExample :: Int -> Int -> Parser a -> IO (Either Text a)
-parseExample d year parser = do
-  day <- getDayDocument d year
-  pure $ testParseInput parser (Just "example") (input $ head $ inputs day)
-
-testParseDay :: (Show a) => Int -> Int -> Parser a -> IO ()
-testParseDay d year parser = do
-  day <- getDayDocument d year
+testParseDay :: AoC -> IO ()
+testParseDay m@MkAoC {parse} = do
+  day <- getAoCDocument m
   forM_ (inputs day) $ \i -> do
-    case testParseInput parser (comment i) (input i) of
+    case testParseInput parse (comment i) (input i) of
       Left err -> error $ "Failed to parse input: " <> err
-      Right ast -> prettyPrint ast
+      Right _ -> pass
+
+getAoCDocument :: AoC -> IO Document
+getAoCDocument MkAoC {day, year} = getDayDocument day year
 
 getDayDocument :: Int -> Int -> IO Document
 getDayDocument day year = do

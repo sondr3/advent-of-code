@@ -26,7 +26,7 @@ parens = between (symbol "(") (symbol ")")
 string :: Parser Text
 string = toText <$> lexeme (some alphaNumChar)
 
-testParseInput :: Parser a -> Maybe Text -> Text -> Either Text a
+testParseInput :: Parser i -> Maybe Text -> Text -> Either Text i
 testParseInput parser name input = case M.parse parser (toString $ fromMaybe "input" name) (T.strip input) of
   Left err -> Left $ toText (M.errorBundlePretty err)
   Right a -> Right a
