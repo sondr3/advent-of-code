@@ -14,7 +14,7 @@ where
 import Control.Monad.Combinators.NonEmpty qualified as NE
 import Data.Text qualified as T
 import Text.Megaparsec hiding (many, some)
-import Text.Megaparsec.Char (alphaNumChar, space1, spaceChar)
+import Text.Megaparsec.Char (alphaNumChar, space1, spaceChar, string)
 import Text.Megaparsec.Char.Lexer qualified as L
 import Universum hiding (try)
 import Universum.Unsafe qualified as NE
@@ -74,7 +74,7 @@ parseAnswers = braces $ Answer <$> ansParser "p1" <* optional (symbol ",") <*> a
     ansParser p = optional (symbol p *> symbol "=" *> lexeme L.decimal)
 
 parseTextBlock :: Parser Text
-parseTextBlock = symbol "\"\"\"" >> toText <$> manyTill L.charLiteral (symbol "\"\"\"")
+parseTextBlock = string "\"\"\"" >> T.strip . toText <$> manyTill L.charLiteral (symbol "\"\"\"")
 
 parseDocumentInput :: Parser Input
 parseDocumentInput = do

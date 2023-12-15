@@ -15,6 +15,7 @@ import Day.Day09 (day09)
 import Day.Day10 (day10)
 import Day.Day11 (day11)
 import Day.Day12 (day12)
+import Day.Day13 (day13)
 import Parsers (parseInput)
 import TOML
 import Test.Hspec (Spec, describe, it, parallel, runIO, shouldBe)
@@ -50,3 +51,4 @@ spec = parallel $ do
   testDay day10
   testDay day11
   testDay day12
+  testDay day13

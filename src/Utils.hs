@@ -7,6 +7,7 @@ module Utils
     compareLengths,
     readConcat,
     pick,
+    listToMaybe,
   )
 where
 
@@ -41,3 +42,7 @@ pick :: Int -> [a] -> [[a]]
 pick 0 _ = [[]]
 pick _ [] = []
 pick k (x : xs) = map (x :) (pick (k - 1) xs) <> pick k xs
+
+listToMaybe :: [a] -> Maybe [a]
+listToMaybe [] = Nothing
+listToMaybe xs = Just xs

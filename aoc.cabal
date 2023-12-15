@@ -54,6 +54,7 @@ library
     Day.Day10
     Day.Day11
     Day.Day12
+    Day.Day13
     Grid
     PrettyPrint
     Parsers
