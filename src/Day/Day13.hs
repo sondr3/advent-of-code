@@ -2,24 +2,30 @@
 
 module Day.Day13 where
 
+import Data.IntMap qualified as IntMap
+import Data.Map qualified as Map
 import Day (AoC, mkAoC)
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
 import Universum
-import Universum.Unsafe qualified as U
-import Utils (listToMaybe)
 
 data Pattern = Ash | Rock deriving stock (Show, Eq, Ord, Generic)
 
 partA :: [[[Pattern]]] -> Int
-partA xs = sum $ map calculate xs
+partA xs = sum $ map (calculate 0) xs
 
 partB :: [[[Pattern]]] -> Int
-partB xs = 0
+partB xs = sum $ map (calculate 1) xs
 
-calculate :: (Eq a) => [[a]] -> Int
-calculate grid = fromMaybe 0 $ ((* 100) <$> pivot grid) <|> pivot (transpose grid)
+calculate :: (Eq a) => Int -> [[a]] -> Int
+calculate n grid = fromMaybe 0 $ ((* 100) <$> pivot grid) <|> pivot (transpose grid)
+
+numPivots :: [[[Pattern]]] -> [Int]
+numPivots = concatMap (mapMaybe pivot)
+
+countPivots :: [Int] -> [(Int, Int)]
+countPivots xs = IntMap.toList $ IntMap.fromListWith (+) (map (,1) xs)
 
 pivot :: (Eq a) => [a] -> Maybe Int
 pivot grid = length . fst <$> find (\(xs, ys) -> and $ mirrored xs ys) (filter (\(xs, ys) -> not (null xs) && not (null ys)) $ zip (inits grid) (tails grid))
