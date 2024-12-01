@@ -1,5 +1,6 @@
 module TOML
-  ( Answer (..),
+  ( Answers (..),
+    Answer (..),
     Input (..),
     Document (..),
     getInputs,
@@ -8,6 +9,7 @@ module TOML
     parseTitle,
     parseAnswers,
     parseDocumentInput,
+    whenAnswer,
   )
 where
 
@@ -22,15 +24,23 @@ import Text.Megaparsec hiding (many, some)
 import Text.Megaparsec.Char (alphaNumChar, space1, spaceChar, string)
 import Text.Megaparsec.Char.Lexer qualified as L
 
-data Answer = Answer
-  { p1 :: Maybe Int,
-    p2 :: Maybe Int
+data Answer = Unanswered | NilAnswer | Answer Int
+  deriving stock (Eq, Show)
+
+data Answers = Answers
+  { p1 :: Answer,
+    p2 :: Answer
   }
   deriving stock (Eq, Show)
 
+whenAnswer :: (Applicative f) => Answer -> (Answer -> f ()) -> f ()
+whenAnswer a@(Answer _) f = f a
+whenAnswer a@NilAnswer f = f a
+whenAnswer Unanswered _ = pure ()
+
 data Input = Input
   { comment :: Maybe Text,
-    answers :: Answer,
+    answers :: Answers,
     input :: Text
   }
   deriving stock (Eq, Show)
@@ -70,11 +80,11 @@ doubleBrackets = between (symbol "[[") (symbol "]]")
 braces :: Parser a -> Parser a
 braces = between (symbol "{") (symbol "}")
 
-parseAnswers :: Parser Answer
-parseAnswers = braces $ Answer <$> ansParser "p1" <* optional (symbol ",") <*> ansParser "p2"
+parseAnswers :: Parser Answers
+parseAnswers = braces $ Answers <$> ansParser "p1" <* optional (symbol ",") <*> ansParser "p2"
   where
-    ansParser :: Text -> Parser (Maybe Int)
-    ansParser p = optional (symbol p *> symbol "=" *> lexeme L.decimal)
+    ansParser :: Text -> Parser Answer
+    ansParser p = (symbol p *> symbol "=" *> choice [Answer <$> lexeme L.decimal, NilAnswer <$ symbol "nil"]) <|> pure Unanswered
 
 parseTextBlock :: Parser Text
 parseTextBlock = string "\"\"\"" >> T.strip . T.pack <$> manyTill L.charLiteral (symbol "\"\"\"")

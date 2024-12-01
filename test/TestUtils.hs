@@ -2,7 +2,7 @@
 
 module TestUtils (testDay, testInput) where
 
-import AoC (AoC (..), getDayDocument, mkAoC, whenJust)
+import AoC (AoC (..), getDayDocument, mkAoC)
 import Control.Monad (forM_)
 import Data.Maybe (fromMaybe)
 import Data.Text qualified as T
@@ -23,5 +23,5 @@ testInput i MkAoC {parse, part1, part2} = do
 
   let name = fromMaybe "input" (comment i)
   it (T.unpack $ "should parse " <> name) $ do
-    whenJust (p1 $ answers i) $ \p -> part1 parsed `shouldBe` p
-    whenJust (p2 $ answers i) $ \p -> part2 parsed `shouldBe` p
+    whenAnswer (p1 $ answers i) $ \p -> part1 parsed `shouldBe` p
+    whenAnswer (p2 $ answers i) $ \p -> part2 parsed `shouldBe` p

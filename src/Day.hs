@@ -17,7 +17,7 @@ import Data.Text.IO qualified as TIO
 import GHC.Base (when)
 import Parsers (Parser, parseInput, testParseInput)
 import System.CPUTime (getCPUTime)
-import TOML (Document, Input, answers, comment, input, inputs, p1, p2, parseDocument)
+import TOML (Answer (..), Document, Input, answers, comment, input, inputs, p1, p2, parseDocument, whenAnswer)
 import Text.Megaparsec (errorBundlePretty, runParser)
 import Text.Printf (printf)
 import Utils (padNum, whenJust)
@@ -53,21 +53,28 @@ stopwatch action = do
   let diff = fromIntegral (end - start) * 1e-9
   return (diff, result)
 
-runPart :: (i -> Int) -> i -> Int -> Int -> IO ()
-runPart solver i expected part = do
+runPart :: (i -> Int) -> i -> Answer -> Int -> IO ()
+runPart solver i answer part = do
   (duration, res) <- stopwatch (pure $ solver i)
 
-  when (res /= expected) $ do
-    TIO.putStrLn $ "Part " <> display part <> " failed: expected " <> display expected <> " but got " <> display res
+  TIO.putStr $ "> part " <> display part
+  case answer of
+    Unanswered -> TIO.putStr " is as of yet unanswered"
+    NilAnswer -> TIO.putStr $ " had `nil` as answer, but got " <> display res
+    Answer e ->
+      if res /= e
+        then TIO.putStr $ " failed: expected " <> display e <> " but got " <> display res
+        else
+          TIO.putStr $ " correct: " <> display res <> " in " <> T.pack (printf "%.3fs" duration)
 
-  TIO.putStrLn $ "   Part " <> display part <> ": " <> display res <> " in " <> T.pack (printf "%.3fs" duration)
+  TIO.putStrLn ""
 
 solveInput :: Input -> AoC -> IO ()
 solveInput i MkAoC {parse, part1, part2} = do
   parsed <- parseInput parse (comment i) (input i)
 
-  whenJust (p1 $ answers i) $ \p -> runPart part1 parsed p 1
-  whenJust (p2 $ answers i) $ \p -> runPart part2 parsed p 2
+  runPart part1 parsed (p1 $ answers i) 1
+  runPart part2 parsed (p2 $ answers i) 2
 
 data AoC
   = forall i.
@@ -105,6 +112,6 @@ mkAoC p p1 p2 d y =
         TIO.putStrLn $ "Solution for " <> display year <> ", day " <> padNum day
         docs <- getDayDocument day year
         forM_ (inputs docs) $ \input -> do
-          whenJust (comment input) $ \c -> TIO.putStrLn $ ">> " <> c
+          whenJust (comment input) $ \c -> TIO.putStrLn $ "$ " <> c
           solveInput input (mkAoC p p1 p2 d y)
     }

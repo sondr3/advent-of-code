@@ -1,5 +1,5 @@
 *.previous
-.hspec
+.hspec*
 
 ### Created by https://www.gitignore.io
 ### VisualStudioCode ###
