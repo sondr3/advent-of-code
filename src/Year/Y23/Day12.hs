@@ -3,7 +3,7 @@
 {-# LANGUAGE TypeOperators #-}
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
 
-module Day.Day12 where
+module Year.Y23.Day12 where
 
 import Control.Applicative (Alternative (..))
 import Data.List (intercalate)

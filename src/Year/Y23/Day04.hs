@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
 
-module Day.Day04 where
+module Year.Y23.Day04 where
 
 import Control.Monad (void)
 import Data.Set qualified as S

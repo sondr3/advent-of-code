@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
 
-module Day.Day03 where
+module Year.Y23.Day03 where
 
 import Control.Applicative (Alternative (..))
 import Data.List (nub)

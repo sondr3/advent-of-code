@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
 
-module Day.Day02 where
+module Year.Y23.Day02 where
 
 import Control.Monad (void)
 import Control.Monad.Combinators.NonEmpty qualified as NE

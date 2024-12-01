@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
 
-module Day.Day09 where
+module Year.Y23.Day09 where
 
 import Day (AoC, mkAoC)
 import Parsers

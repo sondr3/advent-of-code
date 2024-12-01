@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
 
-module Day.Day13 where
+module Year.Y23.Day13 where
 
 import Control.Applicative (Alternative (..))
 import Data.IntMap qualified as IntMap

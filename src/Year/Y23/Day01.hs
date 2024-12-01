@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
 
-module Day.Day01 where
+module Year.Y23.Day01 where
 
 import Data.Either (rights)
 import Data.List.NonEmpty (NonEmpty)

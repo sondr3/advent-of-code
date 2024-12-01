@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
 
-module Day.Day05 where
+module Year.Y23.Day05 where
 
 import Control.Applicative (Alternative (..))
 import Data.List.NonEmpty (NonEmpty)

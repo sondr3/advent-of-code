@@ -2,7 +2,7 @@
 {-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
 
-module Day.Day15 where
+module Year.Y23.Day15 where
 
 import AoC (read')
 import Control.Applicative (Alternative (..))
