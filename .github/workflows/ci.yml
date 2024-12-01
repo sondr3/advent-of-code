@@ -49,6 +49,10 @@ jobs:
 
       - name: Formatting
         uses: haskell-actions/run-ormolu@v16
+        with:
+          pattern: |
+            **/*.hs
+            !DayXX.hs
 
       - name: "Set up HLint"
         uses: haskell-actions/hlint-setup@v2
