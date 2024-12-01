@@ -10,15 +10,16 @@ module Day
   )
 where
 
-import Chronos (SubsecondPrecision (SubsecondPrecisionAuto), encodeTimespan, stopwatch)
 import Control.Monad (forM_)
 import Data.Text qualified as T
 import Data.Text.Display (display)
 import Data.Text.IO qualified as TIO
 import GHC.Base (when)
 import Parsers (Parser, parseInput, testParseInput)
+import System.CPUTime (getCPUTime)
 import TOML (Document, Input, answers, comment, input, inputs, p1, p2, parseDocument)
 import Text.Megaparsec (errorBundlePretty, runParser)
+import Text.Printf (printf)
 import Utils (padNum, whenJust)
 
 runDay :: AoC -> IO ()
@@ -44,6 +45,14 @@ getDayDocument day year = do
   where
     filename = T.unpack $ "inputs/" <> display year <> "/day" <> padNum day <> ".toml"
 
+stopwatch :: IO a -> IO (Double, a)
+stopwatch action = do
+  start <- getCPUTime
+  result <- action
+  end <- getCPUTime
+  let diff = fromIntegral (end - start) * 1e-9
+  return (diff, result)
+
 runPart :: (i -> Int) -> i -> Int -> Int -> IO ()
 runPart solver i expected part = do
   (duration, res) <- stopwatch (pure $ solver i)
@@ -51,7 +60,7 @@ runPart solver i expected part = do
   when (res /= expected) $ do
     TIO.putStrLn $ "Part " <> display part <> " failed: expected " <> display expected <> " but got " <> display res
 
-  TIO.putStrLn $ "   Part " <> display part <> ": " <> display res <> " in " <> encodeTimespan SubsecondPrecisionAuto duration <> "ms"
+  TIO.putStrLn $ "   Part " <> display part <> ": " <> display res <> " in " <> T.pack (printf "%.3fs" duration)
 
 solveInput :: Input -> AoC -> IO ()
 solveInput i MkAoC {parse, part1, part2} = do
