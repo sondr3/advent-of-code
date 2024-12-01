@@ -3,8 +3,8 @@ name: aoc
 version: 0.1.0
 author: Sondre Aasemoen
 maintainer: sondre@eons.io
-synopsis: Advent of Code 2023
-description: Solutions for Advent of Code 2023
+synopsis: Advent of Code
+description: Solutions for Advent of Code
 category: Fun
 license: MIT
 license-file: LICENSE
@@ -101,4 +101,4 @@ test-suite aoc-test
 
 source-repository head
   type: git
-  location: https://github.com/sondr3/advent-of-code-2023.git
+  location: https://github.com/sondr3/advent-of-code.git
