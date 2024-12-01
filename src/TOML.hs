@@ -9,7 +9,6 @@ module TOML
     parseTitle,
     parseAnswers,
     parseDocumentInput,
-    whenAnswer,
   )
 where
 
@@ -32,11 +31,6 @@ data Answers = Answers
     p2 :: Answer
   }
   deriving stock (Eq, Show)
-
-whenAnswer :: (Applicative f) => Answer -> (Answer -> f ()) -> f ()
-whenAnswer a@(Answer _) f = f a
-whenAnswer a@NilAnswer f = f a
-whenAnswer Unanswered _ = pure ()
 
 data Input = Input
   { comment :: Maybe Text,

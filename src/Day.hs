@@ -14,10 +14,9 @@ import Control.Monad (forM_)
 import Data.Text qualified as T
 import Data.Text.Display (display)
 import Data.Text.IO qualified as TIO
-import GHC.Base (when)
 import Parsers (Parser, parseInput, testParseInput)
 import System.CPUTime (getCPUTime)
-import TOML (Answer (..), Document, Input, answers, comment, input, inputs, p1, p2, parseDocument, whenAnswer)
+import TOML (Answer (..), Document, Input, answers, comment, input, inputs, p1, p2, parseDocument)
 import Text.Megaparsec (errorBundlePretty, runParser)
 import Text.Printf (printf)
 import Utils (padNum, whenJust)

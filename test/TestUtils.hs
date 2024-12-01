@@ -8,7 +8,7 @@ import Data.Maybe (fromMaybe)
 import Data.Text qualified as T
 import Parsers (parseInput)
 import TOML
-import Test.Hspec (Spec, describe, it, runIO, shouldBe)
+import Test.Hspec (Spec, describe, it, runIO, shouldBe, shouldNotBe)
 import Utils (padNum)
 
 testDay :: AoC -> Spec
@@ -23,5 +23,10 @@ testInput i MkAoC {parse, part1, part2} = do
 
   let name = fromMaybe "input" (comment i)
   it (T.unpack $ "should parse " <> name) $ do
-    whenAnswer (p1 $ answers i) $ \p -> part1 parsed `shouldBe` p
-    whenAnswer (p2 $ answers i) $ \p -> part2 parsed `shouldBe` p
+    runPart part1 parsed (p1 $ answers i)
+    runPart part2 parsed (p2 $ answers i)
+
+runPart :: (i -> Int) -> i -> Answer -> IO ()
+runPart _ _ Unanswered = pure ()
+runPart part i NilAnswer = part i `shouldNotBe` 0
+runPart part i (Answer a) = part i `shouldBe` a
