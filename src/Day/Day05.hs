@@ -2,19 +2,21 @@
 
 module Day.Day05 where
 
+import Control.Applicative (Alternative (..))
+import Data.List.NonEmpty (NonEmpty)
+import Data.List.NonEmpty qualified as NE
 import Day (AoC, mkAoC)
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L
-import Universum
 import Utils (pairs)
 
 data Range = Range Int Int Int
   deriving stock (Eq, Show)
 
 partA :: ([Int], [[Range]]) -> Int
-partA (seed, maps) = minimum $ map (\x -> foldl go x maps) (fromList seed)
+partA (seed, maps) = minimum $ map (\x -> foldl go x maps) seed
   where
     go s [] = s
     go s (Range dst src len : xs)
@@ -22,7 +24,7 @@ partA (seed, maps) = minimum $ map (\x -> foldl go x maps) (fromList seed)
       | otherwise = go s xs
 
 concatRange :: NonEmpty (Int, Int) -> [Range] -> NonEmpty (Int, Int)
-concatRange xs ys = fromList $ concatMap (`foldRange` ys) xs
+concatRange xs ys = NE.fromList $ concatMap (`foldRange` ys) xs
 
 foldRange :: (Int, Int) -> [Range] -> [(Int, Int)]
 foldRange t [] = [t]
@@ -35,7 +37,7 @@ foldRange t@(s, len) (Range dst src len' : rs)
     post = if src + len' < s + len then foldRange (src + len', s + len - src - len') rs else []
 
 partB :: ([Int], [[Range]]) -> Int
-partB (seeds, maps) = fst $ minimum $ foldl concatRange (fromList $ pairs seeds) maps
+partB (seeds, maps) = fst $ minimum $ foldl concatRange (NE.fromList $ pairs seeds) maps
 
 parser :: Parser ([Int], [[Range]])
 parser = (,) <$> parseSeeds <*> parseMap `sepEndBy` "\n"

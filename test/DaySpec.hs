@@ -2,7 +2,10 @@
 
 module DaySpec (spec) where
 
-import AoC (AoC (..), getDayDocument, mkAoC)
+import AoC (AoC (..), getDayDocument, mkAoC, whenJust)
+import Control.Monad (forM_)
+import Data.Maybe (fromMaybe)
+import Data.Text qualified as T
 import Day.Day01 (day01)
 import Day.Day02 (day02)
 import Day.Day03 (day03)
@@ -18,11 +21,10 @@ import Day.Day12 (day12)
 import Parsers (parseInput)
 import TOML
 import Test.Hspec (Spec, describe, it, parallel, runIO, shouldBe)
-import Universum
 import Utils (padNum)
 
 testDay :: AoC -> Spec
-testDay MkAoC {parse, part1, part2, day, year} = describe (toString $ "day " <> padNum day) $ do
+testDay MkAoC {parse, part1, part2, day, year} = describe (T.unpack $ "day " <> padNum day) $ do
   docs <- runIO (getDayDocument day year)
   forM_ (inputs docs) $ \input -> do
     testInput input (mkAoC parse part1 part2 day year)
@@ -32,7 +34,7 @@ testInput i MkAoC {parse, part1, part2} = do
   parsed <- parseInput parse (comment i) (input i)
 
   let name = fromMaybe "input" (comment i)
-  it (toString $ "should parse " <> name) $ do
+  it (T.unpack $ "should parse " <> name) $ do
     whenJust (p1 $ answers i) $ \p -> part1 parsed `shouldBe` p
     whenJust (p2 $ answers i) $ \p -> part2 parsed `shouldBe` p
 

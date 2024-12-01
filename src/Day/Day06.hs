@@ -2,12 +2,13 @@
 
 module Day.Day06 where
 
+import Control.Applicative (Alternative (..))
+import Data.Text (Text)
 import Day (AoC, mkAoC)
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L
-import Universum
 import Utils (readConcat)
 
 partA :: [(Int, Int)] -> Int

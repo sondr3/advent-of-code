@@ -1,7 +1,6 @@
 module PrettyPrint (prettyPrint) where
 
 import Text.Pretty.Simple (CheckColorTty (NoCheckColorTty), OutputOptions (..), defaultOutputOptionsLightBg, pPrintOpt)
-import Universum
 
 outputOpts :: OutputOptions
 outputOpts =

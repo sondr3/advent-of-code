@@ -17,8 +17,8 @@ jobs:
         id: setup
         uses: haskell-actions/setup@v2
         with:
-          ghc-version: "9.6"
-          cabal-version: "3.10"
+          ghc-version: "9.10"
+          cabal-version: "3.12"
           cabal-update: true
 
       - name: Configure the build
@@ -48,12 +48,12 @@ jobs:
           key: ${{ steps.cache.outputs.cache-primary-key }}
 
       - name: Formatting
-        uses: haskell-actions/run-ormolu@v14
+        uses: haskell-actions/run-ormolu@v16
 
       - name: "Set up HLint"
         uses: haskell-actions/hlint-setup@v2
         with:
-          version: "3.6.1"
+          version: "3.8"
 
       - name: "Run HLint"
         uses: haskell-actions/hlint-run@v2

@@ -2,15 +2,17 @@
 
 module Day.Day11 where
 
+import Control.Applicative (Alternative (..))
+import Data.Map (Map)
 import Data.Map qualified as Map
+import Data.Set (Set)
 import Data.Set qualified as Set
+import Data.Text (Text)
 import Day (AoC, mkAoC)
 import Grid (gridify)
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
-import Universum
-import Universum.Unsafe qualified as U
 import Utils (pick)
 
 data Space = Empty | Galaxy deriving stock (Show, Eq, Ord)
@@ -36,7 +38,7 @@ findGalaxies :: Map (Int, Int) Space -> [(Int, Int)]
 findGalaxies m = Map.keys $ Map.filter (== Galaxy) m
 
 empty' :: [(Int, Int)] -> ((Int, Int) -> Int) -> Set Int
-empty' gals f = Set.difference (Set.fromList [0 .. U.maximum xs]) (fromList xs)
+empty' gals f = Set.difference (Set.fromList [0 .. maximum xs]) (Set.fromList xs)
   where
     xs = map f gals
 

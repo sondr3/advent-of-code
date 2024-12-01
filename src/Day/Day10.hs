@@ -2,15 +2,17 @@
 
 module Day.Day10 where
 
+import Control.Applicative (Alternative (..))
+import Data.Map (Map)
 import Data.Map qualified as Map
 import Data.Set qualified as Set
+import Data.Text (Text)
 import Day (AoC, mkAoC)
 import Grid (gridify)
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
-import Universum
-import Universum.Unsafe qualified as U
+import Utils (uHead, uTail)
 
 data Cell = Start | Ground | Pipe (Dir, Dir) deriving stock (Show, Eq, Ord)
 
@@ -49,13 +51,13 @@ filterGround :: Map (Int, Int) Cell -> Map (Int, Int) Cell
 filterGround = Map.filter (/= Ground)
 
 findStart :: Map (Int, Int) Cell -> (Int, Int)
-findStart m = U.head $ Map.keys $ Map.filter (== Start) m
+findStart m = uHead $ Map.keys $ Map.filter (== Start) m
 
 partA :: [[Cell]] -> Int
 partA xs = length (dfs $ gridify xs) `div` 2
 
 shoelaceArea :: [(Int, Int)] -> Int
-shoelaceArea pts = abs $ (`div` 2) $ sum [x1 * y2 - y1 * x2 | ((x1, y1), (x2, y2)) <- zip pts (U.tail pts ++ [U.head pts])]
+shoelaceArea pts = abs $ (`div` 2) $ sum [x1 * y2 - y1 * x2 | ((x1, y1), (x2, y2)) <- zip pts (uTail pts ++ [uHead pts])]
 
 cellsPretty :: Map (Int, Int) Cell -> Map (Int, Int) Text
 cellsPretty = Map.map prettyCell

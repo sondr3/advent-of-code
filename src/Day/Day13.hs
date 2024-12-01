@@ -2,13 +2,15 @@
 
 module Day.Day13 where
 
+import Control.Applicative (Alternative (..))
 import Data.IntMap qualified as IntMap
-import Data.Map qualified as Map
+import Data.List (find, inits, tails, transpose)
+import Data.Maybe (fromMaybe, mapMaybe)
 import Day (AoC, mkAoC)
+import GHC.Generics (Generic)
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
-import Universum
 
 data Pattern = Ash | Rock deriving stock (Show, Eq, Ord, Generic)
 
@@ -19,7 +21,7 @@ partB :: [[[Pattern]]] -> Int
 partB xs = sum $ map (calculate 1) xs
 
 calculate :: (Eq a) => Int -> [[a]] -> Int
-calculate n grid = fromMaybe 0 $ ((* 100) <$> pivot grid) <|> pivot (transpose grid)
+calculate _ grid = fromMaybe 0 $ ((* 100) <$> pivot grid) <|> pivot (transpose grid)
 
 numPivots :: [[[Pattern]]] -> [Int]
 numPivots = concatMap (mapMaybe pivot)

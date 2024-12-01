@@ -2,14 +2,17 @@
 
 module Day.Day08 where
 
+import Control.Applicative (Alternative (..))
+import Data.Map (Map)
 import Data.Map qualified as M
+import Data.Text (Text)
 import Data.Text qualified as T
 import Day (AoC, mkAoC)
+import GHC.Exts (sortWith)
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
-import Universum
-import Universum.Unsafe qualified as U
+import Utils (uHead)
 
 data Dir = R | L deriving stock (Show, Eq, Ord)
 
@@ -38,7 +41,7 @@ nodeParser :: Parser (Text, (Text, Text))
 nodeParser = do
   root <- string <* symbol "="
   edges <- parens (string `sepBy` symbol ",")
-  pure (root, (U.head edges, U.last edges))
+  pure (root, (uHead edges, last edges))
 
 dirParser :: Parser [Dir]
 dirParser = some $ choice [R <$ char 'R', L <$ char 'L']

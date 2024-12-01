@@ -1,6 +1,4 @@
 module Main (main) where
 
-import Universum
-
 main :: IO ()
-main = putTextLn "Hello, Haskell!"
+main = putStrLn "Hello, Haskell!"

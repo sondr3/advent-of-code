@@ -2,11 +2,12 @@
 
 module Day.Day07 where
 
+import Control.Applicative (Alternative (..))
+import Data.List (group, sort, sortBy)
 import Day (AoC, mkAoC)
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char
-import Universum
 import Utils (compareLengths)
 
 data Card = Two | Three | Four | Five | Six | Seven | Eight | Nine | T | J | Q | K | A
@@ -37,7 +38,7 @@ cardsToHand cs = case map length cards of
   _ -> HighCard
   where
     cards :: [[Card]]
-    cards = map toList $ sortBy compareLengths (group $ sort cs)
+    cards = sortBy compareLengths (group $ sort cs)
 
 compareHands :: (Ord a, Ord b) => (a, b, c1) -> (a, b, c2) -> Ordering
 compareHands (h1, cs1, _) (h2, cs2, _) = case compare h1 h2 of

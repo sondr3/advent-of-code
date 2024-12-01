@@ -11,13 +11,16 @@ module TOML
   )
 where
 
+import Control.Applicative (Alternative (..))
+import Control.Monad (void)
 import Control.Monad.Combinators.NonEmpty qualified as NE
+import Data.List.NonEmpty (NonEmpty, toList)
+import Data.Text (Text)
 import Data.Text qualified as T
+import Data.Void (Void)
 import Text.Megaparsec hiding (many, some)
 import Text.Megaparsec.Char (alphaNumChar, space1, spaceChar, string)
 import Text.Megaparsec.Char.Lexer qualified as L
-import Universum hiding (try)
-import Universum.Unsafe qualified as NE
 
 data Answer = Answer
   { p1 :: Maybe Int,
@@ -56,7 +59,7 @@ parseTitle :: Parser Text
 parseTitle = symbol "title" *> symbol "=" *> lexeme (textBetween quoted)
 
 textBetween :: (Parser Text -> Parser Text) -> Parser Text
-textBetween bt = bt (toText <$> some (alphaNumChar <|> spaceChar))
+textBetween bt = bt (T.pack <$> some (alphaNumChar <|> spaceChar))
 
 quoted :: Parser a -> Parser a
 quoted = between (symbol "\"") (symbol "\"")
@@ -74,7 +77,7 @@ parseAnswers = braces $ Answer <$> ansParser "p1" <* optional (symbol ",") <*> a
     ansParser p = optional (symbol p *> symbol "=" *> lexeme L.decimal)
 
 parseTextBlock :: Parser Text
-parseTextBlock = string "\"\"\"" >> T.strip . toText <$> manyTill L.charLiteral (symbol "\"\"\"")
+parseTextBlock = string "\"\"\"" >> T.strip . T.pack <$> manyTill L.charLiteral (symbol "\"\"\"")
 
 parseDocumentInput :: Parser Input
 parseDocumentInput = do
@@ -88,4 +91,4 @@ getInputs :: Document -> NonEmpty Input
 getInputs Document {inputs} = inputs
 
 getTextInputAt :: Int -> Document -> Text
-getTextInputAt i Document {inputs} = T.strip $ input $ toList inputs NE.!! i
+getTextInputAt i Document {inputs} = T.strip $ input $ toList inputs !! i

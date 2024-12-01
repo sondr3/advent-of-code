@@ -2,6 +2,11 @@
 
 module Day.Day01 where
 
+import Data.Either (rights)
+import Data.List.NonEmpty (NonEmpty)
+import Data.List.NonEmpty qualified as NE
+import Data.Maybe (fromJust)
+import Data.Text (Text)
 import Data.Text qualified as T
 import Data.Text.Read (decimal)
 import Day (AoC, mkAoC)
@@ -9,21 +14,19 @@ import Parsers (Parser)
 import Text.Megaparsec
 import Text.Megaparsec qualified as M
 import Text.Megaparsec.Char
-import Universum hiding (some)
-import Universum.Unsafe (fromJust)
 import Utils (getRight, isDigit)
 
 partA :: [Text] -> Int
-partA xs = sum $ map fst $ rights $ map (decimal . (\t -> toText [T.head t, T.head (T.reverse t)]) . T.filter isDigit) xs
+partA xs = sum $ map fst $ rights $ map (decimal . (\t -> T.pack [T.head t, T.head (T.reverse t)]) . T.filter isDigit) xs
 
 partB :: [Text] -> Int
-partB xs = sum $ map ((\x -> fst . getRight $ decimal $ T.concat [head x, last x]) . extractNums) xs
+partB xs = sum $ map ((\x -> fst . getRight $ decimal $ T.concat [NE.head x, NE.last x]) . extractNums) xs
 
 wordsToNum :: [(Text, Text)]
 wordsToNum = [("one", "1"), ("two", "2"), ("three", "3"), ("four", "4"), ("five", "5"), ("six", "6"), ("seven", "7"), ("eight", "8"), ("nine", "9")]
 
 extractNums :: Text -> NonEmpty Text
-extractNums input = fromJust $ nonEmpty (go input)
+extractNums input = fromJust $ NE.nonEmpty (go input)
   where
     go :: Text -> [Text]
     go t

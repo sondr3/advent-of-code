@@ -2,6 +2,7 @@
 
 module Day.Day04 where
 
+import Control.Monad (void)
 import Data.Set qualified as S
 import Day (AoC, mkAoC)
 import Parsers (Parser)
@@ -9,7 +10,6 @@ import Text.Megaparsec hiding (some)
 import Text.Megaparsec qualified as T
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L
-import Universum
 
 partA :: [([Int], [Int])] -> Int
 partA xs = sum . map (\x -> 2 ^ (x - 1)) . filter (> 0) $ map (uncurry numMatching) xs

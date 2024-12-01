@@ -4,7 +4,6 @@ import TOML
 import Test.Hspec (Spec, it, parallel)
 import Test.Hspec.Megaparsec
 import Text.Megaparsec (parse)
-import Universum
 
 spec :: Spec
 spec = parallel $ do

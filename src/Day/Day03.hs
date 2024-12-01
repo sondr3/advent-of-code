@@ -2,13 +2,15 @@
 
 module Day.Day03 where
 
+import Control.Applicative (Alternative (..))
+import Data.List (nub)
+import Data.Maybe (fromJust, mapMaybe)
 import Data.Set qualified as S
 import Day (AoC, mkAoC)
 import Parsers (Parser)
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char
-import Universum
-import Universum.Unsafe (fromJust, (!!))
+import Text.Read (readMaybe)
 import Utils (isDigit)
 
 data Part
@@ -35,17 +37,17 @@ partValue _ = 0
 
 partA :: [[Part]] -> Int
 partA xs =
-  S.foldr (\x y -> partValue x + y) 0
-    $ S.fromList
-    $ mapMaybe (\(cs, p) -> if any (isSymbol . (\(x, y) -> xs !! x !! y)) cs && isPart p then pure p else Nothing) (matrix xs)
+  S.foldr (\x y -> partValue x + y) 0 $
+    S.fromList $
+      mapMaybe (\(cs, p) -> if any (isSymbol . (\(x, y) -> xs !! x !! y)) cs && isPart p then pure p else Nothing) (matrix xs)
 
 partB :: [[Part]] -> Int
 partB xs =
-  sum
-    $ map
+  sum $
+    map
       (product . map partValue)
-      ( filter (\x -> length x == 2)
-          $ map (filter isPart . ordNub) (mapMaybe (\(cs, p) -> if isGear p then pure $ map (\(x, y) -> xs !! x !! y) cs else Nothing) (matrix xs))
+      ( filter (\x -> length x == 2) $
+          map (filter isPart . nub) (mapMaybe (\(cs, p) -> if isGear p then pure $ map (\(x, y) -> xs !! x !! y) cs else Nothing) (matrix xs))
       )
 
 matrix :: [[Part]] -> [([(Int, Int)], Part)]
