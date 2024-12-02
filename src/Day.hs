@@ -21,6 +21,7 @@ import Text.Megaparsec (errorBundlePretty, runParser)
 import Text.Printf (printf)
 import System.OsPath (decodeUtf, unsafeEncodeUtf)
 import Utils (padNum, whenJust)
+import PrettyPrint (prettyPrint)
 
 runDay :: AoC -> IO ()
 runDay MkAoC {solve, year, day} = solve day year
@@ -31,7 +32,7 @@ testParseDay m@MkAoC {parse} = do
   forM_ (inputs day) $ \i -> do
     case testParseInput parse (comment i) (input i) of
       Left err -> error $ "Failed to parse input: " <> err
-      Right v -> print v
+      Right v -> prettyPrint v
 
 getAoCDocument :: AoC -> IO Document
 getAoCDocument MkAoC {day, year} = getDayDocument day year

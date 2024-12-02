@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
 
-module Year.DayXX where
+module Year.Y24.DayXX where
 
 import Data.Text (Text)
 import Day (AoC, mkAoC)

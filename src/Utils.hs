@@ -11,6 +11,7 @@ module Utils
     whenJust,
     uTail,
     uHead,
+    pairwise
   )
 where
 
@@ -19,6 +20,9 @@ import Data.Text (Text)
 import Data.Text qualified as T
 import Data.Text.Display (Display, display)
 import Text.Read (readEither)
+
+pairwise :: [a] -> [(a, a)]
+pairwise xs = zip xs (uTail xs)
 
 padNum :: Int -> Text
 padNum n = T.justifyRight 2 '0' $ display n

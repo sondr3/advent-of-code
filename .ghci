@@ -1,5 +1,5 @@
 :set -XOverloadedStrings
 :set -XTypeFamilies
-import Text.Megaparsec hiding (many, some)
-import Text.Megaparsec qualified as M
+import Text.Megaparsec
+import Text.Megaparsec.Char.Lexer qualified as L
 import Data.Text qualified as T
