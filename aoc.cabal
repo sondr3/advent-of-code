@@ -71,6 +71,7 @@ library
     pretty-simple ^>=4.1,
     text ^>=2.1,
     text-display ^>=0.0,
+    filepath ^>=1.5,
 
 executable aoc
   import: config

@@ -19,6 +19,7 @@ import System.CPUTime (getCPUTime)
 import TOML (Answer (..), Document, Input, answers, comment, input, inputs, p1, p2, parseDocument)
 import Text.Megaparsec (errorBundlePretty, runParser)
 import Text.Printf (printf)
+import System.OsPath (decodeUtf, unsafeEncodeUtf)
 import Utils (padNum, whenJust)
 
 runDay :: AoC -> IO ()
@@ -37,12 +38,13 @@ getAoCDocument MkAoC {day, year} = getDayDocument day year
 
 getDayDocument :: Int -> Int -> IO Document
 getDayDocument day year = do
-  file <- TIO.readFile filename
-  case runParser parseDocument filename file of
+  fname <- decodeUtf filename 
+  file <- TIO.readFile fname
+  case runParser parseDocument fname file of
     Left err -> error $ "Failed to parse TOML file: " <> errorBundlePretty err
     Right doc -> pure doc
   where
-    filename = T.unpack $ "inputs/" <> display year <> "/day" <> padNum day <> ".toml"
+    filename = unsafeEncodeUtf $ "inputs/" <> show year <> "/day" <> (T.unpack $ padNum day) <> ".toml" 
 
 stopwatch :: IO a -> IO (Double, a)
 stopwatch action = do
