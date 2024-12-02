@@ -11,7 +11,8 @@ module Utils
     whenJust,
     uTail,
     uHead,
-    pairwise
+    pairwise,
+    dropped,
   )
 where
 
@@ -23,6 +24,9 @@ import Text.Read (readEither)
 
 pairwise :: [a] -> [(a, a)]
 pairwise xs = zip xs (uTail xs)
+
+dropped :: [a] -> [[a]]
+dropped xs = [take i xs ++ drop (i + 1) xs | i <- [0 .. length xs - 1]]
 
 padNum :: Int -> Text
 padNum n = T.justifyRight 2 '0' $ display n
