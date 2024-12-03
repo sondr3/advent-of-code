@@ -47,6 +47,7 @@ library
     PrettyPrint
     Puzzle.Parser
     Puzzle.Types
+    Puzzle.Writer
     TOML
     Utils
     Year.Y23.Day01

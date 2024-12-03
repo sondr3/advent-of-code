@@ -3,3 +3,4 @@
 import Text.Megaparsec
 import Text.Megaparsec.Char.Lexer qualified as L
 import Data.Text qualified as T
+import Data.List.NonEmpty (NonEmpty (..))
