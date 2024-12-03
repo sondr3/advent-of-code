@@ -44,17 +44,16 @@ quote = quoted text
 braces :: Parser a -> Parser a
 braces = between (symbol "{") (symbol "}")
 
-takeBody :: Parser Text
-takeBody = takeWhile1P (Just "body") (/= '\n') <> eol
+parseBody :: Parser Text
+parseBody = T.strip . T.concat <$> some (notFollowedBy (chunk "#{") >> takeWhileP (Just "body") (/= '\n') <> eol <?> "File body")
 
 parsePuzzle :: Parser Puzzle
-parsePuzzle = Puzzle <$> (parseInput `NE.sepEndBy1` eol) <* eof
+parsePuzzle = Puzzle <$> NE.some parseInput <* eof
 
 parseInput :: Parser Input
 parseInput = do
   (p1, p2, name, cmt) <- parseHeader
-  input <- T.concat <$> some takeBody
-  pure $ Input p1 p2 cmt name input
+  Input p1 p2 cmt name <$> parseBody
 
 parseHeader :: Parser (Answer, Answer, Maybe Text, Maybe Text)
 parseHeader = do

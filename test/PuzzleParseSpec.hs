@@ -26,18 +26,18 @@ spec = parallel $ do
       `shouldParse` Puzzle
         { inputs =
             Input
-              { part1 = Answer 1,
-                part2 = Answer 2,
+              { answer1 = Answer 1,
+                answer2 = Answer 2,
                 comment = Nothing,
                 name = Nothing,
-                input = "123\n123\n123\n"
+                input = "123\n123\n123"
               }
               :| [ Input
-                     { part1 = Answer 1,
-                       part2 = Unanswered,
+                     { answer1 = Answer 1,
+                       answer2 = Unanswered,
                        comment = Nothing,
                        name = Nothing,
-                       input = "123\n123\n123\n"
+                       input = "123\n123\n123"
                      }
                  ]
         }

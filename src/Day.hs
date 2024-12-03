@@ -4,8 +4,10 @@ module Day
   ( AoC (..),
     mkAoC,
     runDay,
-    getDayDocument,
+    getDayPuzzle,
+    getAoCPuzzle,
     getAoCDocument,
+    getDayDocument,
     testParseDay,
   )
 where
@@ -16,9 +18,11 @@ import Data.Text.Display (display)
 import Data.Text.IO qualified as TIO
 import Parsers (Parser, parseInput, testParseInput)
 import PrettyPrint (prettyPrint)
+import Puzzle.Parser (parsePuzzle)
+import Puzzle.Types (Answer (..), Input (..), Puzzle (..))
 import System.CPUTime (getCPUTime)
 import System.OsPath (decodeUtf, unsafeEncodeUtf)
-import TOML (Answer (..), Document, Input, answers, comment, input, inputs, p1, p2, parseDocument)
+import TOML (Document, parseDocument)
 import Text.Megaparsec (errorBundlePretty, runParser)
 import Text.Printf (printf)
 import Utils (padNum, whenJust)
@@ -28,11 +32,14 @@ runDay MkAoC {solve, year, day} = solve day year
 
 testParseDay :: AoC -> IO ()
 testParseDay m@MkAoC {parse} = do
-  day <- getAoCDocument m
+  day <- getAoCPuzzle m
   forM_ (inputs day) $ \i -> do
     case testParseInput parse (comment i) (input i) of
       Left err -> error $ "Failed to parse input: " <> err
       Right v -> prettyPrint v
+
+getAoCPuzzle :: AoC -> IO Puzzle
+getAoCPuzzle MkAoC {day, year} = getDayPuzzle day year
 
 getAoCDocument :: AoC -> IO Document
 getAoCDocument MkAoC {day, year} = getDayDocument day year
@@ -46,6 +53,16 @@ getDayDocument day year = do
     Right doc -> pure doc
   where
     filename = unsafeEncodeUtf $ "inputs/" <> show year <> "/day" <> T.unpack (padNum day) <> ".toml"
+
+getDayPuzzle :: Int -> Int -> IO Puzzle
+getDayPuzzle day year = do
+  fname <- decodeUtf filename
+  file <- TIO.readFile fname
+  case runParser parsePuzzle fname file of
+    Left err -> error $ "Failed to parse puzzle file: " <> errorBundlePretty err
+    Right doc -> pure doc
+  where
+    filename = unsafeEncodeUtf $ "inputs/" <> show year <> "/day" <> T.unpack (padNum day) <> ".aoc"
 
 stopwatch :: IO a -> IO (Double, a)
 stopwatch action = do
@@ -73,10 +90,10 @@ runPart solver i answer part = do
 
 solveInput :: Input -> AoC -> IO ()
 solveInput i MkAoC {parse, part1, part2} = do
-  parsed <- parseInput parse (comment i) (input i)
+  parsed <- parseInput parse (name i) (input i)
 
-  runPart part1 parsed (p1 $ answers i) 1
-  runPart part2 parsed (p2 $ answers i) 2
+  runPart part1 parsed (answer1 i) 1
+  runPart part2 parsed (answer2 i) 2
 
 data AoC
   = forall i.
@@ -112,7 +129,7 @@ mkAoC p p1 p2 d y =
       year = y,
       solve = \day year -> do
         TIO.putStrLn $ "Solution for " <> display year <> ", day " <> padNum day
-        docs <- getDayDocument day year
+        docs <- getDayPuzzle day year
         forM_ (inputs docs) $ \input -> do
           whenJust (comment input) $ \c -> TIO.putStrLn $ "$ " <> c
           solveInput input (mkAoC p p1 p2 d y)

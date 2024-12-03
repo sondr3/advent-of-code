@@ -16,9 +16,8 @@ import Utils (padNum)
 
 convertFolder :: Int -> [Int] -> IO ()
 convertFolder year days = do
-  docs <- map convertTOML <$> mapM (\x -> getDayDocument x year) days
+  docs <- map convertTOML <$> mapM (`getDayDocument` year) days
   mapM_ (\(d, puz) -> writePuzzle puz (out d)) (zip days docs)
-  pure ()
   where
     out :: Int -> OsPath
     out day = unsafeEncodeUtf $ "inputs/" <> show year <> "/day" <> T.unpack (padNum day) <> ".aoc"

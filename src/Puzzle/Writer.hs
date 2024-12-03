@@ -50,7 +50,7 @@ writeAnswer NilAnswer p = p <> " = nil"
 writeAnswer (Answer a) p = p <> " = " <> display a
 
 writeP1 :: Input -> Text
-writeP1 (Input {part1}) = writeAnswer part1 "p1"
+writeP1 (Input {answer1}) = writeAnswer answer1 "p1"
 
 writeP2 :: Input -> Text
-writeP2 (Input {part2}) = writeAnswer part2 "p2"
+writeP2 (Input {answer2}) = writeAnswer answer2 "p2"

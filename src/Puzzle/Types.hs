@@ -15,8 +15,8 @@ newtype Puzzle = Puzzle {inputs :: NonEmpty Input}
   deriving stock (Show, Eq)
 
 data Input = Input
-  { part1 :: Answer,
-    part2 :: Answer,
+  { answer1 :: Answer,
+    answer2 :: Answer,
     comment :: Maybe Text,
     name :: Maybe Text,
     input :: Text
