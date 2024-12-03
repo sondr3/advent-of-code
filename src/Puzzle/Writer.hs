@@ -18,10 +18,15 @@ writePuzzle (Puzzle {inputs}) p = do
   file <- openFile path WriteMode
   mapM_ (`writeInput` file) inputs
   hClose file
+
+  -- hack for whitespace
+  written <- TIO.readFile path
+  TIO.writeFile path (T.stripStart written)
   pure ()
 
 writeInput :: Input -> Handle -> IO ()
 writeInput i handle = do
+  TIO.hPutStr handle "\n"
   TIO.hPutStr handle "#{"
   let parts = filter (not . T.null) [writeName i, writeP1 i, writeP2 i, writeComment i]
   TIO.hPutStr handle $ T.intercalate ", " parts
