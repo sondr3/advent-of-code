@@ -45,6 +45,7 @@ library
     Grid
     Parsers
     PrettyPrint
+    Puzzle.Convert
     Puzzle.Parser
     Puzzle.Types
     Puzzle.Writer
@@ -66,6 +67,7 @@ library
     Year.Y23.Day15
     Year.Y24.Day01
     Year.Y24.Day02
+    Year.Y24.Day03
 
   build-depends:
     MemoTrie ^>=0.6,
