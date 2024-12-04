@@ -6,8 +6,6 @@ module Day
     runDay,
     getDayPuzzle,
     getAoCPuzzle,
-    getAoCDocument,
-    getDayDocument,
     testParseDay,
     stopwatch,
   )
@@ -25,7 +23,6 @@ import Puzzle.Parser (parsePuzzle)
 import Puzzle.Types (Answer (..), Input (..), Puzzle (..))
 import System.Clock (Clock (Monotonic), TimeSpec, getTime, toNanoSecs)
 import System.OsPath (decodeUtf, unsafeEncodeUtf)
-import TOML (Document, parseDocument)
 import Text.Megaparsec (errorBundlePretty, runParser)
 import Text.Printf (printf)
 import Utils (padNum, whenJust)
@@ -43,19 +40,6 @@ testParseDay m@MkAoC {parse} = do
 
 getAoCPuzzle :: AoC -> IO Puzzle
 getAoCPuzzle MkAoC {day, year} = getDayPuzzle day year
-
-getAoCDocument :: AoC -> IO Document
-getAoCDocument MkAoC {day, year} = getDayDocument day year
-
-getDayDocument :: Int -> Int -> IO Document
-getDayDocument day year = do
-  fname <- decodeUtf filename
-  file <- TIO.readFile fname
-  case runParser parseDocument fname file of
-    Left err -> error $ "Failed to parse TOML file: " <> errorBundlePretty err
-    Right doc -> pure doc
-  where
-    filename = unsafeEncodeUtf $ "inputs/" <> show year <> "/day" <> T.unpack (padNum day) <> ".toml"
 
 getDayPuzzle :: Int -> Int -> IO Puzzle
 getDayPuzzle day year = do

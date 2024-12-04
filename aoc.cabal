@@ -46,11 +46,9 @@ library
     Grid
     Parsers
     PrettyPrint
-    Puzzle.Convert
     Puzzle.Parser
     Puzzle.Types
     Puzzle.Writer
-    TOML
     Utils
     Year.Y23.Day01
     Year.Y23.Day02
@@ -98,7 +96,6 @@ test-suite aoc-test
   -- cabal-gild: discover test --include=**/*Spec.hs --include=**/*Utils.hs --exclude=**/Spec.hs
   other-modules:
     PuzzleParseSpec
-    TOMLSpec
     TestUtils
     Y23Spec
     Y24Spec
