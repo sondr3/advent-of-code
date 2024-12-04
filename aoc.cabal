@@ -83,7 +83,9 @@ executable aoc
   import: config
   hs-source-dirs: app
   main-is: Main.hs
-  build-depends: aoc
+  build-depends:
+    aoc,
+    optparse-applicative ^>=0.18,
 
 test-suite aoc-test
   import: config
