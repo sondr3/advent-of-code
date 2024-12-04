@@ -9,7 +9,7 @@ module Grid
 where
 
 import Coordinates (Position)
-import Data.List (elemIndex, transpose, (!?))
+import Data.List (transpose, (!?))
 import Data.Map (Map)
 import Data.Map qualified as Map
 import Data.Text (Text)

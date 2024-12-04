@@ -9,10 +9,13 @@ module Day
     getAoCDocument,
     getDayDocument,
     testParseDay,
+    stopwatch,
   )
 where
 
+import Control.Exception (evaluate)
 import Control.Monad (forM_)
+import Data.Text (Text)
 import Data.Text qualified as T
 import Data.Text.Display (display)
 import Data.Text.IO qualified as TIO
@@ -20,7 +23,7 @@ import Parsers (Parser, parseInput, testParseInput)
 import PrettyPrint (prettyPrint)
 import Puzzle.Parser (parsePuzzle)
 import Puzzle.Types (Answer (..), Input (..), Puzzle (..))
-import System.CPUTime (getCPUTime)
+import System.Clock (Clock (Monotonic), TimeSpec, getTime, toNanoSecs)
 import System.OsPath (decodeUtf, unsafeEncodeUtf)
 import TOML (Document, parseDocument)
 import Text.Megaparsec (errorBundlePretty, runParser)
@@ -64,13 +67,23 @@ getDayPuzzle day year = do
   where
     filename = unsafeEncodeUtf $ "inputs/" <> show year <> "/day" <> T.unpack (padNum day) <> ".aoc"
 
+diffTime :: TimeSpec -> TimeSpec -> Double
+diffTime end start = (* 1e-6) $ fromIntegral $ toNanoSecs end - toNanoSecs start
+
+formatDiffTime :: Double -> Text
+formatDiffTime diff =
+  if diff < 1000
+    then
+      T.pack (printf "%.2fms" diff)
+    else
+      T.pack (printf "%.2fs" (diff * 1e-3))
+
 stopwatch :: IO a -> IO (Double, a)
 stopwatch action = do
-  start <- getCPUTime
-  result <- action
-  end <- getCPUTime
-  let diff = fromIntegral (end - start) * 1e-9
-  return (diff, result)
+  start <- getTime Monotonic
+  result <- action >>= evaluate
+  end <- getTime Monotonic
+  return (diffTime end start, result)
 
 runPart :: (i -> Int) -> i -> Answer -> Int -> IO ()
 runPart solver i answer part = do
@@ -84,7 +97,7 @@ runPart solver i answer part = do
       if res /= e
         then TIO.putStr $ " failed: expected " <> display e <> " but got " <> display res
         else
-          TIO.putStr $ " correct: " <> display res <> " in " <> T.pack (printf "%.3fs" duration)
+          TIO.putStr $ " correct: " <> display res <> " in " <> formatDiffTime duration
 
   TIO.putStrLn ""
 
