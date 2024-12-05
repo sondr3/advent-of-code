@@ -35,14 +35,14 @@ writeInput i handle = do
   pure ()
 
 writeName :: Input -> Text
-writeName (Input {name}) = writeText name
+writeName (Input {name}) = writeText name "name"
 
 writeComment :: Input -> Text
-writeComment (Input {comment}) = writeText comment
+writeComment (Input {comment}) = writeText comment "comment"
 
-writeText :: Maybe Text -> Text
-writeText (Just t) = "name = \"" <> t <> "\""
-writeText Nothing = ""
+writeText :: Maybe Text -> Text -> Text
+writeText (Just t) k = k <> "= \"" <> t <> "\""
+writeText Nothing _ = ""
 
 writeAnswer :: Answer -> Text -> Text
 writeAnswer Unanswered _ = ""
