@@ -1,3 +1,7 @@
+:set -Wno-type-defaults
+:set -Wno-x-partial
+:set -Wno-missing-local-signatures
+:set -Wno-name-shadowing
 :set -XOverloadedStrings
 :set -XTypeFamilies
 import Text.Megaparsec
