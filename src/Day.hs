@@ -11,27 +11,27 @@ module Day
     parsedInput,
     parsedInputN,
     runDay,
+    benchmark,
     getDayPuzzle,
     getAoCPuzzle,
     testParseDay,
   )
 where
 
-import Control.Monad (forM_, void)
-import Control.Monad.IO.Class (MonadIO (liftIO))
-import Criterion.Measurement (getCPUTime, getTime, initializeTime, secs)
+import Control.Exception (handle)
+import Control.Monad (forM_)
 import Data.List.NonEmpty qualified as NE
-import Data.Text (Text)
 import Data.Text qualified as T
 import Data.Text.Display (Display, ShowInstance (..), display)
 import Data.Text.IO qualified as TIO
+import GHC.IO.Exception (ExitCode)
 import Parsers (Parser, parseInput, testParseInput)
 import PrettyPrint (prettyPrint)
 import Puzzle.Parser (parsePuzzle)
 import Puzzle.Types (Answer (..), Input (..), Puzzle (..))
 import System.OsPath (decodeUtf, unsafeEncodeUtf)
+import Test.Tasty.Bench (bench, bgroup, defaultMain, nf)
 import Text.Megaparsec (errorBundlePretty, runParser)
-import Text.Printf (printf)
 import Utils (padNum, uHead, whenJust)
 
 runDay :: AoC i -> IO ()
@@ -91,6 +91,29 @@ runPart solver i answer part = do
             else
               TIO.putStr $ " correct: " <> display res
       TIO.putStrLn ""
+
+checkAnswer :: PartStatus -> Answer -> Bool
+checkAnswer (Solved a) (Answer b) = a == b
+checkAnswer _ _ = error "invalid answer"
+
+benchmark :: AoC i -> IO ()
+benchmark a@MkAoC {..} = do
+  input <- parsedInput a
+  puzzle <- getAoCPuzzle a
+
+  handle
+    ((\_ -> pure ()) :: ExitCode -> IO ())
+    ( defaultMain
+        [ bgroup
+            ("AoC " <> show year <> " - " <> T.unpack (padNum day))
+            [ bench "part 1" $ nf (`p1` puzzle) input,
+              bench "part 2" $ nf (`p2` puzzle) input
+            ]
+        ]
+    )
+  where
+    p1 i p = checkAnswer (part1 i) (answer1 $ NE.last $ inputs p)
+    p2 i p = checkAnswer (part2 i) (answer1 $ NE.last $ inputs p)
 
 solveInput :: Input -> AoC i -> IO ()
 solveInput i MkAoC {parser, part1, part2} = do

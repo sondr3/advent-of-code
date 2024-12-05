@@ -79,6 +79,7 @@ library
     megaparsec ^>=9.7,
     parser-combinators ^>=1.3,
     pretty-simple ^>=4.1,
+    tasty-bench ^>=0.4,
     text ^>=2.1,
     text-display ^>=0.0,
 
