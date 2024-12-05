@@ -22,6 +22,7 @@ import Data.Text qualified as T
 import Data.Text.Display (Display, display)
 import Text.Read (readEither)
 
+-- create a sliding window over a list
 pairwise :: [a] -> [(a, a)]
 pairwise xs = zip xs (uTail xs)
 
@@ -34,6 +35,7 @@ padNum n = T.justifyRight 2 '0' $ display n
 isDigit :: Char -> Bool
 isDigit c = (fromIntegral (ord c - ord '0') :: Word) <= 9
 
+-- take two and two items from a list
 pairs :: [a] -> [(a, a)]
 pairs [] = []
 pairs (a : b : xs) = (a, b) : pairs xs

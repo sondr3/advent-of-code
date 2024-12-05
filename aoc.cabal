@@ -20,6 +20,7 @@ common config
     LambdaCase
     MultiWayIf
     OverloadedStrings
+    RecordWildCards
     TypeFamilies
 
   ghc-options:
@@ -73,7 +74,6 @@ library
 
   build-depends:
     MemoTrie ^>=0.6,
-    clock ^>=0.8,
     containers ^>=0.7,
     filepath ^>=1.5,
     megaparsec ^>=9.7,
