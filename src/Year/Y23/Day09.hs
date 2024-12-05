@@ -25,5 +25,5 @@ diff xs = zipWith (-) (uTail xs) xs
 parser :: Parser [[Int]]
 parser = (number `sepBy` hspace) `sepBy` eol
 
-day09 :: AoC
+day09 :: AoC [[Int]]
 day09 = mkAoC parser partA partB 9 2023

@@ -44,6 +44,7 @@ library
     Coordinates
     Day
     Grid
+    Map
     Parsers
     PrettyPrint
     Puzzle.Parser
@@ -68,6 +69,7 @@ library
     Year.Y24.Day02
     Year.Y24.Day03
     Year.Y24.Day04
+    Year.Y24.Day05
 
   build-depends:
     MemoTrie ^>=0.6,

@@ -20,5 +20,5 @@ partB (xs, ys) = Solved $ foldl' (\acc x -> acc + (x * length (filter (== x) ys)
 parser :: Parser Input
 parser = unzip <$> some ((,) <$> lexeme L.decimal <*> lexeme L.decimal <* optional eol) <* eof
 
-day01 :: AoC
+day01 :: AoC Input
 day01 = mkAoC parser partA partB 1 2024

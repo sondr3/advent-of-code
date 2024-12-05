@@ -77,5 +77,5 @@ parseChar = Symbol <$> satisfy (\x -> not (isDigit x) && x /= '.' && x /= '\n')
 parsePeriod :: Parser Part
 parsePeriod = Period <$ char '.'
 
-day03 :: AoC
+day03 :: AoC [[Part]]
 day03 = mkAoC parser partA partB 3 2023

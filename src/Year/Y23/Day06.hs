@@ -32,5 +32,5 @@ parser = zip <$> lineParser "Time:" <*> lineParser "Distance:"
     lineParser :: Parser Text -> Parser [Int]
     lineParser t = lexeme t >> some (lexeme L.decimal) <* optional eol
 
-day06 :: AoC
+day06 :: AoC [(Int, Int)]
 day06 = mkAoC parser partA partB 6 2023

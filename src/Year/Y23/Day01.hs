@@ -46,5 +46,5 @@ matchNum ((word, num) : rest) t =
 parser :: Parser [Text]
 parser = M.many $ takeWhile1P Nothing (/= '\n') <* optional eol
 
-day01 :: AoC
+day01 :: AoC [Text]
 day01 = mkAoC parser partA partB 1 2023

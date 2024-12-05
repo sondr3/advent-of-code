@@ -51,5 +51,5 @@ memo = memo2 go
     damaged (left, []) n ns | length left == n, Operational `notElem` left = memo [] ns
     damaged _ _ _ = 0
 
-day12 :: AoC
+day12 :: AoC [([Spring], [Int])]
 day12 = mkAoC parser partA partB 12 2023

@@ -51,5 +51,5 @@ isMas _ = False
 parser :: Parser Input
 parser = fmap T.unpack <$> some (takeWhile1P Nothing (/= '\n') <* (eol $> () <|> eof))
 
-day04 :: AoC
+day04 :: AoC Input
 day04 = mkAoC parser partA partB 4 2024

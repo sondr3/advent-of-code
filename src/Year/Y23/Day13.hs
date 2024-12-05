@@ -38,5 +38,5 @@ pivot grid = length . fst <$> find (\(xs, ys) -> and $ mirrored xs ys) (filter (
 parser :: Parser [[[Pattern]]]
 parser = ((some . choice) [Ash <$ char '.', Rock <$ char '#'] `sepEndBy` eol) `sepEndBy` some eol
 
-day13 :: AoC
+day13 :: AoC [[[Pattern]]]
 day13 = mkAoC parser partA partB 13 2023

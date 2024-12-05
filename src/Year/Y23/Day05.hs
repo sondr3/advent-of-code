@@ -51,5 +51,5 @@ parseRange = Range <$> lexeme L.decimal <*> lexeme L.decimal <*> lexeme L.decima
 parseMap :: Parser [Range]
 parseMap = takeWhileP Nothing (/= ':') >> char ':' >> eol >> parseRange `sepEndBy1` "\n"
 
-day05 :: AoC
+day05 :: AoC ([Int], [[Range]])
 day05 = mkAoC parser partA partB 5 2023

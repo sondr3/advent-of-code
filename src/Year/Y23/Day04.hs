@@ -38,5 +38,5 @@ gameParser = do
   yours <- T.many (L.lexeme hspace L.decimal)
   pure (winning, yours)
 
-day04 :: AoC
+day04 :: AoC [([Int], [Int])]
 day04 = mkAoC parser partA partB 4 2023

@@ -29,5 +29,5 @@ partB xs = Solved . length $ filter (not . null) $ map (run . dropped) xs
 parser :: Parser Input
 parser = some (some (lexeme L.decimal) <* optional eol) <* eof
 
-day02 :: AoC
+day02 :: AoC Input
 day02 = mkAoC parser partA partB 2 2024

@@ -83,5 +83,5 @@ pipeParser =
       Ground <$ char '.'
     ]
 
-day10 :: AoC
+day10 :: AoC [[Cell]]
 day10 = mkAoC parser partA partB 10 2023

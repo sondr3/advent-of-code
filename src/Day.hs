@@ -1,9 +1,12 @@
 {-# LANGUAGE DerivingVia #-}
+{-# LANGUAGE GADTs #-}
+{-# LANGUAGE RoleAnnotations #-}
 
 module Day
   ( AoC (..),
     PartStatus (..),
     mkAoC,
+    parsedInput,
     runDay,
     getDayPuzzle,
     getAoCPuzzle,
@@ -12,8 +15,9 @@ module Day
   )
 where
 
-import Control.Exception (evaluate)
 import Control.Monad (forM_)
+import Control.Monad.IO.Class (MonadIO (liftIO))
+import Data.List.NonEmpty qualified as NE
 import Data.Text (Text)
 import Data.Text qualified as T
 import Data.Text.Display (Display, ShowInstance (..), display)
@@ -22,25 +26,28 @@ import Parsers (Parser, parseInput, testParseInput)
 import PrettyPrint (prettyPrint)
 import Puzzle.Parser (parsePuzzle)
 import Puzzle.Types (Answer (..), Input (..), Puzzle (..))
-import System.Clock (Clock (Monotonic), TimeSpec, getTime, toNanoSecs)
+import System.CPUTime (getCPUTime)
 import System.OsPath (decodeUtf, unsafeEncodeUtf)
 import Text.Megaparsec (errorBundlePretty, runParser)
 import Text.Printf (printf)
 import Utils (padNum, whenJust)
 
-runDay :: AoC -> IO ()
+runDay :: AoC i -> IO ()
 runDay MkAoC {solve, year, day} = solve day year
 
-testParseDay :: AoC -> IO ()
-testParseDay m@MkAoC {parse} = do
+testParseDay :: AoC i -> IO ()
+testParseDay m@MkAoC {parser} = do
   day <- getAoCPuzzle m
   forM_ (inputs day) $ \i -> do
-    case testParseInput parse (comment i) (input i) of
+    case testParseInput parser (comment i) (input i) of
       Left err -> error $ "Failed to parse input: " <> err
       Right v -> prettyPrint v
 
-getAoCPuzzle :: AoC -> IO Puzzle
+getAoCPuzzle :: AoC i -> IO Puzzle
 getAoCPuzzle MkAoC {day, year} = getDayPuzzle day year
+
+parsedInput :: forall i. AoC i -> IO [i]
+parsedInput MkAoC {parsed} = parsed
 
 getDayPuzzle :: Int -> Int -> IO Puzzle
 getDayPuzzle day year = do
@@ -52,8 +59,8 @@ getDayPuzzle day year = do
   where
     filename = unsafeEncodeUtf $ "inputs/" <> show year <> "/day" <> T.unpack (padNum day) <> ".aoc"
 
-diffTime :: TimeSpec -> TimeSpec -> Double
-diffTime end start = (* 1e-6) $ fromIntegral $ toNanoSecs end - toNanoSecs start
+diffTime :: Integer -> Integer -> Double
+diffTime end start = fromIntegral (end - start) * 1e-5
 
 formatDiffTime :: Double -> Text
 formatDiffTime diff =
@@ -65,9 +72,10 @@ formatDiffTime diff =
 
 stopwatch :: IO a -> IO (Double, a)
 stopwatch action = do
-  start <- getTime Monotonic
-  result <- action >>= evaluate
-  end <- getTime Monotonic
+  start <- liftIO getCPUTime
+  !result <- action
+  end <- liftIO getCPUTime
+
   return (diffTime end start, result)
 
 runPart :: (i -> PartStatus) -> i -> Answer -> Int -> IO ()
@@ -90,9 +98,9 @@ runPart solver i answer part = do
 
   TIO.putStrLn ""
 
-solveInput :: Input -> AoC -> IO ()
-solveInput i MkAoC {parse, part1, part2} = do
-  parsed <- parseInput parse (name i) (input i)
+solveInput :: Input -> AoC i -> IO ()
+solveInput i MkAoC {parser, part1, part2} = do
+  (_, parsed) <- stopwatch $ parseInput parser (name i) (input i)
 
   runPart part1 parsed (answer1 i) 1
   runPart part2 parsed (answer2 i) 2
@@ -101,17 +109,23 @@ data PartStatus = Solved Int | Unsolved
   deriving stock (Show, Eq)
   deriving (Display) via (ShowInstance PartStatus)
 
-data AoC
-  = forall i.
-  (Show i) =>
-  MkAoC
-  { parse :: Parser i,
-    part1 :: i -> PartStatus,
-    part2 :: i -> PartStatus,
-    day :: Int,
-    year :: Int,
-    solve :: Int -> Int -> IO ()
-  }
+data AoC i where
+  MkAoC ::
+    (Show i) =>
+    { parser :: Parser i,
+      parsed :: IO [i],
+      part1 :: i -> PartStatus,
+      part2 :: i -> PartStatus,
+      day :: Int,
+      year :: Int,
+      solve :: Int -> Int -> IO ()
+    } ->
+    AoC i
+
+type role AoC nominal
+
+parseDay :: (Applicative f) => Parser b -> Input -> f b
+parseDay p (Input {input, name}) = either error pure $ testParseInput p name input
 
 mkAoC ::
   (Show i) =>
@@ -125,10 +139,13 @@ mkAoC ::
   Int ->
   -- | Year
   Int ->
-  AoC
+  AoC i
 mkAoC p p1 p2 d y =
   MkAoC
-    { parse = p,
+    { parser = p,
+      parsed = do
+        docs <- getDayPuzzle d y
+        mapM (parseDay p) (NE.toList $ inputs docs),
       part1 = p1,
       part2 = p2,
       day = d,

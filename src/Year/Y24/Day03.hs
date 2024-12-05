@@ -47,5 +47,5 @@ parser = catMaybes <$> some (go <* optional eol) <* eof
 parseMul :: Parser Instruction
 parseMul = symbol "mul" *> parens (Mul <$> (lexeme L.decimal <* symbol ",") <*> lexeme L.decimal)
 
-day03 :: AoC
+day03 :: AoC Input
 day03 = mkAoC parser partA partB 3 2024

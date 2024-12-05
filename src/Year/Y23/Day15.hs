@@ -49,5 +49,5 @@ box boxes xs = go $ T.span (`notElem` ['=', '-']) xs
 parser :: Parser [Text]
 parser = (T.pack <$> some (alphaNumChar <|> char '=' <|> char '-')) `sepEndBy` char ','
 
-day15 :: AoC
+day15 :: AoC [Text]
 day15 = mkAoC parser partA partB 15 2023
