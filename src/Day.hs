@@ -6,7 +6,10 @@ module Day
   ( AoC (..),
     PartStatus (..),
     mkAoC,
+    allParsedInput,
+    parsedExample,
     parsedInput,
+    parsedInputN,
     runDay,
     getDayPuzzle,
     getAoCPuzzle,
@@ -30,7 +33,7 @@ import System.CPUTime (getCPUTime)
 import System.OsPath (decodeUtf, unsafeEncodeUtf)
 import Text.Megaparsec (errorBundlePretty, runParser)
 import Text.Printf (printf)
-import Utils (padNum, whenJust)
+import Utils (padNum, uHead, whenJust)
 
 runDay :: AoC i -> IO ()
 runDay MkAoC {solve, year, day} = solve day year
@@ -46,8 +49,21 @@ testParseDay m@MkAoC {parser} = do
 getAoCPuzzle :: AoC i -> IO Puzzle
 getAoCPuzzle MkAoC {day, year} = getDayPuzzle day year
 
-parsedInput :: forall i. AoC i -> IO [i]
-parsedInput MkAoC {parsed} = parsed
+allParsedInput :: AoC i -> IO [i]
+allParsedInput MkAoC {parsed} = parsed
+
+parsedExample :: AoC i -> IO i
+parsedExample MkAoC {parsed} = uHead <$> parsed
+
+parsedInputN :: AoC i -> Int -> IO i
+parsedInputN MkAoC {parsed} i = do
+  inputs <- parsed
+  if i >= length inputs
+    then error "invalid input"
+    else pure $ inputs !! i
+
+parsedInput :: AoC i -> IO i
+parsedInput MkAoC {parsed} = last <$> parsed
 
 getDayPuzzle :: Int -> Int -> IO Puzzle
 getDayPuzzle day year = do
