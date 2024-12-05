@@ -11,10 +11,10 @@ import Text.Megaparsec.Char.Lexer qualified as L
 
 type Input = [Int]
 
-partA :: Input -> PartStatus
+partA :: Input -> PartStatus Int
 partA xs = Unsolved
 
-partB :: Input -> PartStatus
+partB :: Input -> PartStatus Int
 partB xs = Unsolved
 
 parser :: Parser Input

@@ -22,10 +22,10 @@ instance HasTrie Spring where
   untrie = untrieGeneric unSpringTrie
   enumerate = enumerateGeneric unSpringTrie
 
-partA :: [([Spring], [Int])] -> PartStatus
+partA :: [([Spring], [Int])] -> PartStatus Int
 partA xs = Solved . sum $ map (uncurry memo) xs
 
-partB :: [([Spring], [Int])] -> PartStatus
+partB :: [([Spring], [Int])] -> PartStatus Int
 partB xs = Solved . sum $ map (uncurry memo . unfold) xs
 
 unfold :: ([Spring], [Int]) -> ([Spring], [Int])
@@ -51,5 +51,5 @@ memo = memo2 go
     damaged (left, []) n ns | length left == n, Operational `notElem` left = memo [] ns
     damaged _ _ _ = 0
 
-day12 :: AoC [([Spring], [Int])]
+day12 :: AoC [([Spring], [Int])] Int
 day12 = mkAoC parser partA partB 12 2023

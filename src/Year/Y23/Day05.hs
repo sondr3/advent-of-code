@@ -15,7 +15,7 @@ import Utils (pairs)
 data Range = Range Int Int Int
   deriving stock (Eq, Show)
 
-partA :: ([Int], [[Range]]) -> PartStatus
+partA :: ([Int], [[Range]]) -> PartStatus Int
 partA (seed, maps) = Solved . minimum $ map (\x -> foldl go x maps) seed
   where
     go s [] = s
@@ -36,7 +36,7 @@ foldRange t@(s, len) (Range dst src len' : rs)
     curr = [(dst + max 0 (s - src), min len (len' - max 0 (s - src)))]
     post = if src + len' < s + len then foldRange (src + len', s + len - src - len') rs else []
 
-partB :: ([Int], [[Range]]) -> PartStatus
+partB :: ([Int], [[Range]]) -> PartStatus Int
 partB (seeds, maps) = Solved . fst $ minimum $ foldl concatRange (NE.fromList $ pairs seeds) maps
 
 parser :: Parser ([Int], [[Range]])
@@ -51,5 +51,5 @@ parseRange = Range <$> lexeme L.decimal <*> lexeme L.decimal <*> lexeme L.decima
 parseMap :: Parser [Range]
 parseMap = takeWhileP Nothing (/= ':') >> char ':' >> eol >> parseRange `sepEndBy1` "\n"
 
-day05 :: AoC ([Int], [[Range]])
+day05 :: AoC ([Int], [[Range]]) Int
 day05 = mkAoC parser partA partB 5 2023

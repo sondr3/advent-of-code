@@ -12,7 +12,7 @@ import Text.Megaparsec.Char
 
 type Input = (Map Int [Int], [[Int]])
 
-partA :: Input -> PartStatus
+partA :: Input -> PartStatus Int
 partA (m, xs) = Solved $ test (m, xs)
 
 test :: (Map Int [Int], [[Int]]) -> Int
@@ -29,7 +29,7 @@ sumMiddle xs = sum $ map (\x -> x !! (length x `div` 2)) xs
 filterPages :: Input -> (([Int], Bool) -> Bool) -> [[Int]]
 filterPages (m, xs) f = map fst $ filter f $ zip xs (map (and . find m) xs)
 
-partB :: Input -> PartStatus
+partB :: Input -> PartStatus Int
 partB xs = Solved . sumMiddle $ fixOrder xs
 
 fixOrder :: Input -> [[Int]]
@@ -46,5 +46,5 @@ parser = (,) <$> pageOrder <* eol <*> (number `sepBy` symbol ",") `sepBy` eol <*
     pageOrder :: Parser (Map Int [Int])
     pageOrder = fromTuples <$> some ((,) <$> (number <* symbol "|") <*> number <* eol)
 
-day05 :: AoC Input
+day05 :: AoC Input Int
 day05 = mkAoC parser partA partB 5 2024

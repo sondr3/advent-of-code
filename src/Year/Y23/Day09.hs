@@ -8,11 +8,11 @@ import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
 import Utils (uTail)
 
-partB :: [[Int]] -> PartStatus
+partB :: [[Int]] -> PartStatus Int
 
 partA xs = Solved . sum $ map subseq xs
 
-partA :: [[Int]] -> PartStatus
+partA :: [[Int]] -> PartStatus Int
 
 partB xs = Solved . sum $ map (subseq . reverse) xs
 
@@ -25,5 +25,5 @@ diff xs = zipWith (-) (uTail xs) xs
 parser :: Parser [[Int]]
 parser = (number `sepBy` hspace) `sepBy` eol
 
-day09 :: AoC [[Int]]
+day09 :: AoC [[Int]] Int
 day09 = mkAoC parser partA partB 9 2023

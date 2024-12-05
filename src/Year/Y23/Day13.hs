@@ -14,10 +14,10 @@ import Text.Megaparsec.Char hiding (string)
 
 data Pattern = Ash | Rock deriving stock (Show, Eq, Ord, Generic)
 
-partA :: [[[Pattern]]] -> PartStatus
+partA :: [[[Pattern]]] -> PartStatus Int
 partA xs = Solved . sum $ map (calculate 0) xs
 
-partB :: [[[Pattern]]] -> PartStatus
+partB :: [[[Pattern]]] -> PartStatus Int
 partB xs = Solved . sum $ map (calculate 1) xs
 
 calculate :: (Eq a) => Int -> [[a]] -> Int
@@ -38,5 +38,5 @@ pivot grid = length . fst <$> find (\(xs, ys) -> and $ mirrored xs ys) (filter (
 parser :: Parser [[[Pattern]]]
 parser = ((some . choice) [Ash <$ char '.', Rock <$ char '#'] `sepEndBy` eol) `sepEndBy` some eol
 
-day13 :: AoC [[[Pattern]]]
+day13 :: AoC [[[Pattern]]] Int
 day13 = mkAoC parser partA partB 13 2023

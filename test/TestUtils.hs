@@ -12,13 +12,13 @@ import Puzzle.Types
 import Test.Hspec (Spec, describe, it, runIO, shouldBe, shouldNotBe)
 import Utils (padNum)
 
-testDay :: AoC i -> Spec
+testDay :: AoC i Int -> Spec
 testDay MkAoC {parser, part1, part2, day, year} = describe (T.unpack $ "day " <> padNum day) $ do
   docs <- runIO (getDayPuzzle day year)
   forM_ (inputs docs) $ \input -> do
     testInput input (mkAoC parser part1 part2 day year)
 
-testInput :: Input -> AoC i -> Spec
+testInput :: Input a -> AoC i a -> Spec
 testInput i MkAoC {parser, part1, part2} = do
   parsed <- parseInput parser (comment i) (input i)
 
@@ -27,7 +27,7 @@ testInput i MkAoC {parser, part1, part2} = do
     runPart part1 parsed (answer1 i)
     runPart part2 parsed (answer2 i)
 
-runPart :: (i -> PartStatus) -> i -> Answer -> IO ()
+runPart :: (Show a, Eq a) => (i -> PartStatus a) -> i -> Answer a -> IO ()
 runPart _ _ Unanswered = pure ()
 runPart part i NilAnswer = part i `shouldNotBe` Unsolved
 runPart part i (Answer a) = part i `shouldBe` Solved a

@@ -1,10 +1,12 @@
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE RoleAnnotations #-}
+{-# LANGUAGE StandaloneDeriving #-}
 
 module Day
   ( AoC (..),
     PartStatus (..),
+    Solvable (..),
     mkAoC,
     allParsedInput,
     parsedExample,
@@ -34,37 +36,37 @@ import Test.Tasty.Bench (bench, bgroup, defaultMain, nf)
 import Text.Megaparsec (errorBundlePretty, runParser)
 import Utils (padNum, uHead, whenJust)
 
-runDay :: AoC i -> IO ()
+runDay :: AoC i a -> IO ()
 runDay MkAoC {solve, year, day} = solve day year
 
-testParseDay :: AoC i -> IO ()
+testParseDay :: (Show i) => AoC i Int -> IO ()
 testParseDay m@MkAoC {parser} = do
   day <- getAoCPuzzle m
   forM_ (inputs day) $ \i -> do
     case testParseInput parser (comment i) (input i) of
       Left err -> error $ "Failed to parse input: " <> err
-      Right v -> prettyPrint v
+      Right v -> prettyPrint (show v)
 
-getAoCPuzzle :: AoC i -> IO Puzzle
+getAoCPuzzle :: AoC i Int -> IO (Puzzle Int)
 getAoCPuzzle MkAoC {day, year} = getDayPuzzle day year
 
-allParsedInput :: AoC i -> IO [i]
+allParsedInput :: AoC i a -> IO [i]
 allParsedInput MkAoC {parsed} = parsed
 
-parsedExample :: AoC i -> IO i
+parsedExample :: AoC i a -> IO i
 parsedExample MkAoC {parsed} = uHead <$> parsed
 
-parsedInputN :: AoC i -> Int -> IO i
+parsedInputN :: AoC i a -> Int -> IO i
 parsedInputN MkAoC {parsed} i = do
   inputs <- parsed
   if i >= length inputs
     then error "invalid input"
     else pure $ inputs !! i
 
-parsedInput :: AoC i -> IO i
+parsedInput :: AoC i a -> IO i
 parsedInput MkAoC {parsed} = last <$> parsed
 
-getDayPuzzle :: Int -> Int -> IO Puzzle
+getDayPuzzle :: Int -> Int -> IO (Puzzle Int)
 getDayPuzzle day year = do
   fname <- decodeUtf filename
   file <- TIO.readFile fname
@@ -74,7 +76,7 @@ getDayPuzzle day year = do
   where
     filename = unsafeEncodeUtf $ "inputs/" <> show year <> "/day" <> T.unpack (padNum day) <> ".aoc"
 
-runPart :: (i -> PartStatus) -> i -> Answer -> Int -> IO ()
+runPart :: (Display a, Eq a, Show a) => (i -> PartStatus a) -> i -> Answer a -> Int -> IO ()
 runPart solver i answer part = do
   let res = solver i
   if res == Unsolved
@@ -92,11 +94,11 @@ runPart solver i answer part = do
               TIO.putStr $ " correct: " <> display res
       TIO.putStrLn ""
 
-checkAnswer :: PartStatus -> Answer -> Bool
+checkAnswer :: PartStatus a -> Answer a -> Bool
 checkAnswer (Solved a) (Answer b) = a == b
 checkAnswer _ _ = error "invalid answer"
 
-benchmark :: AoC i -> IO ()
+benchmark :: AoC i Int -> IO ()
 benchmark a@MkAoC {..} = do
   input <- parsedInput a
   puzzle <- getAoCPuzzle a
@@ -115,37 +117,50 @@ benchmark a@MkAoC {..} = do
     p1 i p = checkAnswer (part1 i) (answer1 $ NE.last $ inputs p)
     p2 i p = checkAnswer (part2 i) (answer1 $ NE.last $ inputs p)
 
-solveInput :: Input -> AoC i -> IO ()
+solveInput :: Input a -> AoC i a -> IO ()
 solveInput i MkAoC {parser, part1, part2} = do
   parsed <- parseInput parser (name i) (input i)
 
   runPart part1 parsed (answer1 i) 1
   runPart part2 parsed (answer2 i) 2
 
-data PartStatus = Solved Int | Unsolved
-  deriving stock (Eq)
-  deriving (Display) via (ShowInstance PartStatus)
+class (Eq a, Show a) => Solvable a where
+  unsolved :: PartStatus a
+  solved :: a -> PartStatus a
 
-instance Show PartStatus where
+data PartStatus a where
+  Solved :: (Eq a, Show a) => a -> PartStatus a
+  Unsolved :: (Eq a, Show a) => PartStatus a
+  deriving (Display) via (ShowInstance (PartStatus a))
+
+type role PartStatus nominal
+
+deriving stock instance (Eq a) => Eq (PartStatus a)
+
+instance Show (PartStatus a) where
   show Unsolved = "not solved"
   show (Solved a) = show a
 
-data AoC i where
+instance Solvable Int where
+  unsolved = Unsolved
+  solved = Solved
+
+data AoC i a where
   MkAoC ::
-    (Show i) =>
+    (Show i, Solvable a, Display a) =>
     { parser :: Parser i,
       parsed :: IO [i],
-      part1 :: i -> PartStatus,
-      part2 :: i -> PartStatus,
+      part1 :: i -> PartStatus a,
+      part2 :: i -> PartStatus a,
       day :: Int,
       year :: Int,
       solve :: Int -> Int -> IO ()
     } ->
-    AoC i
+    AoC i a
 
-type role AoC nominal
+type role AoC nominal nominal
 
-parseDay :: (Applicative f) => Parser b -> Input -> f b
+parseDay :: (Applicative f) => Parser b -> Input i -> f b
 parseDay p (Input {input, name}) = either error pure $ testParseInput p name input
 
 mkAoC ::
@@ -153,14 +168,14 @@ mkAoC ::
   -- | Parser
   Parser i ->
   -- | Part 1
-  (i -> PartStatus) ->
+  (i -> PartStatus Int) ->
   -- | Part 2
-  (i -> PartStatus) ->
+  (i -> PartStatus Int) ->
   -- | Day
   Int ->
   -- | Year
   Int ->
-  AoC i
+  AoC i Int
 mkAoC p p1 p2 d y =
   MkAoC
     { parser = p,

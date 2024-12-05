@@ -11,10 +11,10 @@ import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L
 import Utils (readConcat)
 
-partA :: [(Int, Int)] -> PartStatus
+partA :: [(Int, Int)] -> PartStatus Int
 partA xs = Solved . product $ map numWins xs
 
-partB :: [(Int, Int)] -> PartStatus
+partB :: [(Int, Int)] -> PartStatus Int
 partB xs = Solved $ numWins (readConcat (map fst xs), readConcat (map snd xs))
 
 numWins :: (Int, Int) -> Int
@@ -32,5 +32,5 @@ parser = zip <$> lineParser "Time:" <*> lineParser "Distance:"
     lineParser :: Parser Text -> Parser [Int]
     lineParser t = lexeme t >> some (lexeme L.decimal) <* optional eol
 
-day06 :: AoC [(Int, Int)]
+day06 :: AoC [(Int, Int)] Int
 day06 = mkAoC parser partA partB 6 2023

@@ -19,7 +19,7 @@ type Input = [Row]
 gridify :: Input -> [Position]
 gridify xs = allPos (0, 0) (length xs, length xs)
 
-partA :: Input -> PartStatus
+partA :: Input -> PartStatus Int
 partA xs = Solved . sum $ map isXmas $ concatMap (find xs 4) (gridify xs)
 
 isXmas :: Row -> Int
@@ -31,7 +31,7 @@ find grid n pos = map go allDirs
   where
     go dir = get grid $ line pos dir n
 
-partB :: Input -> PartStatus
+partB :: Input -> PartStatus Int
 partB xs = Solved $ length $ filter id $ map (\p -> cross xs p 3) (gridify xs)
 
 get :: Input -> [Position] -> Row
@@ -51,5 +51,5 @@ isMas _ = False
 parser :: Parser Input
 parser = fmap T.unpack <$> some (takeWhile1P Nothing (/= '\n') <* (eol $> () <|> eof))
 
-day04 :: AoC Input
+day04 :: AoC Input Int
 day04 = mkAoC parser partA partB 4 2024

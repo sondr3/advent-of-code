@@ -11,14 +11,14 @@ import Text.Megaparsec.Char.Lexer qualified as L
 
 type Input = ([Int], [Int])
 
-partA :: Input -> PartStatus
+partA :: Input -> PartStatus Int
 partA (xs, ys) = Solved $ foldl' (\acc (x, y) -> acc + abs (x - y)) 0 (zip (sort xs) (sort ys))
 
-partB :: Input -> PartStatus
+partB :: Input -> PartStatus Int
 partB (xs, ys) = Solved $ foldl' (\acc x -> acc + (x * length (filter (== x) ys))) 0 xs
 
 parser :: Parser Input
 parser = unzip <$> some ((,) <$> lexeme L.decimal <*> lexeme L.decimal <* optional eol) <* eof
 
-day01 :: AoC Input
+day01 :: AoC Input Int
 day01 = mkAoC parser partA partB 1 2024

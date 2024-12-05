@@ -47,15 +47,15 @@ braces = between (symbol "{") (symbol "}")
 parseBody :: Parser Text
 parseBody = T.strip . T.concat <$> some (notFollowedBy (chunk "#{") >> takeWhileP (Just "body") (/= '\n') <> eol <?> "File body")
 
-parsePuzzle :: Parser Puzzle
+parsePuzzle :: Parser (Puzzle Int)
 parsePuzzle = Puzzle <$> NE.some parseInput <* eof
 
-parseInput :: Parser Input
+parseInput :: Parser (Input Int)
 parseInput = do
   (p1, p2, name, cmt) <- parseHeader
   Input p1 p2 cmt name <$> parseBody
 
-parseHeader :: Parser (Answer, Answer, Maybe Text, Maybe Text)
+parseHeader :: Parser (Answer Int, Answer Int, Maybe Text, Maybe Text)
 parseHeader = do
   void (symbol "#" <?> "hash")
   braces $ do
@@ -68,5 +68,5 @@ parseHeader = do
 parseText :: Text -> Parser (Maybe Text)
 parseText t = try . optional $ symbol t *> equals *> choice [quote, text]
 
-parseAnswer :: Text -> Parser Answer
+parseAnswer :: Text -> Parser (Answer Int)
 parseAnswer p = symbol p *> equals *> choice [Answer <$> lexeme L.decimal, NilAnswer <$ symbol "nil"]

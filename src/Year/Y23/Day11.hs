@@ -21,10 +21,10 @@ prettySpace :: Space -> Text
 prettySpace Empty = "."
 prettySpace Galaxy = "#"
 
-partA :: Map (Int, Int) Space -> PartStatus
+partA :: Map (Int, Int) Space -> PartStatus Int
 partA xs = Solved . sum $ map manhattan' $ pick 2 $ calculate (findGalaxies xs) 2
 
-partB :: Map (Int, Int) Space -> PartStatus
+partB :: Map (Int, Int) Space -> PartStatus Int
 partB xs = Solved . sum $ map manhattan' $ pick 2 $ calculate (findGalaxies xs) 1000000
 
 manhattan' :: [(Int, Int)] -> Int
@@ -55,5 +55,5 @@ calculate gals expand = map go gals
 parser :: Parser (Map (Int, Int) Space)
 parser = gridify <$> some (choice [Empty <$ char '.', Galaxy <$ char '#']) `sepEndBy` eol
 
-day11 :: AoC (Map (Int, Int) Space)
+day11 :: AoC (Map (Int, Int) Space) Int
 day11 = mkAoC parser partA partB 11 2023

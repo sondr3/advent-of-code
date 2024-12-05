@@ -16,10 +16,10 @@ import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
 
-partA :: [Text] -> PartStatus
+partA :: [Text] -> PartStatus Int
 partA xs = Solved . sum $ map hash xs
 
-partB :: [Text] -> PartStatus
+partB :: [Text] -> PartStatus Int
 partB xs = Solved . sum $ map focusPower $ Map.toList (foldl' box buildBoxes xs)
 
 hash :: Text -> Int
@@ -49,5 +49,5 @@ box boxes xs = go $ T.span (`notElem` ['=', '-']) xs
 parser :: Parser [Text]
 parser = (T.pack <$> some (alphaNumChar <|> char '=' <|> char '-')) `sepEndBy` char ','
 
-day15 :: AoC [Text]
+day15 :: AoC [Text] Int
 day15 = mkAoC parser partA partB 15 2023

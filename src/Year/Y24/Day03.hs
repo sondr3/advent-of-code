@@ -22,10 +22,10 @@ insValue :: Instruction -> Int
 insValue (Mul x y) = x * y
 insValue _ = 0
 
-partA :: Input -> PartStatus
+partA :: Input -> PartStatus Int
 partA = Solved . foldl' (\acc i -> acc + insValue i) 0
 
-partB :: Input -> PartStatus
+partB :: Input -> PartStatus Int
 partB xs = Solved $ foldl' (\acc i -> acc + insValue i) 0 (go xs [] True)
   where
     go (m@(Mul _ _) : xss) acc s = if s then go xss (m : acc) s else go xss acc s
@@ -47,5 +47,5 @@ parser = catMaybes <$> some (go <* optional eol) <* eof
 parseMul :: Parser Instruction
 parseMul = symbol "mul" *> parens (Mul <$> (lexeme L.decimal <* symbol ",") <*> lexeme L.decimal)
 
-day03 :: AoC Input
+day03 :: AoC Input Int
 day03 = mkAoC parser partA partB 3 2024

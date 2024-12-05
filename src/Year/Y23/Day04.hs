@@ -11,13 +11,13 @@ import Text.Megaparsec qualified as T
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L
 
-partA :: [([Int], [Int])] -> PartStatus
+partA :: [([Int], [Int])] -> PartStatus Int
 partA xs = Solved . sum . map (\x -> 2 ^ (x - 1)) . filter (> 0) $ map (uncurry numMatching) xs
 
 numMatching :: [Int] -> [Int] -> Int
 numMatching xs ys = S.size $ S.fromList xs `S.intersection` S.fromList ys
 
-partB :: [([Int], [Int])] -> PartStatus
+partB :: [([Int], [Int])] -> PartStatus Int
 partB i = Solved . sum $ go i
   where
     go :: [([Int], [Int])] -> [Int]
@@ -38,5 +38,5 @@ gameParser = do
   yours <- T.many (L.lexeme hspace L.decimal)
   pure (winning, yours)
 
-day04 :: AoC [([Int], [Int])]
+day04 :: AoC [([Int], [Int])] Int
 day04 = mkAoC parser partA partB 4 2023

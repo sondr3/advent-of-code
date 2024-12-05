@@ -35,14 +35,14 @@ partValue :: Part -> Int
 partValue (Part x _) = x
 partValue _ = 0
 
-partA :: [[Part]] -> PartStatus
+partA :: [[Part]] -> PartStatus Int
 partA xs =
   Solved
     . S.foldr (\x y -> partValue x + y) 0
     $ S.fromList
     $ mapMaybe (\(cs, p) -> if any (isSymbol . (\(x, y) -> xs !! x !! y)) cs && isPart p then pure p else Nothing) (matrix xs)
 
-partB :: [[Part]] -> PartStatus
+partB :: [[Part]] -> PartStatus Int
 partB xs =
   Solved
     . sum
@@ -77,5 +77,5 @@ parseChar = Symbol <$> satisfy (\x -> not (isDigit x) && x /= '.' && x /= '\n')
 parsePeriod :: Parser Part
 parsePeriod = Period <$ char '.'
 
-day03 :: AoC [[Part]]
+day03 :: AoC [[Part]] Int
 day03 = mkAoC parser partA partB 3 2023

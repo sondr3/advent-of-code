@@ -11,7 +11,7 @@ import Utils (dropped, pairwise)
 
 type Input = [[Int]]
 
-partA :: Input -> PartStatus
+partA :: Input -> PartStatus Int
 partA = Solved . length . run
 
 run :: Input -> [Bool]
@@ -23,11 +23,11 @@ safe xs = all (\(a, b) -> abs (a - b) `elem` [1 .. 3]) (pairwise xs)
 ordered :: [a] -> (a -> a -> Bool) -> Bool
 ordered xs op = all (uncurry op) (pairwise xs)
 
-partB :: Input -> PartStatus
+partB :: Input -> PartStatus Int
 partB xs = Solved . length $ filter (not . null) $ map (run . dropped) xs
 
 parser :: Parser Input
 parser = some (some (lexeme L.decimal) <* optional eol) <* eof
 
-day02 :: AoC Input
+day02 :: AoC Input Int
 day02 = mkAoC parser partA partB 2 2024
