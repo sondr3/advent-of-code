@@ -14,12 +14,12 @@ module Day
     getDayPuzzle,
     getAoCPuzzle,
     testParseDay,
-    stopwatch,
   )
 where
 
-import Control.Monad (forM_)
+import Control.Monad (forM_, void)
 import Control.Monad.IO.Class (MonadIO (liftIO))
+import Criterion.Measurement (getCPUTime, getTime, initializeTime, secs)
 import Data.List.NonEmpty qualified as NE
 import Data.Text (Text)
 import Data.Text qualified as T
@@ -29,7 +29,6 @@ import Parsers (Parser, parseInput, testParseInput)
 import PrettyPrint (prettyPrint)
 import Puzzle.Parser (parsePuzzle)
 import Puzzle.Types (Answer (..), Input (..), Puzzle (..))
-import System.CPUTime (getCPUTime)
 import System.OsPath (decodeUtf, unsafeEncodeUtf)
 import Text.Megaparsec (errorBundlePretty, runParser)
 import Text.Printf (printf)
@@ -75,29 +74,9 @@ getDayPuzzle day year = do
   where
     filename = unsafeEncodeUtf $ "inputs/" <> show year <> "/day" <> T.unpack (padNum day) <> ".aoc"
 
-diffTime :: Integer -> Integer -> Double
-diffTime end start = fromIntegral (end - start) * 1e-5
-
-formatDiffTime :: Double -> Text
-formatDiffTime diff =
-  if diff < 1000
-    then
-      T.pack (printf "%.2fms" diff)
-    else
-      T.pack (printf "%.2fs" (diff * 1e-3))
-
-stopwatch :: IO a -> IO (Double, a)
-stopwatch action = do
-  start <- liftIO getCPUTime
-  !result <- action
-  end <- liftIO getCPUTime
-
-  return (diffTime end start, result)
-
 runPart :: (i -> PartStatus) -> i -> Answer -> Int -> IO ()
 runPart solver i answer part = do
-  (duration, res) <- stopwatch (pure $ solver i)
-
+  let res = solver i
   if res == Unsolved
     then
       pure ()
@@ -110,20 +89,23 @@ runPart solver i answer part = do
           if res /= Solved e
             then TIO.putStr $ " failed: expected " <> display e <> " but got " <> display res
             else
-              TIO.putStr $ " correct: " <> display res <> " in " <> formatDiffTime duration
-
-  TIO.putStrLn ""
+              TIO.putStr $ " correct: " <> display res
+      TIO.putStrLn ""
 
 solveInput :: Input -> AoC i -> IO ()
 solveInput i MkAoC {parser, part1, part2} = do
-  (_, parsed) <- stopwatch $ parseInput parser (name i) (input i)
+  parsed <- parseInput parser (name i) (input i)
 
   runPart part1 parsed (answer1 i) 1
   runPart part2 parsed (answer2 i) 2
 
 data PartStatus = Solved Int | Unsolved
-  deriving stock (Show, Eq)
+  deriving stock (Eq)
   deriving (Display) via (ShowInstance PartStatus)
+
+instance Show PartStatus where
+  show Unsolved = "not solved"
+  show (Solved a) = show a
 
 data AoC i where
   MkAoC ::
