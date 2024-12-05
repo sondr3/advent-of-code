@@ -5,7 +5,7 @@ module Year.Y23.Day05 where
 import Control.Applicative (Alternative (..))
 import Data.List.NonEmpty (NonEmpty)
 import Data.List.NonEmpty qualified as NE
-import Day (AoC, mkAoC)
+import Day (AoC, PartStatus (..), mkAoC)
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char
@@ -15,8 +15,8 @@ import Utils (pairs)
 data Range = Range Int Int Int
   deriving stock (Eq, Show)
 
-partA :: ([Int], [[Range]]) -> Int
-partA (seed, maps) = minimum $ map (\x -> foldl go x maps) seed
+partA :: ([Int], [[Range]]) -> PartStatus
+partA (seed, maps) = Solved . minimum $ map (\x -> foldl go x maps) seed
   where
     go s [] = s
     go s (Range dst src len : xs)
@@ -36,8 +36,8 @@ foldRange t@(s, len) (Range dst src len' : rs)
     curr = [(dst + max 0 (s - src), min len (len' - max 0 (s - src)))]
     post = if src + len' < s + len then foldRange (src + len', s + len - src - len') rs else []
 
-partB :: ([Int], [[Range]]) -> Int
-partB (seeds, maps) = fst $ minimum $ foldl concatRange (NE.fromList $ pairs seeds) maps
+partB :: ([Int], [[Range]]) -> PartStatus
+partB (seeds, maps) = Solved . fst $ minimum $ foldl concatRange (NE.fromList $ pairs seeds) maps
 
 parser :: Parser ([Int], [[Range]])
 parser = (,) <$> parseSeeds <*> parseMap `sepEndBy` "\n"

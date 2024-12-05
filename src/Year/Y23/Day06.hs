@@ -4,18 +4,18 @@ module Year.Y23.Day06 where
 
 import Control.Applicative (Alternative (..))
 import Data.Text (Text)
-import Day (AoC, mkAoC)
+import Day (AoC, PartStatus (..), mkAoC)
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L
 import Utils (readConcat)
 
-partA :: [(Int, Int)] -> Int
-partA xs = product $ map numWins xs
+partA :: [(Int, Int)] -> PartStatus
+partA xs = Solved . product $ map numWins xs
 
-partB :: [(Int, Int)] -> Int
-partB xs = numWins (readConcat (map fst xs), readConcat (map snd xs))
+partB :: [(Int, Int)] -> PartStatus
+partB xs = Solved $ numWins (readConcat (map fst xs), readConcat (map snd xs))
 
 numWins :: (Int, Int) -> Int
 numWins (a, b) = abs (x1 - x2) + 1

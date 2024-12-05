@@ -8,7 +8,7 @@ module Year.Y23.Day12 where
 import Control.Applicative (Alternative (..))
 import Data.List (intercalate)
 import Data.MemoTrie (HasTrie (..), Reg, enumerateGeneric, memo2, trieGeneric, untrieGeneric)
-import Day (AoC, mkAoC)
+import Day (AoC, PartStatus (..), mkAoC)
 import GHC.Generics (Generic)
 import Parsers
 import Text.Megaparsec hiding (some)
@@ -22,11 +22,11 @@ instance HasTrie Spring where
   untrie = untrieGeneric unSpringTrie
   enumerate = enumerateGeneric unSpringTrie
 
-partA :: [([Spring], [Int])] -> Int
-partA xs = sum $ map (uncurry memo) xs
+partA :: [([Spring], [Int])] -> PartStatus
+partA xs = Solved . sum $ map (uncurry memo) xs
 
-partB :: [([Spring], [Int])] -> Int
-partB xs = sum $ map (uncurry memo . unfold) xs
+partB :: [([Spring], [Int])] -> PartStatus
+partB xs = Solved . sum $ map (uncurry memo . unfold) xs
 
 unfold :: ([Spring], [Int]) -> ([Spring], [Int])
 unfold (springs, nums) = (intercalate [Unknown] (replicate 5 springs), concat $ replicate 5 nums)

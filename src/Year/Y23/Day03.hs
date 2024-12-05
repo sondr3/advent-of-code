@@ -6,7 +6,7 @@ import Control.Applicative (Alternative (..))
 import Data.List (nub)
 import Data.Maybe (fromJust, mapMaybe)
 import Data.Set qualified as S
-import Day (AoC, mkAoC)
+import Day (AoC, PartStatus (..), mkAoC)
 import Parsers (Parser)
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char
@@ -35,16 +35,18 @@ partValue :: Part -> Int
 partValue (Part x _) = x
 partValue _ = 0
 
-partA :: [[Part]] -> Int
+partA :: [[Part]] -> PartStatus
 partA xs =
-  S.foldr (\x y -> partValue x + y) 0 $
-    S.fromList $
-      mapMaybe (\(cs, p) -> if any (isSymbol . (\(x, y) -> xs !! x !! y)) cs && isPart p then pure p else Nothing) (matrix xs)
+  Solved
+    . S.foldr (\x y -> partValue x + y) 0
+    $ S.fromList
+    $ mapMaybe (\(cs, p) -> if any (isSymbol . (\(x, y) -> xs !! x !! y)) cs && isPart p then pure p else Nothing) (matrix xs)
 
-partB :: [[Part]] -> Int
+partB :: [[Part]] -> PartStatus
 partB xs =
-  sum $
-    map
+  Solved
+    . sum
+    $ map
       (product . map partValue)
       ( filter (\x -> length x == 2) $
           map (filter isPart . nub) (mapMaybe (\(cs, p) -> if isGear p then pure $ map (\(x, y) -> xs !! x !! y) cs else Nothing) (matrix xs))

@@ -9,18 +9,18 @@ import Data.Maybe (fromJust)
 import Data.Text (Text)
 import Data.Text qualified as T
 import Data.Text.Read (decimal)
-import Day (AoC, mkAoC)
+import Day (AoC, PartStatus (..), mkAoC)
 import Parsers (Parser)
 import Text.Megaparsec
 import Text.Megaparsec qualified as M
 import Text.Megaparsec.Char
 import Utils (getRight, isDigit)
 
-partA :: [Text] -> Int
-partA xs = sum $ map fst $ rights $ map (decimal . (\t -> T.pack [T.head t, T.head (T.reverse t)]) . T.filter isDigit) xs
+partA :: [Text] -> PartStatus
+partA xs = Solved . sum $ map fst $ rights $ map (decimal . (\t -> T.pack [T.head t, T.head (T.reverse t)]) . T.filter isDigit) xs
 
-partB :: [Text] -> Int
-partB xs = sum $ map ((\x -> fst . getRight $ decimal $ T.concat [NE.head x, NE.last x]) . extractNums) xs
+partB :: [Text] -> PartStatus
+partB xs = Solved . sum $ map ((\x -> fst . getRight $ decimal $ T.concat [NE.head x, NE.last x]) . extractNums) xs
 
 wordsToNum :: [(Text, Text)]
 wordsToNum = [("one", "1"), ("two", "2"), ("three", "3"), ("four", "4"), ("five", "5"), ("six", "6"), ("seven", "7"), ("eight", "8"), ("nine", "9")]

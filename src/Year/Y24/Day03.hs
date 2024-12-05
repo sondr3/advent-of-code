@@ -4,7 +4,7 @@ module Year.Y24.Day03 where
 
 import Data.Functor (($>))
 import Data.Maybe (catMaybes)
-import Day (AoC, mkAoC)
+import Day (AoC, PartStatus (..), mkAoC)
 import Parsers (Parser, lexeme, parens, symbol)
 import Text.Megaparsec
 import Text.Megaparsec.Char
@@ -22,11 +22,11 @@ insValue :: Instruction -> Int
 insValue (Mul x y) = x * y
 insValue _ = 0
 
-partA :: Input -> Int
-partA = foldl' (\acc i -> acc + insValue i) 0
+partA :: Input -> PartStatus
+partA = Solved . foldl' (\acc i -> acc + insValue i) 0
 
-partB :: Input -> Int
-partB xs = foldl' (\acc i -> acc + insValue i) 0 (go xs [] True)
+partB :: Input -> PartStatus
+partB xs = Solved $ foldl' (\acc i -> acc + insValue i) 0 (go xs [] True)
   where
     go (m@(Mul _ _) : xss) acc s = if s then go xss (m : acc) s else go xss acc s
     go (Enable : xss) acc _ = go xss acc True

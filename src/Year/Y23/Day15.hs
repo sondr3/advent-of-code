@@ -11,16 +11,16 @@ import Data.Map (Map)
 import Data.Map qualified as Map
 import Data.Text (Text)
 import Data.Text qualified as T
-import Day (AoC, mkAoC)
+import Day (AoC, PartStatus (..), mkAoC)
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
 
-partA :: [Text] -> Int
-partA xs = sum $ map hash xs
+partA :: [Text] -> PartStatus
+partA xs = Solved . sum $ map hash xs
 
-partB :: [Text] -> Int
-partB xs = sum $ map focusPower $ Map.toList (foldl' box buildBoxes xs)
+partB :: [Text] -> PartStatus
+partB xs = Solved . sum $ map focusPower $ Map.toList (foldl' box buildBoxes xs)
 
 hash :: Text -> Int
 hash = T.foldl' (\acc a -> ((ord a + acc) * 17) `mod` 256) 0

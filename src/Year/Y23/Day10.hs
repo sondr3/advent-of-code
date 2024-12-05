@@ -7,7 +7,7 @@ import Data.Map (Map)
 import Data.Map qualified as Map
 import Data.Set qualified as Set
 import Data.Text (Text)
-import Day (AoC, mkAoC)
+import Day (AoC, PartStatus (..), mkAoC)
 import Grid (gridify)
 import Parsers
 import Text.Megaparsec hiding (some)
@@ -53,8 +53,8 @@ filterGround = Map.filter (/= Ground)
 findStart :: Map (Int, Int) Cell -> (Int, Int)
 findStart m = uHead $ Map.keys $ Map.filter (== Start) m
 
-partA :: [[Cell]] -> Int
-partA xs = length (dfs $ gridify xs) `div` 2
+partA :: [[Cell]] -> PartStatus
+partA xs = Solved $ length (dfs $ gridify xs) `div` 2
 
 shoelaceArea :: [(Int, Int)] -> Int
 shoelaceArea pts = abs $ (`div` 2) $ sum [x1 * y2 - y1 * x2 | ((x1, y1), (x2, y2)) <- zip pts (uTail pts ++ [uHead pts])]
@@ -62,8 +62,8 @@ shoelaceArea pts = abs $ (`div` 2) $ sum [x1 * y2 - y1 * x2 | ((x1, y1), (x2, y2
 cellsPretty :: Map (Int, Int) Cell -> Map (Int, Int) Text
 cellsPretty = Map.map prettyCell
 
-partB :: [[Cell]] -> Int
-partB xs = (abs (shoelaceArea area * 2) - length area - 1 + 3) `div` 2
+partB :: [[Cell]] -> PartStatus
+partB xs = Solved $ (abs (shoelaceArea area * 2) - length area - 1 + 3) `div` 2
   where
     area = dfs (gridify xs)
 

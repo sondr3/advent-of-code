@@ -9,7 +9,7 @@ import Data.List.NonEmpty qualified as NE
 import Data.Map qualified as Map
 import Data.Text (Text)
 import Data.Text qualified as T
-import Day (AoC, mkAoC)
+import Day (AoC, PartStatus (..), mkAoC)
 import Parsers (Parser)
 import Text.Megaparsec qualified as T
 import Text.Megaparsec.Char
@@ -17,8 +17,8 @@ import Text.Megaparsec.Char.Lexer qualified as L
 
 type Input = NonEmpty (NonEmpty (NonEmpty (Text, Int)))
 
-partA :: Input -> Int
-partA xs = sum $ zipWith (\i v -> if v then i else 0) [1 ..] $ NE.toList $ NE.map (all (all valid)) xs
+partA :: Input -> PartStatus
+partA xs = Solved . sum $ zipWith (\i v -> if v then i else 0) [1 ..] $ NE.toList $ NE.map (all (all valid)) xs
 
 valid :: (Text, Int) -> Bool
 valid ("red", num) = num <= 12
@@ -26,8 +26,8 @@ valid ("green", num) = num <= 13
 valid ("blue", num) = num <= 14
 valid _ = error "invalid color"
 
-partB :: Input -> Int
-partB xs = sum $ NE.map go xs
+partB :: Input -> PartStatus
+partB xs = Solved . sum $ NE.map go xs
   where
     go :: NonEmpty (NonEmpty (Text, Int)) -> Int
     go ys = Map.foldr (*) 1 $ Map.fromListWith max $ concatMap NE.toList ys

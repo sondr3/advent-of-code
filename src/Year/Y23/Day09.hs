@@ -2,17 +2,19 @@
 
 module Year.Y23.Day09 where
 
-import Day (AoC, mkAoC)
+import Day (AoC, PartStatus (..), mkAoC)
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
 import Utils (uTail)
 
-partA :: [[Int]] -> Int
-partA xs = sum $ map subseq xs
+partB :: [[Int]] -> PartStatus
 
-partB :: [[Int]] -> Int
-partB xs = sum $ map (subseq . reverse) xs
+partA xs = Solved . sum $ map subseq xs
+
+partA :: [[Int]] -> PartStatus
+
+partB xs = Solved . sum $ map (subseq . reverse) xs
 
 subseq :: [Int] -> Int
 subseq xs = sum $ map last $ takeWhile (any (/= 0)) $ iterate diff xs

@@ -2,10 +2,11 @@
 
 module TestUtils (testDay, testInput) where
 
-import AoC (AoC (..), getDayPuzzle, mkAoC)
+import AoC (AoC (..), PartStatus, getDayPuzzle, mkAoC)
 import Control.Monad (forM_)
 import Data.Maybe (fromMaybe)
 import Data.Text qualified as T
+import Day (PartStatus (..))
 import Parsers (parseInput)
 import Puzzle.Types
 import Test.Hspec (Spec, describe, it, runIO, shouldBe, shouldNotBe)
@@ -26,7 +27,7 @@ testInput i MkAoC {parse, part1, part2} = do
     runPart part1 parsed (answer1 i)
     runPart part2 parsed (answer2 i)
 
-runPart :: (i -> Int) -> i -> Answer -> IO ()
+runPart :: (i -> PartStatus) -> i -> Answer -> IO ()
 runPart _ _ Unanswered = pure ()
-runPart part i NilAnswer = part i `shouldNotBe` 0
-runPart part i (Answer a) = part i `shouldBe` a
+runPart part i NilAnswer = part i `shouldNotBe` Unsolved
+runPart part i (Answer a) = part i `shouldBe` Solved a

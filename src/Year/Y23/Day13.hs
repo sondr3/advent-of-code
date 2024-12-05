@@ -6,7 +6,7 @@ import Control.Applicative (Alternative (..))
 import Data.IntMap qualified as IntMap
 import Data.List (find, inits, tails, transpose)
 import Data.Maybe (fromMaybe, mapMaybe)
-import Day (AoC, mkAoC)
+import Day (AoC, PartStatus (..), mkAoC)
 import GHC.Generics (Generic)
 import Parsers
 import Text.Megaparsec hiding (some)
@@ -14,11 +14,11 @@ import Text.Megaparsec.Char hiding (string)
 
 data Pattern = Ash | Rock deriving stock (Show, Eq, Ord, Generic)
 
-partA :: [[[Pattern]]] -> Int
-partA xs = sum $ map (calculate 0) xs
+partA :: [[[Pattern]]] -> PartStatus
+partA xs = Solved . sum $ map (calculate 0) xs
 
-partB :: [[[Pattern]]] -> Int
-partB xs = sum $ map (calculate 1) xs
+partB :: [[[Pattern]]] -> PartStatus
+partB xs = Solved . sum $ map (calculate 1) xs
 
 calculate :: (Eq a) => Int -> [[a]] -> Int
 calculate _ grid = fromMaybe 0 $ ((* 100) <$> pivot grid) <|> pivot (transpose grid)

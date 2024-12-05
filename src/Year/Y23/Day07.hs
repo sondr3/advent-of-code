@@ -4,7 +4,7 @@ module Year.Y23.Day07 where
 
 import Control.Applicative (Alternative (..))
 import Data.List (group, sort, sortBy)
-import Day (AoC, mkAoC)
+import Day (AoC, PartStatus (..), mkAoC)
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char
@@ -62,11 +62,11 @@ jokerHands hand cs = case (hand, numJ) of
 buildHand :: (Card -> b) -> [([Card], c)] -> [(Hand, [b], c)]
 buildHand f xs = zipWith (\a (b, c) -> (a, map f b, c)) (map (cardsToHand . fst) xs) xs
 
-partA :: [([Card], Int)] -> Int
-partA xs = sum $ zipWith (curry (\((_, _, bid), rnk) -> rnk * bid)) (sortBy compareHands $ buildHand id xs) [1 ..]
+partA :: [([Card], Int)] -> PartStatus
+partA xs = Solved . sum $ zipWith (curry (\((_, _, bid), rnk) -> rnk * bid)) (sortBy compareHands $ buildHand id xs) [1 ..]
 
-partB :: [([Card], Int)] -> Int
-partB xs = sum $ zipWith (curry (\((_, _, bid), rnk) -> rnk * bid)) (sortBy compareHands $ map (\(h, cs, bid) -> (jokerHands h cs, cs, bid)) $ buildHand cardToJokerCard xs) [1 ..]
+partB :: [([Card], Int)] -> PartStatus
+partB xs = Solved . sum $ zipWith (curry (\((_, _, bid), rnk) -> rnk * bid)) (sortBy compareHands $ map (\(h, cs, bid) -> (jokerHands h cs, cs, bid)) $ buildHand cardToJokerCard xs) [1 ..]
 
 parser :: Parser [([Card], Int)]
 parser = some $ (,) <$> some cardParser <* hspace <*> number <* optional eol

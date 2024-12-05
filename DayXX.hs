@@ -3,22 +3,22 @@
 module Year.Y24.DayXX where
 
 import Data.Text (Text)
-import Day (AoC, mkAoC)
+import Day (AoC, PartStatus (..), mkAoC)
 import Parsers (Parser)
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L
 
-type Input = ([Any], [Any])
+type Input = [Int]
 
-partA :: Input -> Int
-partA xs = undefined
+partA :: Input -> PartStatus
+partA xs = Unsolved
 
-partB :: Input -> Int
-partB xs = undefined
+partB :: Input -> PartStatus
+partB xs = Unsolved
 
 parser :: Parser Input
-parser = undefined
+parser = empty
 
 day01 :: AoC
 day01 = mkAoC parser partA partB 1 2024

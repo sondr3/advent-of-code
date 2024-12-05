@@ -6,7 +6,7 @@ import Coordinates (Dir (..), Position, allDirs, allPos, line, move)
 import Data.Functor (($>))
 import Data.Maybe (mapMaybe)
 import Data.Text qualified as T
-import Day (AoC, mkAoC)
+import Day (AoC, PartStatus (..), mkAoC)
 import Grid (getAtPos)
 import Parsers (Parser)
 import Text.Megaparsec
@@ -19,8 +19,8 @@ type Input = [Row]
 gridify :: Input -> [Position]
 gridify xs = allPos (0, 0) (length xs, length xs)
 
-partA :: Input -> Int
-partA xs = sum $ map isXmas $ concatMap (find xs 4) (gridify xs)
+partA :: Input -> PartStatus
+partA xs = Solved . sum $ map isXmas $ concatMap (find xs 4) (gridify xs)
 
 isXmas :: Row -> Int
 isXmas ['X', 'M', 'A', 'S'] = 1
@@ -31,8 +31,8 @@ find grid n pos = map go allDirs
   where
     go dir = get grid $ line pos dir n
 
-partB :: Input -> Int
-partB xs = length $ filter id $ map (\p -> cross xs p 3) (gridify xs)
+partB :: Input -> PartStatus
+partB xs = Solved $ length $ filter id $ map (\p -> cross xs p 3) (gridify xs)
 
 get :: Input -> [Position] -> Row
 get grid = mapMaybe (`getAtPos` grid)

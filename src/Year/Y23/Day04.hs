@@ -4,21 +4,21 @@ module Year.Y23.Day04 where
 
 import Control.Monad (void)
 import Data.Set qualified as S
-import Day (AoC, mkAoC)
+import Day (AoC, PartStatus (..), mkAoC)
 import Parsers (Parser)
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec qualified as T
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L
 
-partA :: [([Int], [Int])] -> Int
-partA xs = sum . map (\x -> 2 ^ (x - 1)) . filter (> 0) $ map (uncurry numMatching) xs
+partA :: [([Int], [Int])] -> PartStatus
+partA xs = Solved . sum . map (\x -> 2 ^ (x - 1)) . filter (> 0) $ map (uncurry numMatching) xs
 
 numMatching :: [Int] -> [Int] -> Int
 numMatching xs ys = S.size $ S.fromList xs `S.intersection` S.fromList ys
 
-partB :: [([Int], [Int])] -> Int
-partB i = sum $ go i
+partB :: [([Int], [Int])] -> PartStatus
+partB i = Solved . sum $ go i
   where
     go :: [([Int], [Int])] -> [Int]
     go [] = []

@@ -1,5 +1,8 @@
+{-# LANGUAGE DerivingVia #-}
+
 module Day
   ( AoC (..),
+    PartStatus (..),
     mkAoC,
     runDay,
     getDayPuzzle,
@@ -13,7 +16,7 @@ import Control.Exception (evaluate)
 import Control.Monad (forM_)
 import Data.Text (Text)
 import Data.Text qualified as T
-import Data.Text.Display (display)
+import Data.Text.Display (Display, ShowInstance (..), display)
 import Data.Text.IO qualified as TIO
 import Parsers (Parser, parseInput, testParseInput)
 import PrettyPrint (prettyPrint)
@@ -67,19 +70,23 @@ stopwatch action = do
   end <- getTime Monotonic
   return (diffTime end start, result)
 
-runPart :: (i -> Int) -> i -> Answer -> Int -> IO ()
+runPart :: (i -> PartStatus) -> i -> Answer -> Int -> IO ()
 runPart solver i answer part = do
   (duration, res) <- stopwatch (pure $ solver i)
 
-  TIO.putStr $ "> part " <> display part
-  case answer of
-    Unanswered -> TIO.putStr " is as of yet unanswered"
-    NilAnswer -> TIO.putStr $ " had `nil` as answer, but got " <> display res
-    Answer e ->
-      if res /= e
-        then TIO.putStr $ " failed: expected " <> display e <> " but got " <> display res
-        else
-          TIO.putStr $ " correct: " <> display res <> " in " <> formatDiffTime duration
+  if res == Unsolved
+    then
+      pure ()
+    else do
+      TIO.putStr $ "> part " <> display part
+      case answer of
+        Unanswered -> TIO.putStr " is as of yet unanswered"
+        NilAnswer -> TIO.putStr $ " had `nil` as answer, but got " <> display res
+        Answer e ->
+          if res /= Solved e
+            then TIO.putStr $ " failed: expected " <> display e <> " but got " <> display res
+            else
+              TIO.putStr $ " correct: " <> display res <> " in " <> formatDiffTime duration
 
   TIO.putStrLn ""
 
@@ -90,13 +97,17 @@ solveInput i MkAoC {parse, part1, part2} = do
   runPart part1 parsed (answer1 i) 1
   runPart part2 parsed (answer2 i) 2
 
+data PartStatus = Solved Int | Unsolved
+  deriving stock (Show, Eq)
+  deriving (Display) via (ShowInstance PartStatus)
+
 data AoC
   = forall i.
   (Show i) =>
   MkAoC
   { parse :: Parser i,
-    part1 :: i -> Int,
-    part2 :: i -> Int,
+    part1 :: i -> PartStatus,
+    part2 :: i -> PartStatus,
     day :: Int,
     year :: Int,
     solve :: Int -> Int -> IO ()
@@ -107,9 +118,9 @@ mkAoC ::
   -- | Parser
   Parser i ->
   -- | Part 1
-  (i -> Int) ->
+  (i -> PartStatus) ->
   -- | Part 2
-  (i -> Int) ->
+  (i -> PartStatus) ->
   -- | Day
   Int ->
   -- | Year

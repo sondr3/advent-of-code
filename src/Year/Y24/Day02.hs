@@ -2,7 +2,7 @@
 
 module Year.Y24.Day02 where
 
-import Day (AoC, mkAoC)
+import Day (AoC, PartStatus (..), mkAoC)
 import Parsers (Parser, lexeme)
 import Text.Megaparsec
 import Text.Megaparsec.Char
@@ -11,8 +11,8 @@ import Utils (dropped, pairwise)
 
 type Input = [[Int]]
 
-partA :: Input -> Int
-partA = length . run
+partA :: Input -> PartStatus
+partA = Solved . length . run
 
 run :: Input -> [Bool]
 run xs = filter id $ map (\x -> safe x && (ordered x (<) || ordered x (>))) xs
@@ -23,8 +23,8 @@ safe xs = all (\(a, b) -> abs (a - b) `elem` [1 .. 3]) (pairwise xs)
 ordered :: [a] -> (a -> a -> Bool) -> Bool
 ordered xs op = all (uncurry op) (pairwise xs)
 
-partB :: Input -> Int
-partB xs = length $ filter (not . null) $ map (run . dropped) xs
+partB :: Input -> PartStatus
+partB xs = Solved . length $ filter (not . null) $ map (run . dropped) xs
 
 parser :: Parser Input
 parser = some (some (lexeme L.decimal) <* optional eol) <* eof

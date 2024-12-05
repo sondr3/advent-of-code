@@ -8,7 +8,7 @@ import Data.Map qualified as Map
 import Data.Set (Set)
 import Data.Set qualified as Set
 import Data.Text (Text)
-import Day (AoC, mkAoC)
+import Day (AoC, PartStatus (..), mkAoC)
 import Grid (gridify)
 import Parsers
 import Text.Megaparsec hiding (some)
@@ -21,11 +21,11 @@ prettySpace :: Space -> Text
 prettySpace Empty = "."
 prettySpace Galaxy = "#"
 
-partA :: Map (Int, Int) Space -> Int
-partA xs = sum $ map manhattan' $ pick 2 $ calculate (findGalaxies xs) 2
+partA :: Map (Int, Int) Space -> PartStatus
+partA xs = Solved . sum $ map manhattan' $ pick 2 $ calculate (findGalaxies xs) 2
 
-partB :: Map (Int, Int) Space -> Int
-partB xs = sum $ map manhattan' $ pick 2 $ calculate (findGalaxies xs) 1000000
+partB :: Map (Int, Int) Space -> PartStatus
+partB xs = Solved . sum $ map manhattan' $ pick 2 $ calculate (findGalaxies xs) 1000000
 
 manhattan' :: [(Int, Int)] -> Int
 manhattan' [a, b] = manhattan a b

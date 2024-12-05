@@ -7,7 +7,7 @@ import Data.Map (Map)
 import Data.Map qualified as M
 import Data.Text (Text)
 import Data.Text qualified as T
-import Day (AoC, mkAoC)
+import Day (AoC, PartStatus (..), mkAoC)
 import GHC.Exts (sortWith)
 import Parsers
 import Text.Megaparsec hiding (some)
@@ -21,11 +21,11 @@ step [] _ _ = error "impossible"
 step (L : ds) m xs = xs : step ds m (fst $ m M.! xs)
 step (R : ds) m xs = xs : step ds m (snd $ m M.! xs)
 
-partA :: ([Dir], Map Text (Text, Text)) -> Int
-partA (dirs, nodes) = length $ takeWhile (/= "ZZZ") $ step (cycle dirs) nodes "AAA"
+partA :: ([Dir], Map Text (Text, Text)) -> PartStatus
+partA (dirs, nodes) = Solved . length $ takeWhile (/= "ZZZ") $ step (cycle dirs) nodes "AAA"
 
-partB :: ([Dir], Map Text (Text, Text)) -> Int
-partB (dirs, nodes) = foldr (lcm . (length . takeWhile (not . isEndNode) . step (cycle dirs) nodes)) 1 startNodes
+partB :: ([Dir], Map Text (Text, Text)) -> PartStatus
+partB (dirs, nodes) = Solved $ foldr (lcm . (length . takeWhile (not . isEndNode) . step (cycle dirs) nodes)) 1 startNodes
   where
     startNodes = filter isStartNode $ M.keys nodes
     isStartNode n = "A" `T.isSuffixOf` n
