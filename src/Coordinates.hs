@@ -1,6 +1,9 @@
 module Coordinates
   ( Dir (..),
     Position,
+    Turn (..),
+    turnOffset,
+    turn,
     allDirs,
     diagonals,
     cardinals,
@@ -9,6 +12,15 @@ module Coordinates
     allPos,
   )
 where
+
+data Turn
+  = TLeft
+  | TRight
+  deriving stock (Show, Eq, Ord, Enum, Bounded)
+
+turnOffset :: Turn -> Int
+turnOffset TLeft = -1
+turnOffset TRight = 1
 
 data Dir
   = North
@@ -21,7 +33,8 @@ data Dir
   | NorthWest
   deriving stock (Show, Eq, Ord, Enum, Bounded)
 
-type Position = (Int, Int)
+turn :: Dir -> Turn -> Dir
+turn dir t = toEnum $ (fromEnum dir + turnOffset t) `mod` length allDirs
 
 allDirs :: [Dir]
 allDirs = [minBound .. maxBound]
@@ -31,6 +44,8 @@ diagonals = [NorthEast, SouthEast, SouthWest, NorthWest]
 
 cardinals :: [Dir]
 cardinals = [North, East, South, West]
+
+type Position = (Int, Int)
 
 move :: Position -> Dir -> Position
 move (x, y) North = (x, y - 1)
