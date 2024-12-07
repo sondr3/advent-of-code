@@ -71,8 +71,10 @@ library
     Year.Y24.Day03
     Year.Y24.Day04
     Year.Y24.Day05
+    Year.Y24.Day06
 
   build-depends:
+    array ^>=0.5,
     MemoTrie ^>=0.6,
     containers ^>=0.7,
     filepath ^>=1.5,

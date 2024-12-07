@@ -1,7 +1,6 @@
 module Grid
   ( padGrid,
     getAtPos,
-    getAtPos',
     gridify,
     findOnGrid,
     findSingle,
@@ -27,11 +26,8 @@ padGrid p c grid = transpose $ map pad $ transpose $ map pad grid
   where
     pad l = replicate p c ++ l ++ replicate p c
 
-getAtPos :: (Ord k) => k -> Map k a -> Maybe a
-getAtPos p g = Map.lookup p g
-
-getAtPos' :: Position -> [[a]] -> Maybe a
-getAtPos' (x, y) g = do
+getAtPos :: Position -> [[a]] -> Maybe a
+getAtPos (x, y) g = do
   row <- g !? y
   row !? x
 
