@@ -3,7 +3,9 @@ module Coordinates
     Position,
     Turn (..),
     turnOffset,
+    turnOffsetCardinal,
     turn,
+    turnCardinal,
     allDirs,
     diagonals,
     cardinals,
@@ -22,6 +24,10 @@ turnOffset :: Turn -> Int
 turnOffset TLeft = -1
 turnOffset TRight = 1
 
+turnOffsetCardinal :: Turn -> Int
+turnOffsetCardinal TLeft = -2
+turnOffsetCardinal TRight = 2
+
 data Dir
   = North
   | NorthEast
@@ -35,6 +41,9 @@ data Dir
 
 turn :: Dir -> Turn -> Dir
 turn dir t = toEnum $ (fromEnum dir + turnOffset t) `mod` length allDirs
+
+turnCardinal :: Dir -> Turn -> Dir
+turnCardinal dir t = toEnum $ (fromEnum dir + turnOffsetCardinal t) `mod` length allDirs
 
 allDirs :: [Dir]
 allDirs = [minBound .. maxBound]

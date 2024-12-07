@@ -1,8 +1,10 @@
 module Grid
   ( padGrid,
     getAtPos,
+    getAtPos',
     gridify,
     findOnGrid,
+    findSingle,
     printGrid,
     printGridMap,
     createGrid,
@@ -11,9 +13,9 @@ where
 
 import Coordinates (Position, allPos)
 import Data.List (transpose, (!?))
-import Data.Map (Map)
-import Data.Map qualified as Map
-import Data.Maybe (catMaybes, mapMaybe)
+import Data.Map.Strict (Map)
+import Data.Map.Strict qualified as Map
+import Data.Maybe (fromMaybe, mapMaybe)
 import Data.Text (Text)
 import Data.Text qualified as T
 import Data.Text.IO qualified as TIO
@@ -25,22 +27,22 @@ padGrid p c grid = transpose $ map pad $ transpose $ map pad grid
   where
     pad l = replicate p c ++ l ++ replicate p c
 
-getAtPos :: Position -> [[a]] -> Maybe a
-getAtPos (x, y) g = do
+getAtPos :: (Ord k) => k -> Map k a -> Maybe a
+getAtPos p g = Map.lookup p g
+
+getAtPos' :: Position -> [[a]] -> Maybe a
+getAtPos' (x, y) g = do
   row <- g !? y
   row !? x
 
 gridify :: [[a]] -> Map (Int, Int) a
 gridify xs = Map.fromList [((j, i), x) | (i, row) <- zip [0 ..] xs, (j, x) <- zip [0 ..] row]
 
-findOnGrid :: (Eq a) => [[a]] -> a -> [Position]
-findOnGrid xs n = mapMaybe isA (allPos (0, 0) (w, h))
-  where
-    isA (x, y) = case getAtPos (x, y) xs of
-      Just a -> if a == n then Just (x, y) else Nothing
-      Nothing -> Nothing
-    h = length xs
-    w = length $ uHead xs
+findSingle :: (Eq a) => Map k a -> a -> k
+findSingle xs n = fst . uHead . Map.toList $ findOnGrid xs n
+
+findOnGrid :: (Eq a) => Map k a -> a -> Map k a
+findOnGrid xs n = Map.filter (== n) xs
 
 printGrid :: [[a]] -> (a -> Text) -> IO ()
 printGrid xs prettify = mapM_ (TIO.putStrLn . T.concat) (createGrid (prettify <$> gridify xs))
