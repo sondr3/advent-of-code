@@ -10,11 +10,10 @@ module Grid
   )
 where
 
-import Coordinates (Position, allPos)
+import Coordinates (Position)
 import Data.List (transpose, (!?))
 import Data.Map.Strict (Map)
 import Data.Map.Strict qualified as Map
-import Data.Maybe (fromMaybe, mapMaybe)
 import Data.Text (Text)
 import Data.Text qualified as T
 import Data.Text.IO qualified as TIO

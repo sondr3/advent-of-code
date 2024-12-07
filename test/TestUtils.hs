@@ -2,7 +2,7 @@
 
 module TestUtils (testDay, testInput) where
 
-import AoC (AoC (..), PartStatus, getDayPuzzle, mkAoC)
+import AoC (AoC (..), PartStatus, getDayPuzzle)
 import Control.Monad (forM_)
 import Data.Maybe (fromMaybe)
 import Data.Text qualified as T
@@ -13,19 +13,18 @@ import Test.Hspec (Spec, describe, it, runIO, shouldBe, shouldNotBe)
 import Utils (padNum)
 
 testDay :: AoC i Int -> Spec
-testDay MkAoC {parser, part1, part2, day, year} = describe (T.unpack $ "day " <> padNum day) $ do
+testDay m@MkAoC {..} = describe (T.unpack $ "day " <> padNum day) $ do
   docs <- runIO (getDayPuzzle day year)
   forM_ (inputs docs) $ \input -> do
-    testInput input (mkAoC parser part1 part2 day year)
+    testInput input m
 
 testInput :: Input a -> AoC i a -> Spec
-testInput i MkAoC {parser, part1, part2} = do
-  parsed <- parseInput parser (comment i) (input i)
+testInput i MkAoC {..} = do
+  p <- parseInput parser (comment i) (input i)
+  let n = fromMaybe "input" (name i)
 
-  let name = fromMaybe "input" (comment i)
-  it (T.unpack $ "should parse " <> name) $ do
-    runPart part1 parsed (answer1 i)
-    runPart part2 parsed (answer2 i)
+  it (T.unpack $ "should solve part 1 on input " <> n) $ runPart part1 p (answer1 i)
+  it (T.unpack $ "should solve part 2 on input " <> n) $ runPart part2 p (answer2 i)
 
 runPart :: (Show a, Eq a) => (i -> PartStatus a) -> i -> Answer a -> IO ()
 runPart _ _ Unanswered = pure ()

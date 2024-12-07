@@ -2,22 +2,16 @@
 
 module Year.Y24.Day06 where
 
-import Control.Monad (forM_, void)
 import Coordinates (Dir (East, North, South, West), Position, Turn (..), move, turnCardinal)
-import Coordinates qualified as C
-import Data.List (nubBy)
 import Data.Map.Strict (Map)
 import Data.Map.Strict qualified as Map
 import Data.Set qualified as Set
 import Data.Text (Text)
 import Day (AoC, PartStatus (..), mkAoC)
-import Debug.Trace (trace, traceShow, traceShowId)
-import Grid (createGrid, findOnGrid, findSingle, getAtPos, gridify, padGrid)
+import Grid (findSingle, gridify)
 import Parsers (Parser, symbol)
 import Text.Megaparsec
 import Text.Megaparsec.Char
-import Text.Megaparsec.Char.Lexer qualified as L
-import Utils (uHead, uTail)
 
 data Point
   = Obstacle
