@@ -48,7 +48,7 @@ readPuzzle :: NewOptions -> IO ()
 readPuzzle NewOptions {..} = do
   inputs <- runInputT defaultSettings (loop [])
   path <- encodeUtf ("inputs/" <> "20" <> T.unpack year <> "/day" <> (T.unpack . padNum $ read . T.unpack $ day) <> ".aoc")
-  writePuzzle (Puzzle (NE.fromList inputs)) path
+  writePuzzle (Puzzle (NE.fromList $ reverse inputs)) path
   where
     loop :: [Input Int] -> InputT IO [Input Int]
     loop xs = do
@@ -66,6 +66,7 @@ readAnswer prompt = do
   cmd <- getInputLine prompt
   case cmd of
     Nothing -> pure Unanswered
+    Just "" -> pure Unanswered
     Just "nil" -> pure NilAnswer
     Just ans -> pure $ Answer (read ans)
 
@@ -74,6 +75,7 @@ readLine prompt f = do
   cmd <- getInputLine prompt
   case cmd of
     Nothing -> pure Nothing
+    Just "" -> pure Nothing
     Just c -> pure $ Just (f c)
 
 readInput :: Text -> InputT IO Text
@@ -84,7 +86,7 @@ readInput prompt = outputStrLn (T.unpack prompt) *> loop []
       minput <- getInputLine ""
       case minput of
         Nothing -> return $ T.unlines $ reverse acc
-        Just line -> loop (T.pack line : acc)
+        Just line -> loop ((T.strip . T.pack) line : acc)
 
 run :: App -> IO ()
 run (App (New o@NewOptions {..}) _) = do
