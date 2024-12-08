@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
 
-module Year.Y24.DayXX where
+module Year.{{yy}}.Day{{padDay}} where
 
 import Data.Text (Text)
 import Day (AoC, PartStatus (..), mkAoC)
@@ -20,5 +20,5 @@ partB xs = Unsolved
 parser :: Parser Input
 parser = empty
 
-day01 :: AoC
-day01 = mkAoC parser partA partB 1 2024
+day{{padDay}} :: AoC Input Int
+day{{padDay}} = mkAoC parser partA partB {{day}} 20{{year}}

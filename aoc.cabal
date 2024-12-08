@@ -74,8 +74,8 @@ library
     Year.Y24.Day06
 
   build-depends:
-    array ^>=0.5,
     MemoTrie ^>=0.6,
+    array ^>=0.5,
     containers ^>=0.7,
     filepath ^>=1.5,
     megaparsec ^>=9.7,
@@ -90,8 +90,16 @@ executable aoc
   hs-source-dirs: app
   main-is: Main.hs
   build-depends:
+    aeson ^>=2.2,
     aoc,
+    filepath ^>=1.5,
+    haskeline ^>=0.8,
+    megaparsec ^>=9.7,
     optparse-applicative ^>=0.18,
+    process ^>=1.6,
+    stache ^>=2.3,
+    text ^>=2.1,
+    text-display ^>=0.0,
 
 test-suite aoc-test
   import: config
