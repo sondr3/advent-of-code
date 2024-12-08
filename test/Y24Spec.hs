@@ -11,6 +11,7 @@ import Year.Y24.Day04 (day04)
 import Year.Y24.Day05 (day05)
 import Year.Y24.Day06 (day06)
 import Year.Y24.Day07 (day07)
+import Year.Y24.Day08 (day08)
 
 spec :: Spec
 spec = parallel $ do
@@ -21,3 +22,4 @@ spec = parallel $ do
   testDay day05
   testDay day06
   testDay day07
+  testDay day08
