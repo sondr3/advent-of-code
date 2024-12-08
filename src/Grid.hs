@@ -2,8 +2,10 @@ module Grid
   ( padGrid,
     getAtPos,
     gridify,
+    invertGrid,
     findOnGrid,
     findSingle,
+    gridSize,
     printGrid,
     printGridMap,
     createGrid,
@@ -32,6 +34,12 @@ getAtPos (x, y) g = do
 
 gridify :: [[a]] -> Map (Int, Int) a
 gridify xs = Map.fromList [((j, i), x) | (i, row) <- zip [0 ..] xs, (j, x) <- zip [0 ..] row]
+
+invertGrid :: (Ord a) => Map Position a -> Map a [Position]
+invertGrid = Map.foldrWithKey (\k v -> Map.insertWith (++) v [k]) Map.empty
+
+gridSize :: Map Position a -> Position
+gridSize = fst . Map.findMax
 
 findSingle :: (Eq a) => Map k a -> a -> k
 findSingle xs n = fst . uHead . Map.toList $ findOnGrid xs n
