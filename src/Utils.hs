@@ -13,10 +13,12 @@ module Utils
     uHead,
     pairwise,
     dropped,
+    combinations,
   )
 where
 
 import Data.Char (ord)
+import Data.List (subsequences)
 import Data.Text (Text)
 import Data.Text qualified as T
 import Data.Text.Display (Display, display)
@@ -40,6 +42,9 @@ pairs :: [a] -> [(a, a)]
 pairs [] = []
 pairs (a : b : xs) = (a, b) : pairs xs
 pairs _ = error "uneven list"
+
+combinations :: Int -> [a] -> [[a]]
+combinations k ns = filter ((k ==) . length) $ subsequences ns
 
 readConcat :: (Read a, Display a) => [a] -> a
 readConcat xs = read' $ foldl (<>) "" $ map display xs
