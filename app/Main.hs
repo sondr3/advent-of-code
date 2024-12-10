@@ -59,7 +59,7 @@ readPuzzle NewOptions {..} = do
           p1 <- readAnswer "p1: "
           p2 <- readAnswer "p2: "
           input <- readInput "input: "
-          loop $ Input p1 p2 Nothing name input : xs
+          loop $ Input p1 p2 Nothing name (T.strip input) : xs
 
 readAnswer :: (Eq a, Display a, Read a) => String -> InputT IO (Answer a)
 readAnswer prompt = do
