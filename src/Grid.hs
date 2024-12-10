@@ -1,10 +1,12 @@
 module Grid
-  ( padGrid,
+  ( Grid,
+    padGrid,
     getAtPos,
     gridify,
     invertGrid,
     findOnGrid,
     findSingle,
+    onGrid,
     gridSize,
     printGrid,
     printGridMap,
@@ -16,10 +18,13 @@ import Coordinates (Position)
 import Data.List (transpose, (!?))
 import Data.Map.Strict (Map)
 import Data.Map.Strict qualified as Map
+import Data.Maybe (isJust)
 import Data.Text (Text)
 import Data.Text qualified as T
 import Data.Text.IO qualified as TIO
 import Utils (uHead)
+
+type Grid a = Map Position a
 
 -- Pad a grid with n items around the whole area
 padGrid :: Int -> a -> [[a]] -> [[a]]
@@ -43,6 +48,9 @@ gridSize = fst . Map.findMax
 
 findSingle :: (Eq a) => Map k a -> a -> k
 findSingle xs n = fst . uHead . Map.toList $ findOnGrid xs n
+
+onGrid :: (Ord k) => Map k a -> k -> Bool
+onGrid grid k = isJust $ Map.lookup k grid
 
 findOnGrid :: (Eq a) => Map k a -> a -> Map k a
 findOnGrid xs n = Map.filter (== n) xs

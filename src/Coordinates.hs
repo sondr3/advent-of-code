@@ -16,6 +16,7 @@ module Coordinates
     furthestPos,
     unitVector,
     move,
+    neighbours,
     line,
     allPos,
   )
@@ -104,6 +105,9 @@ move (x, y) South = (x, y + 1)
 move (x, y) SouthWest = (x - 1, y + 1)
 move (x, y) West = (x - 1, y)
 move (x, y) NorthWest = (x - 1, y - 1)
+
+neighbours :: Position -> [Dir] -> [Position]
+neighbours pos = map (move pos)
 
 -- get all positions that form a line in a direction of length `n`
 line :: Position -> Dir -> Int -> [Position]
