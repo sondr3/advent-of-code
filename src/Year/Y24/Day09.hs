@@ -9,8 +9,9 @@ import Data.Sequence (Seq (..))
 import Data.Sequence qualified as Seq
 import Data.Text (Text)
 import Data.Text.Display (display)
-import Day (AoC, PartStatus (..), mkAoC)
+import Day (AoC, mkAoC)
 import Parsers (Parser)
+import Puzzle.Types (Answer (..))
 import Text.Megaparsec
 
 data FileSystem
@@ -28,11 +29,11 @@ isFile _ = False
 
 type Input = Seq FileSystem
 
-partA :: Input -> PartStatus Int
-partA xs = Solved . sum $ zipWith (\f i -> i * value f) (toList $ sortFiles xs) [0 ..]
+partA :: Input -> Answer
+partA xs = IntAnswer . sum $ zipWith (\f i -> i * value f) (toList $ sortFiles xs) [0 ..]
 
-partB :: Input -> PartStatus Int
-partB xs = Unsolved
+partB :: Input -> Answer
+partB xs = Unanswered
 
 sortFiles :: Input -> Input
 sortFiles xs = do
@@ -63,5 +64,5 @@ pretty :: FileSystem -> Text
 pretty Free = "."
 pretty (File i) = display i
 
-day09 :: AoC Input Int
+day09 :: AoC Input
 day09 = mkAoC parser partA partB 9 2024

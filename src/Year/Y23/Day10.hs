@@ -7,9 +7,10 @@ import Data.Map (Map)
 import Data.Map qualified as Map
 import Data.Set qualified as Set
 import Data.Text (Text)
-import Day (AoC, PartStatus (..), mkAoC)
+import Day (AoC, mkAoC)
 import Grid (gridify)
 import Parsers
+import Puzzle.Types (Answer (..))
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
 import Utils (uHead, uTail)
@@ -53,8 +54,8 @@ filterGround = Map.filter (/= Ground)
 findStart :: Map (Int, Int) Cell -> (Int, Int)
 findStart m = uHead $ Map.keys $ Map.filter (== Start) m
 
-partA :: [[Cell]] -> PartStatus Int
-partA xs = Solved $ length (dfs $ gridify xs) `div` 2
+partA :: [[Cell]] -> Answer
+partA xs = IntAnswer $ length (dfs $ gridify xs) `div` 2
 
 shoelaceArea :: [(Int, Int)] -> Int
 shoelaceArea pts = abs $ (`div` 2) $ sum [x1 * y2 - y1 * x2 | ((x1, y1), (x2, y2)) <- zip pts (uTail pts ++ [uHead pts])]
@@ -62,8 +63,8 @@ shoelaceArea pts = abs $ (`div` 2) $ sum [x1 * y2 - y1 * x2 | ((x1, y1), (x2, y2
 cellsPretty :: Map (Int, Int) Cell -> Map (Int, Int) Text
 cellsPretty = Map.map prettyCell
 
-partB :: [[Cell]] -> PartStatus Int
-partB xs = Solved $ (abs (shoelaceArea area * 2) - length area - 1 + 3) `div` 2
+partB :: [[Cell]] -> Answer
+partB xs = IntAnswer $ (abs (shoelaceArea area * 2) - length area - 1 + 3) `div` 2
   where
     area = dfs (gridify xs)
 
@@ -83,5 +84,5 @@ pipeParser =
       Ground <$ char '.'
     ]
 
-day10 :: AoC [[Cell]] Int
+day10 :: AoC [[Cell]]
 day10 = mkAoC parser partA partB 10 2023

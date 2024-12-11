@@ -9,9 +9,10 @@ import Data.Map.Strict qualified as Map
 import Data.Maybe (isJust)
 import Data.Text (Text)
 import Data.Text qualified as T
-import Day (AoC, PartStatus (..), mkAoC)
+import Day (AoC, mkAoC)
 import Grid (gridSize, gridify, invertGrid)
 import Parsers (Parser, symbol)
+import Puzzle.Types (Answer (..))
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import Utils (combinations, uHead)
@@ -28,12 +29,12 @@ isAntenna _ = False
 
 type Input = Map Position Point
 
-partA :: Input -> PartStatus Int
-partA = Solved . countAntinodes . run (\(a, b) -> [uHead a, uHead b])
+partA :: Input -> Answer
+partA = IntAnswer . countAntinodes . run (\(a, b) -> [uHead a, uHead b])
 
-partB :: Input -> PartStatus Int
+partB :: Input -> Answer
 partB xs =
-  Solved $
+  IntAnswer $
     (\m -> countAntennas m + countAntinodes m) $
       run (\(a, b) -> takeWhile (isOnGrid xs) a ++ takeWhile (isOnGrid xs) b) xs
 
@@ -81,5 +82,5 @@ pretty Open = "."
 pretty (Antenna c) = T.singleton c
 pretty Antinode = "#"
 
-day08 :: AoC Input Int
+day08 :: AoC Input
 day08 = mkAoC parser partA partB 8 2024

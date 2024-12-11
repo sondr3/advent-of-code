@@ -8,9 +8,10 @@ module Year.Y23.Day12 where
 import Control.Applicative (Alternative (..))
 import Data.List (intercalate)
 import Data.MemoTrie (HasTrie (..), Reg, enumerateGeneric, memo2, trieGeneric, untrieGeneric)
-import Day (AoC, PartStatus (..), mkAoC)
+import Day (AoC, mkAoC)
 import GHC.Generics (Generic)
 import Parsers
+import Puzzle.Types (Answer (..))
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
 
@@ -22,11 +23,11 @@ instance HasTrie Spring where
   untrie = untrieGeneric unSpringTrie
   enumerate = enumerateGeneric unSpringTrie
 
-partA :: [([Spring], [Int])] -> PartStatus Int
-partA xs = Solved . sum $ map (uncurry memo) xs
+partA :: [([Spring], [Int])] -> Answer
+partA xs = IntAnswer . sum $ map (uncurry memo) xs
 
-partB :: [([Spring], [Int])] -> PartStatus Int
-partB xs = Solved . sum $ map (uncurry memo . unfold) xs
+partB :: [([Spring], [Int])] -> Answer
+partB xs = IntAnswer . sum $ map (uncurry memo . unfold) xs
 
 unfold :: ([Spring], [Int]) -> ([Spring], [Int])
 unfold (springs, nums) = (intercalate [Unknown] (replicate 5 springs), concat $ replicate 5 nums)
@@ -51,5 +52,5 @@ memo = memo2 go
     damaged (left, []) n ns | length left == n, Operational `notElem` left = memo [] ns
     damaged _ _ _ = 0
 
-day12 :: AoC [([Spring], [Int])] Int
+day12 :: AoC [([Spring], [Int])]
 day12 = mkAoC parser partA partB 12 2023

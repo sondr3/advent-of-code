@@ -4,8 +4,9 @@ module Year.Y24.Day03 where
 
 import Data.Functor (($>))
 import Data.Maybe (catMaybes)
-import Day (AoC, PartStatus (..), mkAoC)
+import Day (AoC, mkAoC)
 import Parsers (Parser, lexeme, parens, symbol)
+import Puzzle.Types (Answer (..))
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L
@@ -22,11 +23,11 @@ insValue :: Instruction -> Int
 insValue (Mul x y) = x * y
 insValue _ = 0
 
-partA :: Input -> PartStatus Int
-partA = Solved . foldl' (\acc i -> acc + insValue i) 0
+partA :: Input -> Answer
+partA = IntAnswer . foldl' (\acc i -> acc + insValue i) 0
 
-partB :: Input -> PartStatus Int
-partB xs = Solved $ foldl' (\acc i -> acc + insValue i) 0 (go xs [] True)
+partB :: Input -> Answer
+partB xs = IntAnswer $ foldl' (\acc i -> acc + insValue i) 0 (go xs [] True)
   where
     go (m@(Mul _ _) : xss) acc s = if s then go xss (m : acc) s else go xss acc s
     go (Enable : xss) acc _ = go xss acc True
@@ -47,5 +48,5 @@ parser = catMaybes <$> some (go <* optional eol) <* eof
 parseMul :: Parser Instruction
 parseMul = symbol "mul" *> parens (Mul <$> (lexeme L.decimal <* symbol ",") <*> lexeme L.decimal)
 
-day03 :: AoC Input Int
+day03 :: AoC Input
 day03 = mkAoC parser partA partB 3 2024

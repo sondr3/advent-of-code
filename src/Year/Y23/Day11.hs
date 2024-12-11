@@ -8,9 +8,10 @@ import Data.Map qualified as Map
 import Data.Set (Set)
 import Data.Set qualified as Set
 import Data.Text (Text)
-import Day (AoC, PartStatus (..), mkAoC)
+import Day (AoC, mkAoC)
 import Grid (gridify)
 import Parsers
+import Puzzle.Types (Answer (..))
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
 import Utils (pick)
@@ -21,11 +22,11 @@ prettySpace :: Space -> Text
 prettySpace Empty = "."
 prettySpace Galaxy = "#"
 
-partA :: Map (Int, Int) Space -> PartStatus Int
-partA xs = Solved . sum $ map manhattan' $ pick 2 $ calculate (findGalaxies xs) 2
+partA :: Map (Int, Int) Space -> Answer
+partA xs = IntAnswer . sum $ map manhattan' $ pick 2 $ calculate (findGalaxies xs) 2
 
-partB :: Map (Int, Int) Space -> PartStatus Int
-partB xs = Solved . sum $ map manhattan' $ pick 2 $ calculate (findGalaxies xs) 1000000
+partB :: Map (Int, Int) Space -> Answer
+partB xs = IntAnswer . sum $ map manhattan' $ pick 2 $ calculate (findGalaxies xs) 1000000
 
 manhattan' :: [(Int, Int)] -> Int
 manhattan' [a, b] = manhattan a b
@@ -55,5 +56,5 @@ calculate gals expand = map go gals
 parser :: Parser (Map (Int, Int) Space)
 parser = gridify <$> some (choice [Empty <$ char '.', Galaxy <$ char '#']) `sepEndBy` eol
 
-day11 :: AoC (Map (Int, Int) Space) Int
+day11 :: AoC (Map (Int, Int) Space)
 day11 = mkAoC parser partA partB 11 2023

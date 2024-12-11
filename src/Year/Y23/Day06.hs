@@ -4,18 +4,19 @@ module Year.Y23.Day06 where
 
 import Control.Applicative (Alternative (..))
 import Data.Text (Text)
-import Day (AoC, PartStatus (..), mkAoC)
+import Day (AoC, mkAoC)
 import Parsers
+import Puzzle.Types (Answer (..))
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L
 import Utils (readConcat)
 
-partA :: [(Int, Int)] -> PartStatus Int
-partA xs = Solved . product $ map numWins xs
+partA :: [(Int, Int)] -> Answer
+partA xs = IntAnswer . product $ map numWins xs
 
-partB :: [(Int, Int)] -> PartStatus Int
-partB xs = Solved $ numWins (readConcat (map fst xs), readConcat (map snd xs))
+partB :: [(Int, Int)] -> Answer
+partB xs = IntAnswer $ numWins (readConcat (map fst xs), readConcat (map snd xs))
 
 numWins :: (Int, Int) -> Int
 numWins (a, b) = abs (x1 - x2) + 1
@@ -32,5 +33,5 @@ parser = zip <$> lineParser "Time:" <*> lineParser "Distance:"
     lineParser :: Parser Text -> Parser [Int]
     lineParser t = lexeme t >> some (lexeme L.decimal) <* optional eol
 
-day06 :: AoC [(Int, Int)] Int
+day06 :: AoC [(Int, Int)]
 day06 = mkAoC parser partA partB 6 2023

@@ -6,8 +6,9 @@ import Control.Applicative (Alternative (..))
 import Data.List (nub)
 import Data.Maybe (fromJust, mapMaybe)
 import Data.Set qualified as S
-import Day (AoC, PartStatus (..), mkAoC)
+import Day (AoC, mkAoC)
 import Parsers (Parser)
+import Puzzle.Types (Answer (..))
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char
 import Text.Read (readMaybe)
@@ -35,16 +36,16 @@ partValue :: Part -> Int
 partValue (Part x _) = x
 partValue _ = 0
 
-partA :: [[Part]] -> PartStatus Int
+partA :: [[Part]] -> Answer
 partA xs =
-  Solved
+  IntAnswer
     . S.foldr (\x y -> partValue x + y) 0
     $ S.fromList
     $ mapMaybe (\(cs, p) -> if any (isSymbol . (\(x, y) -> xs !! x !! y)) cs && isPart p then pure p else Nothing) (matrix xs)
 
-partB :: [[Part]] -> PartStatus Int
+partB :: [[Part]] -> Answer
 partB xs =
-  Solved
+  IntAnswer
     . sum
     $ map
       (product . map partValue)
@@ -77,5 +78,5 @@ parseChar = Symbol <$> satisfy (\x -> not (isDigit x) && x /= '.' && x /= '\n')
 parsePeriod :: Parser Part
 parsePeriod = Period <$ char '.'
 
-day03 :: AoC [[Part]] Int
+day03 :: AoC [[Part]]
 day03 = mkAoC parser partA partB 3 2023

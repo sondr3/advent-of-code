@@ -11,16 +11,17 @@ import Data.Map (Map)
 import Data.Map qualified as Map
 import Data.Text (Text)
 import Data.Text qualified as T
-import Day (AoC, PartStatus (..), mkAoC)
+import Day (AoC, mkAoC)
 import Parsers
+import Puzzle.Types (Answer (..))
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
 
-partA :: [Text] -> PartStatus Int
-partA xs = Solved . sum $ map hash xs
+partA :: [Text] -> Answer
+partA xs = IntAnswer . sum $ map hash xs
 
-partB :: [Text] -> PartStatus Int
-partB xs = Solved . sum $ map focusPower $ Map.toList (foldl' box buildBoxes xs)
+partB :: [Text] -> Answer
+partB xs = IntAnswer . sum $ map focusPower $ Map.toList (foldl' box buildBoxes xs)
 
 hash :: Text -> Int
 hash = T.foldl' (\acc a -> ((ord a + acc) * 17) `mod` 256) 0
@@ -49,5 +50,5 @@ box boxes xs = go $ T.span (`notElem` ['=', '-']) xs
 parser :: Parser [Text]
 parser = (T.pack <$> some (alphaNumChar <|> char '=' <|> char '-')) `sepEndBy` char ','
 
-day15 :: AoC [Text] Int
+day15 :: AoC [Text]
 day15 = mkAoC parser partA partB 15 2023

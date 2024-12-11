@@ -4,18 +4,16 @@ module Year.Y24.Day10 where
 
 import Coordinates (Position, cardinals, neighbours)
 import Data.Char (digitToInt)
-import Data.List (nubBy)
 import Data.Map.Strict qualified as Map
-import Data.Set (Set)
 import Data.Set qualified as Set
 import Data.Text (Text)
 import Data.Text.Display (display)
-import Day (AoC, PartStatus (..), mkAoC)
+import Day (AoC, mkAoC)
 import Grid (Grid, gridify, onGrid)
-import Parsers (Parser, number, symbol)
+import Parsers (Parser, symbol)
+import Puzzle.Types (Answer (..))
 import Text.Megaparsec
 import Text.Megaparsec.Char (digitChar, eol)
-import Text.Megaparsec.Char.Lexer qualified as L
 
 data Trail
   = Path Int
@@ -45,11 +43,11 @@ walk cur grid = case validMoves cur grid of
 findAllPaths :: Input -> [[[Location]]]
 findAllPaths grid = map (filter (\x -> length x == 10) . (`walk` grid)) (findStart grid)
 
-partA :: Input -> PartStatus Int
-partA grid = Solved . sum . map (length . Set.fromList . map last) $ findAllPaths grid
+partA :: Input -> Answer
+partA grid = IntAnswer . sum . map (length . Set.fromList . map last) $ findAllPaths grid
 
-partB :: Input -> PartStatus Int
-partB grid = Solved . sum . map length $ findAllPaths grid
+partB :: Input -> Answer
+partB grid = IntAnswer . sum . map length $ findAllPaths grid
 
 parser :: Parser Input
 parser = gridify <$> (some . choice) [Path . digitToInt <$> digitChar, Impassable <$ symbol "."] `sepBy` eol <* eof
@@ -58,5 +56,5 @@ pretty :: Trail -> Text
 pretty Impassable = "."
 pretty (Path n) = display n
 
-day10 :: AoC Input Int
+day10 :: AoC Input
 day10 = mkAoC parser partA partB 10 2024

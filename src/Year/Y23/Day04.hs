@@ -4,21 +4,22 @@ module Year.Y23.Day04 where
 
 import Control.Monad (void)
 import Data.Set qualified as S
-import Day (AoC, PartStatus (..), mkAoC)
+import Day (AoC, mkAoC)
 import Parsers (Parser)
+import Puzzle.Types (Answer (..))
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec qualified as T
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L
 
-partA :: [([Int], [Int])] -> PartStatus Int
-partA xs = Solved . sum . map (\x -> 2 ^ (x - 1)) . filter (> 0) $ map (uncurry numMatching) xs
+partA :: [([Int], [Int])] -> Answer
+partA xs = IntAnswer . sum . map (\x -> 2 ^ (x - 1) :: Int) . filter (> 0) $ map (uncurry numMatching) xs
 
 numMatching :: [Int] -> [Int] -> Int
 numMatching xs ys = S.size $ S.fromList xs `S.intersection` S.fromList ys
 
-partB :: [([Int], [Int])] -> PartStatus Int
-partB i = Solved . sum $ go i
+partB :: [([Int], [Int])] -> Answer
+partB i = IntAnswer . sum $ go i
   where
     go :: [([Int], [Int])] -> [Int]
     go [] = []
@@ -38,5 +39,5 @@ gameParser = do
   yours <- T.many (L.lexeme hspace L.decimal)
   pure (winning, yours)
 
-day04 :: AoC [([Int], [Int])] Int
+day04 :: AoC [([Int], [Int])]
 day04 = mkAoC parser partA partB 4 2023

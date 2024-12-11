@@ -7,31 +7,37 @@ where
 
 import Data.List.NonEmpty (NonEmpty)
 import Data.Text (Text)
-import Data.Text.Display (Display)
+import Data.Text.Display (Display (..), display)
 
-data Answer a where
-  Unanswered :: (Eq a, Display a) => Answer a
-  NilAnswer :: (Eq a, Display a) => Answer a
-  Answer :: (Eq a, Display a) => a -> Answer a
+data Answer
+  = Unanswered
+  | NilAnswer
+  | IntAnswer Int
 
-deriving stock instance (Eq a) => Eq (Answer a)
+instance Display Answer where
+  displayBuilder (IntAnswer a) = displayBuilder a
+  displayBuilder NilAnswer = "nil"
+  displayBuilder Unanswered = "unanswered"
 
-deriving stock instance (Show a) => Show (Answer a)
+instance Show Answer where
+  show (IntAnswer a) = show a
+  show NilAnswer = "nil"
+  show Unanswered = "unanswered"
 
-type role Answer nominal
+instance Eq Answer where
+  IntAnswer a == IntAnswer b = a == b
+  NilAnswer == NilAnswer = True
+  Unanswered == Unanswered = True
+  _ == _ = False
 
-newtype Puzzle a = Puzzle {inputs :: NonEmpty (Input a)}
+newtype Puzzle = Puzzle {inputs :: NonEmpty Input}
   deriving stock (Show, Eq)
 
-type role Puzzle nominal
-
-data Input a = Input
-  { answer1 :: Answer a,
-    answer2 :: Answer a,
+data Input = Input
+  { answer1 :: Answer,
+    answer2 :: Answer,
     comment :: Maybe Text,
     name :: Maybe Text,
     input :: Text
   }
   deriving stock (Show, Eq)
-
-type role Input nominal

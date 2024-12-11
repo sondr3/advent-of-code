@@ -12,7 +12,7 @@ import Puzzle.Types (Answer (..), Input (..), Puzzle (..))
 import System.IO (Handle, IOMode (WriteMode), hClose, openFile)
 import System.OsPath (OsPath, decodeUtf)
 
-writePuzzle :: Puzzle a -> OsPath -> IO ()
+writePuzzle :: Puzzle -> OsPath -> IO ()
 writePuzzle (Puzzle {inputs}) p = do
   path <- decodeUtf p
   file <- openFile path WriteMode
@@ -24,7 +24,7 @@ writePuzzle (Puzzle {inputs}) p = do
   TIO.writeFile path (T.stripStart written)
   pure ()
 
-writeInput :: Input a -> Handle -> IO ()
+writeInput :: Input -> Handle -> IO ()
 writeInput i handle = do
   TIO.hPutStr handle "\n"
   TIO.hPutStr handle "#{"
@@ -34,23 +34,23 @@ writeInput i handle = do
   TIO.hPutStrLn handle (input i)
   pure ()
 
-writeName :: Input a -> Text
+writeName :: Input -> Text
 writeName (Input {name}) = writeText name "name"
 
-writeComment :: Input a -> Text
+writeComment :: Input -> Text
 writeComment (Input {comment}) = writeText comment "comment"
 
 writeText :: Maybe Text -> Text -> Text
 writeText (Just t) k = k <> "= \"" <> t <> "\""
 writeText Nothing _ = ""
 
-writeAnswer :: Answer a -> Text -> Text
+writeAnswer :: Answer -> Text -> Text
 writeAnswer Unanswered _ = ""
 writeAnswer NilAnswer p = p <> " = nil"
-writeAnswer (Answer a) p = p <> " = " <> display a
+writeAnswer (IntAnswer a) p = p <> " = " <> display a
 
-writeP1 :: Input a -> Text
+writeP1 :: Input -> Text
 writeP1 (Input {answer1}) = writeAnswer answer1 "p1"
 
-writeP2 :: Input a -> Text
+writeP2 :: Input -> Text
 writeP2 (Input {answer2}) = writeAnswer answer2 "p2"

@@ -2,19 +2,20 @@
 
 module Year.Y23.Day09 where
 
-import Day (AoC, PartStatus (..), mkAoC)
+import Day (AoC, mkAoC)
 import Parsers
+import Puzzle.Types (Answer (..))
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
 import Utils (uTail)
 
-partB :: [[Int]] -> PartStatus Int
+partB :: [[Int]] -> Answer
 
-partA xs = Solved . sum $ map subseq xs
+partA xs = IntAnswer . sum $ map subseq xs
 
-partA :: [[Int]] -> PartStatus Int
+partA :: [[Int]] -> Answer
 
-partB xs = Solved . sum $ map (subseq . reverse) xs
+partB xs = IntAnswer . sum $ map (subseq . reverse) xs
 
 subseq :: [Int] -> Int
 subseq xs = sum $ map last $ takeWhile (any (/= 0)) $ iterate diff xs
@@ -25,5 +26,5 @@ diff xs = zipWith (-) (uTail xs) xs
 parser :: Parser [[Int]]
 parser = (number `sepBy` hspace) `sepBy` eol
 
-day09 :: AoC [[Int]] Int
+day09 :: AoC [[Int]]
 day09 = mkAoC parser partA partB 9 2023

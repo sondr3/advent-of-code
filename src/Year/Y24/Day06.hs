@@ -7,9 +7,10 @@ import Data.Map.Strict (Map)
 import Data.Map.Strict qualified as Map
 import Data.Set qualified as Set
 import Data.Text (Text)
-import Day (AoC, PartStatus (..), mkAoC)
+import Day (AoC, mkAoC)
 import Grid (findSingle, gridify)
 import Parsers (Parser, symbol)
+import Puzzle.Types (Answer (..))
 import Text.Megaparsec
 import Text.Megaparsec.Char
 
@@ -21,8 +22,8 @@ data Point
 
 type Input = Map Position Point
 
-partA :: Input -> PartStatus Int
-partA xs = Solved . Set.size . Set.fromList . map fst $ path xs (findSingle xs (Player North), North)
+partA :: Input -> Answer
+partA xs = IntAnswer . Set.size . Set.fromList . map fst $ path xs (findSingle xs (Player North), North)
 
 path :: Input -> (Position, Dir) -> [(Position, Dir)]
 path xs (pos, dir) =
@@ -31,8 +32,8 @@ path xs (pos, dir) =
     Just _ -> path xs (move pos dir, dir)
     Nothing -> []
 
-partB :: Input -> PartStatus Int
-partB xs = Solved $ do
+partB :: Input -> Answer
+partB xs = IntAnswer $ do
   let player = findSingle xs (Player North)
       route = Set.fromList . map fst $ path xs (player, North)
       grids = map (\p -> Map.insert p Obstacle xs) (Set.toList route)
@@ -58,5 +59,5 @@ pretty (Player West) = "‹"
 pretty (Player South) = "∨"
 pretty (Player _) = "*"
 
-day06 :: AoC Input Int
+day06 :: AoC Input
 day06 = mkAoC parser partA partB 6 2024

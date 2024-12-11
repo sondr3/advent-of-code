@@ -6,9 +6,10 @@ import Coordinates (Dir (..), Position, allDirs, allPos, line, move)
 import Data.Functor (($>))
 import Data.Maybe (mapMaybe)
 import Data.Text qualified as T
-import Day (AoC, PartStatus (..), mkAoC)
+import Day (AoC, mkAoC)
 import Grid (getAtPos)
 import Parsers (Parser)
+import Puzzle.Types (Answer (..))
 import Text.Megaparsec
 import Text.Megaparsec.Char
 
@@ -19,8 +20,8 @@ type Input = [Row]
 gridify :: Input -> [Position]
 gridify xs = allPos (0, 0) (length xs, length xs)
 
-partA :: Input -> PartStatus Int
-partA xs = Solved . sum $ map isXmas $ concatMap (find xs 4) (gridify xs)
+partA :: Input -> Answer
+partA xs = IntAnswer . sum $ map isXmas $ concatMap (find xs 4) (gridify xs)
 
 isXmas :: Row -> Int
 isXmas ['X', 'M', 'A', 'S'] = 1
@@ -31,8 +32,8 @@ find grid n pos = map go allDirs
   where
     go dir = get grid $ line pos dir n
 
-partB :: Input -> PartStatus Int
-partB xs = Solved $ length $ filter id $ map (\p -> cross xs p 3) (gridify xs)
+partB :: Input -> Answer
+partB xs = IntAnswer $ length $ filter id $ map (\p -> cross xs p 3) (gridify xs)
 
 get :: Input -> [Position] -> Row
 get grid = mapMaybe (`getAtPos` grid)
@@ -51,5 +52,5 @@ isMas _ = False
 parser :: Parser Input
 parser = fmap T.unpack <$> some (takeWhile1P Nothing (/= '\n') <* (eol $> () <|> eof))
 
-day04 :: AoC Input Int
+day04 :: AoC Input
 day04 = mkAoC parser partA partB 4 2024

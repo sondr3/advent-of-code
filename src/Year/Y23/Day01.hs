@@ -9,18 +9,19 @@ import Data.Maybe (fromJust)
 import Data.Text (Text)
 import Data.Text qualified as T
 import Data.Text.Read (decimal)
-import Day (AoC, PartStatus (..), mkAoC)
+import Day (AoC, mkAoC)
 import Parsers (Parser)
+import Puzzle.Types (Answer (..))
 import Text.Megaparsec
 import Text.Megaparsec qualified as M
 import Text.Megaparsec.Char
 import Utils (getRight, isDigit)
 
-partA :: [Text] -> PartStatus Int
-partA xs = Solved . sum $ map fst $ rights $ map (decimal . (\t -> T.pack [T.head t, T.head (T.reverse t)]) . T.filter isDigit) xs
+partA :: [Text] -> Answer
+partA xs = IntAnswer . sum $ map fst $ rights $ map (decimal . (\t -> T.pack [T.head t, T.head (T.reverse t)]) . T.filter isDigit) xs
 
-partB :: [Text] -> PartStatus Int
-partB xs = Solved . sum $ map ((\x -> fst . getRight $ decimal $ T.concat [NE.head x, NE.last x]) . extractNums) xs
+partB :: [Text] -> Answer
+partB xs = IntAnswer . sum $ map ((\x -> fst . getRight $ decimal $ T.concat [NE.head x, NE.last x]) . extractNums) xs
 
 wordsToNum :: [(Text, Text)]
 wordsToNum = [("one", "1"), ("two", "2"), ("three", "3"), ("four", "4"), ("five", "5"), ("six", "6"), ("seven", "7"), ("eight", "8"), ("nine", "9")]
@@ -46,5 +47,5 @@ matchNum ((word, num) : rest) t =
 parser :: Parser [Text]
 parser = M.many $ takeWhile1P Nothing (/= '\n') <* optional eol
 
-day01 :: AoC [Text] Int
+day01 :: AoC [Text]
 day01 = mkAoC parser partA partB 1 2023

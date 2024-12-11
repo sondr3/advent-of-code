@@ -4,16 +4,17 @@ module Year.Y24.Day05 where
 
 import Data.Map.Strict (Map)
 import Data.Map.Strict qualified as Map
-import Day (AoC, PartStatus (..), mkAoC)
+import Day (AoC, mkAoC)
 import Map (fromTuples)
 import Parsers (Parser, number, symbol)
+import Puzzle.Types (Answer (..))
 import Text.Megaparsec
 import Text.Megaparsec.Char
 
 type Input = (Map Int [Int], [[Int]])
 
-partA :: Input -> PartStatus Int
-partA (m, xs) = Solved $ test (m, xs)
+partA :: Input -> Answer
+partA (m, xs) = IntAnswer $ test (m, xs)
 
 test :: (Map Int [Int], [[Int]]) -> Int
 test (m, xs) = sumMiddle $ filterPages (m, xs) snd
@@ -29,8 +30,8 @@ sumMiddle xs = sum $ map (\x -> x !! (length x `div` 2)) xs
 filterPages :: Input -> (([Int], Bool) -> Bool) -> [[Int]]
 filterPages (m, xs) f = map fst $ filter f $ zip xs (map (and . find m) xs)
 
-partB :: Input -> PartStatus Int
-partB xs = Solved . sumMiddle $ fixOrder xs
+partB :: Input -> Answer
+partB xs = IntAnswer . sumMiddle $ fixOrder xs
 
 fixOrder :: Input -> [[Int]]
 fixOrder (m, xs) = map go $ filterPages (m, xs) (not . snd)
@@ -46,5 +47,5 @@ parser = (,) <$> pageOrder <* eol <*> (number `sepBy` symbol ",") `sepBy` eol <*
     pageOrder :: Parser (Map Int [Int])
     pageOrder = fromTuples <$> some ((,) <$> (number <* symbol "|") <*> number <* eol)
 
-day05 :: AoC Input Int
+day05 :: AoC Input
 day05 = mkAoC parser partA partB 5 2024
