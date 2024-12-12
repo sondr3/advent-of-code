@@ -82,6 +82,7 @@ library
     Year.Y24.Day09
     Year.Y24.Day10
     Year.Y24.Day11
+    Year.Y24.Day12
 
   build-depends:
     MemoTrie ^>=0.6,
