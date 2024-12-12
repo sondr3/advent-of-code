@@ -1,7 +1,6 @@
 module Main (main) where
 
 import AoC (Answer (..), Input (Input), Puzzle (..), padNum, writePuzzle)
-import Control.Monad (void)
 import Data.Aeson (object, (.=))
 import Data.List ((!?))
 import Data.List.NonEmpty qualified as NE
@@ -19,6 +18,7 @@ import Text.Megaparsec (errorBundlePretty)
 import Text.Mustache (compileMustacheText, renderMustache)
 import Year (Year (..), longYear)
 import Year.Y24 qualified
+import Year.Y24 qualified as Year.Y23
 
 data NewOptions = NewOptions
   { year :: Year,
@@ -98,7 +98,7 @@ readInput prompt = outputStrLn (T.unpack prompt) *> loop []
 solveDay :: SolveOptions -> IO ()
 solveDay SolveOptions {..} = do
   let sols = case year of
-        Y23 -> []
+        Y23 -> Year.Y23.solutions
         Y24 -> Year.Y24.solutions
   _ <- solveSolution (sols !? (day - 1))
   _ <- withArgs [] $ benchmarkSolution (sols !? (day - 1))

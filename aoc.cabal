@@ -15,8 +15,8 @@ common config
   build-depends: base ^>=4.20
   default-language: GHC2024
   default-extensions:
-    DerivingStrategies
     DeriveAnyClass
+    DerivingStrategies
     DuplicateRecordFields
     LambdaCase
     MultiWayIf
@@ -55,6 +55,7 @@ library
     Solutions
     Utils
     Year
+    Year.Y23
     Year.Y23.Day01
     Year.Y23.Day02
     Year.Y23.Day03
