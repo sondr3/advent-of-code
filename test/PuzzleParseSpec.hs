@@ -24,7 +24,7 @@ spec = parallel $ do
   it "should parse puzzle inputs" $ do
     parse parsePuzzle "" "#{p1 = 1, p2 = 2}\n123\n123\n123\n\n#{p1=1}\n123\n123\n123\n"
       `shouldParse` Puzzle
-        { inputs =
+        { puzzles =
             Input
               { answer1 = IntAnswer 1,
                 answer2 = IntAnswer 2,

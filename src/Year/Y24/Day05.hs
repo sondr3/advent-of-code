@@ -4,10 +4,9 @@ module Year.Y24.Day05 where
 
 import Data.Map.Strict (Map)
 import Data.Map.Strict qualified as Map
-import Day (AoC, mkAoC)
+import Day (Answer (..), AoC, mkAoC)
 import Map (fromTuples)
 import Parsers (Parser, number, symbol)
-import Puzzle.Types (Answer (..))
 import Text.Megaparsec
 import Text.Megaparsec.Char
 

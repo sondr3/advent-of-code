@@ -6,9 +6,8 @@ import Control.Applicative (Alternative (..))
 import Data.List (nub)
 import Data.Maybe (fromJust, mapMaybe)
 import Data.Set qualified as S
-import Day (AoC, mkAoC)
+import Day (Answer (..), AoC, mkAoC)
 import Parsers (Parser)
-import Puzzle.Types (Answer (..))
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char
 import Text.Read (readMaybe)

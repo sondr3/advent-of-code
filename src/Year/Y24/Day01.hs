@@ -3,9 +3,8 @@
 module Year.Y24.Day01 where
 
 import Data.List (sort)
-import Day (AoC, mkAoC)
+import Day (Answer (..), AoC, mkAoC)
 import Parsers (Parser, lexeme)
-import Puzzle.Types (Answer (..))
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L

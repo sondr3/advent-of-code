@@ -4,9 +4,8 @@ module Year.Y23.Day04 where
 
 import Control.Monad (void)
 import Data.Set qualified as S
-import Day (AoC, mkAoC)
+import Day (Answer (..), AoC, mkAoC)
 import Parsers (Parser)
-import Puzzle.Types (Answer (..))
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec qualified as T
 import Text.Megaparsec.Char

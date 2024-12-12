@@ -7,10 +7,9 @@ import Data.Map (Map)
 import Data.Map qualified as M
 import Data.Text (Text)
 import Data.Text qualified as T
-import Day (AoC, mkAoC)
+import Day (Answer (..), AoC, mkAoC)
 import GHC.Exts (sortWith)
 import Parsers
-import Puzzle.Types (Answer (..))
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
 import Utils (uHead)

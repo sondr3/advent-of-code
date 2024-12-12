@@ -2,9 +2,8 @@
 
 module Year.Y23.Day09 where
 
-import Day (AoC, mkAoC)
+import Day (Answer (..), AoC, mkAoC)
 import Parsers
-import Puzzle.Types (Answer (..))
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
 import Utils (uTail)

@@ -4,9 +4,8 @@ module Year.Y24.Day03 where
 
 import Data.Functor (($>))
 import Data.Maybe (catMaybes)
-import Day (AoC, mkAoC)
+import Day (Answer (..), AoC, mkAoC)
 import Parsers (Parser, lexeme, parens, symbol)
-import Puzzle.Types (Answer (..))
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L

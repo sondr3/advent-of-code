@@ -6,10 +6,9 @@ import Coordinates (Dir (..), Position, allDirs, allPos, line, move)
 import Data.Functor (($>))
 import Data.Maybe (mapMaybe)
 import Data.Text qualified as T
-import Day (AoC, mkAoC)
+import Day (Answer (..), AoC, mkAoC)
 import Grid (getAtPos)
 import Parsers (Parser)
-import Puzzle.Types (Answer (..))
 import Text.Megaparsec
 import Text.Megaparsec.Char
 

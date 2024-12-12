@@ -7,7 +7,7 @@ where
 
 import Data.List.NonEmpty (NonEmpty)
 import Data.Text (Text)
-import Data.Text.Display (Display (..), display)
+import Data.Text.Display (Display (..))
 
 data Answer
   = Unanswered
@@ -30,7 +30,7 @@ instance Eq Answer where
   Unanswered == Unanswered = True
   _ == _ = False
 
-newtype Puzzle = Puzzle {inputs :: NonEmpty Input}
+newtype Puzzle = Puzzle {puzzles :: NonEmpty Input}
   deriving stock (Show, Eq)
 
 data Input = Input

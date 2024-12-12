@@ -6,10 +6,9 @@ import Control.Applicative (Alternative (..))
 import Data.IntMap qualified as IntMap
 import Data.List (find, inits, tails, transpose)
 import Data.Maybe (fromMaybe, mapMaybe)
-import Day (AoC, mkAoC)
+import Day (Answer (..), AoC, mkAoC)
 import GHC.Generics (Generic)
 import Parsers
-import Puzzle.Types (Answer (..))
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
 

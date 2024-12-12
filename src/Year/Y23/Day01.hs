@@ -9,9 +9,8 @@ import Data.Maybe (fromJust)
 import Data.Text (Text)
 import Data.Text qualified as T
 import Data.Text.Read (decimal)
-import Day (AoC, mkAoC)
+import Day (Answer (..), AoC, mkAoC)
 import Parsers (Parser)
-import Puzzle.Types (Answer (..))
 import Text.Megaparsec
 import Text.Megaparsec qualified as M
 import Text.Megaparsec.Char

@@ -8,10 +8,9 @@ module Year.Y23.Day12 where
 import Control.Applicative (Alternative (..))
 import Data.List (intercalate)
 import Data.MemoTrie (HasTrie (..), Reg, enumerateGeneric, memo2, trieGeneric, untrieGeneric)
-import Day (AoC, mkAoC)
+import Day (Answer (..), AoC, mkAoC)
 import GHC.Generics (Generic)
 import Parsers
-import Puzzle.Types (Answer (..))
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
 

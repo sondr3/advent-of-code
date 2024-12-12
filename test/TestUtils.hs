@@ -11,14 +11,14 @@ import Puzzle.Types (Answer (..), Input (..), Puzzle (..))
 import Test.Hspec (Spec, describe, it, runIO, shouldBe, shouldNotBe)
 import Utils (padNum)
 
-testDay :: AoC i -> Spec
-testDay m@MkAoC {..} = describe (T.unpack $ "day " <> padNum day) $ do
-  docs <- runIO (getDayPuzzle day year)
-  forM_ (inputs docs) $ \input -> do
+testDay :: (Show i) => AoC i -> Spec
+testDay m@AoC {..} = describe (T.unpack $ "day " <> padNum day) $ do
+  ps <- runIO (getDayPuzzle day year)
+  forM_ (puzzles ps) $ \input -> do
     testInput input m
 
-testInput :: Input -> AoC i -> Spec
-testInput i MkAoC {..} = do
+testInput :: (Show i) => Input -> AoC i -> Spec
+testInput i AoC {..} = do
   p <- parseInput parser (comment i) (input i)
   let n = fromMaybe "input" (name i)
 

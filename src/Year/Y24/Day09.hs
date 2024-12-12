@@ -9,9 +9,8 @@ import Data.Sequence (Seq (..))
 import Data.Sequence qualified as Seq
 import Data.Text (Text)
 import Data.Text.Display (display)
-import Day (AoC, mkAoC)
+import Day (Answer (..), AoC, mkAoC)
 import Parsers (Parser)
-import Puzzle.Types (Answer (..))
 import Text.Megaparsec
 
 data FileSystem
@@ -33,7 +32,7 @@ partA :: Input -> Answer
 partA xs = IntAnswer . sum $ zipWith (\f i -> i * value f) (toList $ sortFiles xs) [0 ..]
 
 partB :: Input -> Answer
-partB xs = Unanswered
+partB _ = Unanswered
 
 sortFiles :: Input -> Input
 sortFiles xs = do

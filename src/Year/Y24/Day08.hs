@@ -9,10 +9,9 @@ import Data.Map.Strict qualified as Map
 import Data.Maybe (isJust)
 import Data.Text (Text)
 import Data.Text qualified as T
-import Day (AoC, mkAoC)
+import Day (Answer (..), AoC, mkAoC)
 import Grid (gridSize, gridify, invertGrid)
 import Parsers (Parser, symbol)
-import Puzzle.Types (Answer (..))
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import Utils (combinations, uHead)

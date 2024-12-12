@@ -13,10 +13,10 @@ import System.IO (Handle, IOMode (WriteMode), hClose, openFile)
 import System.OsPath (OsPath, decodeUtf)
 
 writePuzzle :: Puzzle -> OsPath -> IO ()
-writePuzzle (Puzzle {inputs}) p = do
+writePuzzle (Puzzle {puzzles}) p = do
   path <- decodeUtf p
   file <- openFile path WriteMode
-  mapM_ (`writeInput` file) inputs
+  mapM_ (`writeInput` file) puzzles
   hClose file
 
   -- hack for whitespace

@@ -7,10 +7,9 @@ import Data.Map.Strict (Map)
 import Data.Map.Strict qualified as Map
 import Data.Set qualified as Set
 import Data.Text (Text)
-import Day (AoC, mkAoC)
+import Day (Answer (..), AoC, mkAoC)
 import Grid (findSingle, gridify)
 import Parsers (Parser, symbol)
-import Puzzle.Types (Answer (..))
 import Text.Megaparsec
 import Text.Megaparsec.Char
 

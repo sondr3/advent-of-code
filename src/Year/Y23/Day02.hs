@@ -9,9 +9,8 @@ import Data.List.NonEmpty qualified as NE
 import Data.Map qualified as Map
 import Data.Text (Text)
 import Data.Text qualified as T
-import Day (AoC, mkAoC)
+import Day (Answer (..), AoC, mkAoC)
 import Parsers (Parser)
-import Puzzle.Types (Answer (..))
 import Text.Megaparsec qualified as T
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L
