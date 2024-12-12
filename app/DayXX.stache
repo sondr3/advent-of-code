@@ -2,8 +2,9 @@
 
 module Year.{{year}}.Day{{padDay}} where
 
+import AoC (Answer (..), AoC, Year (..), mkAoC)
 import Data.Text (Text)
-import Day (AoC, Answer (..), mkAoC, Year (..))
+import Day (Day (..))
 import Parsers (Parser)
 import Text.Megaparsec
 import Text.Megaparsec.Char
