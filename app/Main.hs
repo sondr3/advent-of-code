@@ -1,56 +1,63 @@
 module Main (main) where
 
 import AoC (Answer (..), Input (Input), Puzzle (..), padNum, writePuzzle)
+import Control.Monad (void)
 import Data.Aeson (object, (.=))
+import Data.List ((!?))
 import Data.List.NonEmpty qualified as NE
 import Data.Text (Text)
 import Data.Text qualified as T
-import Data.Text.Display (display)
-import Data.Text.Display.Core (Display)
 import Data.Text.IO.Utf8 qualified as TIO
 import Data.Text.Lazy.IO qualified as TLIO
 import Options.Applicative
+import Solutions (benchmarkSolution, solveSolution)
 import System.Console.Haskeline (InputT, defaultSettings, getInputLine, outputStrLn, runInputT)
+import System.Environment.Blank (withArgs)
 import System.OsPath (encodeUtf)
 import System.Process (callCommand)
 import Text.Megaparsec (errorBundlePretty)
 import Text.Mustache (compileMustacheText, renderMustache)
+import Year (Year (..), longYear)
+import Year.Y24 qualified
 
 data NewOptions = NewOptions
-  { year :: Text,
-    day :: Text,
+  { year :: Year,
+    day :: Int,
     skip :: Bool
   }
 
-newtype Command
+data SolveOptions = SolveOptions
+  { year :: Year,
+    day :: Int
+  }
+
+data Command
   = New NewOptions
+  | Solve SolveOptions
 
 data App = App {_optCommand :: Command, _verbose :: Bool}
 
 writeTemplate :: NewOptions -> IO ()
 writeTemplate NewOptions {..} = do
   f <- TIO.readFile "app/DayXX.stache"
-  let yr = "Y" <> display year
-      d = padNum $ read $ T.unpack day
-      tmpl = compileMustacheText "day" f
-  case tmpl of
+  case compileMustacheText "day" f of
     Left err -> putStrLn (errorBundlePretty err)
     Right t -> do
-      let res = renderMustache t $ object ["day" .= day, "padDay" .= d, "year" .= year, "yy" .= yr]
-          path = "src/Year/" <> yr <> "/" <> "Day" <> d <> ".hs"
+      let res = renderMustache t $ object ["day" .= day, "padDay" .= padNum day, "year" .= show year]
+          path = "src/Year/" <> show year <> "/" <> "Day" <> T.unpack (padNum day) <> ".hs"
       if skip
         then pure ()
         else do
-          TLIO.writeFile (T.unpack path) res
+          TLIO.writeFile path res
           callCommand "cabal-gild -i aoc.cabal -o aoc.cabal"
 
 readPuzzle :: NewOptions -> IO ()
 readPuzzle NewOptions {..} = do
   inputs <- runInputT defaultSettings (loop [])
-  path <- encodeUtf ("inputs/" <> "20" <> T.unpack year <> "/day" <> (T.unpack . padNum $ read . T.unpack $ day) <> ".aoc")
+  path <- encodeUtf (T.unpack ("inputs/" <> longYear year <> "/day" <> padNum day <> ".aoc"))
   writePuzzle (Puzzle (NE.fromList $ reverse inputs)) path
   where
-    loop :: [Input Int] -> InputT IO [Input Int]
+    loop :: [Input] -> InputT IO [Input]
     loop xs = do
       name <- readLine "name: " T.pack
       if name == Just "done"
@@ -61,14 +68,14 @@ readPuzzle NewOptions {..} = do
           input <- readInput "input: "
           loop $ Input p1 p2 Nothing name (T.strip input) : xs
 
-readAnswer :: (Eq a, Display a, Read a) => String -> InputT IO (Answer a)
+readAnswer :: String -> InputT IO Answer
 readAnswer prompt = do
   cmd <- getInputLine prompt
   case cmd of
     Nothing -> pure Unanswered
     Just "" -> pure Unanswered
     Just "nil" -> pure NilAnswer
-    Just ans -> pure $ Answer (read ans)
+    Just ans -> pure $ IntAnswer (read ans)
 
 readLine :: String -> (String -> a) -> InputT IO (Maybe a)
 readLine prompt f = do
@@ -88,15 +95,20 @@ readInput prompt = outputStrLn (T.unpack prompt) *> loop []
         Nothing -> return $ T.unlines $ reverse acc
         Just line -> loop ((T.strip . T.pack) line : acc)
 
+solveDay :: SolveOptions -> IO ()
+solveDay SolveOptions {..} = do
+  let sols = case year of
+        Y23 -> []
+        Y24 -> Year.Y24.solutions
+  _ <- solveSolution (sols !? (day - 1))
+  _ <- withArgs [] $ benchmarkSolution (sols !? (day - 1))
+  pure ()
+
 run :: App -> IO ()
-run (App (New o@NewOptions {..}) _) = do
-  if T.length year /= 2
-    then do
-      TIO.putStrLn "Years should be written as 24, 25 etc"
-      pure ()
-    else do
-      writeTemplate o
-      readPuzzle o
+run (App (Solve o) _) = solveDay o
+run (App (New o) _) = do
+  writeTemplate o
+  readPuzzle o
 
 app :: Parser App
 app = App <$> commands <*> debug
@@ -104,14 +116,17 @@ app = App <$> commands <*> debug
     debug = switch (long "debug" <> short 'd' <> help "Print debug information")
 
 commands :: Parser Command
-commands = subparser newCmd
+commands = subparser (newCmd <> runCmd)
   where
     newCmd = command "new" (info newOptions (progDesc "Start a new day, a glorious day"))
-    newOptions :: Parser Command
+    runCmd = command "solve" (info solveOptions (progDesc "Run a day, fingers crossed"))
+    newOptions, solveOptions :: Parser Command
     newOptions = New <$> (NewOptions <$> y <*> d <*> s)
-    y, d :: Parser Text
-    y = strArgument (metavar "YEAR" <> help "Year")
-    d = strArgument (metavar "DAY" <> help "Day")
+    solveOptions = Solve <$> (SolveOptions <$> y <*> d)
+    y :: Parser Year
+    y = argument auto (metavar "YEAR" <> help "Year")
+    d :: Parser Int
+    d = argument auto (metavar "DAY" <> help "Day")
     s = switch (long "skip" <> short 's' <> help "Skip IO")
 
 main :: IO ()

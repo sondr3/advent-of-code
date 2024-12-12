@@ -16,6 +16,7 @@ common config
   default-language: GHC2024
   default-extensions:
     DerivingStrategies
+    DeriveAnyClass
     DuplicateRecordFields
     LambdaCase
     MultiWayIf
@@ -51,7 +52,9 @@ library
     Puzzle.Parser
     Puzzle.Types
     Puzzle.Writer
+    Solutions
     Utils
+    Year
     Year.Y23.Day01
     Year.Y23.Day02
     Year.Y23.Day03
@@ -82,6 +85,7 @@ library
     MemoTrie ^>=0.6,
     array ^>=0.5,
     containers ^>=0.7,
+    deepseq ^>=1.5,
     filepath ^>=1.5,
     megaparsec ^>=9.7,
     parser-combinators ^>=1.3,
@@ -120,6 +124,7 @@ test-suite aoc-test
 
   build-depends:
     aoc,
+    deepseq ^>=1.5,
     hspec ^>=2.11,
     hspec-megaparsec ^>=2.2,
     megaparsec ^>=9.7,

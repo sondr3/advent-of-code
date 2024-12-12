@@ -3,6 +3,7 @@
 module TestUtils (testDay, testInput) where
 
 import AoC (AoC (..), getDayPuzzle)
+import Control.DeepSeq (NFData)
 import Control.Monad (forM_)
 import Data.Maybe (fromMaybe)
 import Data.Text qualified as T
@@ -11,13 +12,13 @@ import Puzzle.Types (Answer (..), Input (..), Puzzle (..))
 import Test.Hspec (Spec, describe, it, runIO, shouldBe, shouldNotBe)
 import Utils (padNum)
 
-testDay :: (Show i) => AoC i -> Spec
+testDay :: (Show i, NFData i) => AoC i -> Spec
 testDay m@AoC {..} = describe (T.unpack $ "day " <> padNum day) $ do
   ps <- runIO (getDayPuzzle day year)
   forM_ (puzzles ps) $ \input -> do
     testInput input m
 
-testInput :: (Show i) => Input -> AoC i -> Spec
+testInput :: (Show i, NFData i) => Input -> AoC i -> Spec
 testInput i AoC {..} = do
   p <- parseInput parser (comment i) (input i)
   let n = fromMaybe "input" (name i)

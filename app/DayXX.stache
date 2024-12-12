@@ -1,9 +1,9 @@
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
 
-module Year.{{yy}}.Day{{padDay}} where
+module Year.{{year}}.Day{{padDay}} where
 
 import Data.Text (Text)
-import Day (AoC, PartStatus (..), mkAoC)
+import Day (AoC, Answer (..), mkAoC, Year (..))
 import Parsers (Parser)
 import Text.Megaparsec
 import Text.Megaparsec.Char
@@ -11,14 +11,14 @@ import Text.Megaparsec.Char.Lexer qualified as L
 
 type Input = [Int]
 
-partA :: Input -> PartStatus Int
-partA xs = Unsolved
+partA :: Input -> Answer 
+partA xs = Unanswered
 
-partB :: Input -> PartStatus Int
-partB xs = Unsolved
+partB :: Input -> Answer 
+partB xs = Unanswered
 
 parser :: Parser Input
 parser = empty
 
-day{{padDay}} :: AoC Input Int
-day{{padDay}} = mkAoC parser partA partB {{day}} 20{{year}}
+day{{padDay}} :: AoC Input
+day{{padDay}} = mkAoC parser partA partB {{day}} {{year}}
