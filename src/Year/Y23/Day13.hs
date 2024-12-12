@@ -2,12 +2,13 @@
 
 module Year.Y23.Day13 where
 
+import AoC (Answer (..), AoC, Year (..), mkAoC)
 import Control.Applicative (Alternative (..))
 import Control.DeepSeq (NFData)
 import Data.IntMap qualified as IntMap
 import Data.List (find, inits, tails, transpose)
 import Data.Maybe (fromMaybe, mapMaybe)
-import Day (Answer (..), AoC, Year (..), mkAoC)
+import Day (Day (..))
 import GHC.Generics (Generic)
 import Parsers
 import Text.Megaparsec hiding (some)
@@ -46,4 +47,4 @@ parser :: Parser Input
 parser = ((some . choice) [Ash <$ char '.', Rock <$ char '#'] `sepEndBy` eol) `sepEndBy` some eol
 
 day13 :: AoC Input
-day13 = mkAoC parser partA partB 13 Y23
+day13 = mkAoC parser partA partB D13 Y23

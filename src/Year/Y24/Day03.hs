@@ -2,10 +2,11 @@
 
 module Year.Y24.Day03 where
 
+import AoC (Answer (..), AoC, Year (..), mkAoC)
 import Control.DeepSeq (NFData)
 import Data.Functor (($>))
 import Data.Maybe (catMaybes)
-import Day (Answer (..), AoC, Year (..), mkAoC)
+import Day (Day (..))
 import GHC.Generics (Generic)
 import Parsers (Parser, lexeme, parens, symbol)
 import Text.Megaparsec
@@ -51,4 +52,4 @@ parseMul :: Parser Instruction
 parseMul = symbol "mul" *> parens (Mul <$> (lexeme L.decimal <* symbol ",") <*> lexeme L.decimal)
 
 day03 :: AoC Input
-day03 = mkAoC parser partA partB 3 Y24
+day03 = mkAoC parser partA partB D3 Y24

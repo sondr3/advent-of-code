@@ -7,13 +7,13 @@ import Control.DeepSeq (NFData)
 import Control.Monad (forM_)
 import Data.Maybe (fromMaybe)
 import Data.Text qualified as T
+import Day (padDay)
 import Parsers (parseInput)
 import Puzzle.Types (Answer (..), Input (..), Puzzle (..))
 import Test.Hspec (Spec, describe, it, runIO, shouldBe, shouldNotBe)
-import Utils (padNum)
 
 testDay :: (Show i, NFData i) => AoC i -> Spec
-testDay m@AoC {..} = describe (T.unpack $ "day " <> padNum day) $ do
+testDay m@AoC {..} = describe (T.unpack $ "day " <> padDay day) $ do
   ps <- runIO (getDayPuzzle day year)
   forM_ (puzzles ps) $ \input -> do
     testInput input m

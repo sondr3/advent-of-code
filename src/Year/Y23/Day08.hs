@@ -2,13 +2,14 @@
 
 module Year.Y23.Day08 where
 
+import AoC (Answer (..), AoC, Year (..), mkAoC)
 import Control.Applicative (Alternative (..))
 import Control.DeepSeq (NFData)
 import Data.Map (Map)
 import Data.Map qualified as M
 import Data.Text (Text)
 import Data.Text qualified as T
-import Day (Answer (..), AoC, Year (..), mkAoC)
+import Day (Day (..))
 import GHC.Exts (sortWith)
 import GHC.Generics (Generic)
 import Parsers
@@ -51,4 +52,4 @@ dirParser :: Parser [Dir]
 dirParser = some $ choice [R <$ char 'R', L <$ char 'L']
 
 day08 :: AoC ([Dir], Map Text (Text, Text))
-day08 = mkAoC parser partA partB 8 Y23
+day08 = mkAoC parser partA partB D8 Y23

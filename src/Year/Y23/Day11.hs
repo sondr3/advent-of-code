@@ -2,6 +2,7 @@
 
 module Year.Y23.Day11 where
 
+import AoC (Answer (..), AoC, Year (..), mkAoC)
 import Control.Applicative (Alternative (..))
 import Control.DeepSeq (NFData)
 import Data.Map (Map)
@@ -9,7 +10,7 @@ import Data.Map qualified as Map
 import Data.Set (Set)
 import Data.Set qualified as Set
 import Data.Text (Text)
-import Day (Answer (..), AoC, Year (..), mkAoC)
+import Day (Day (..))
 import GHC.Generics (Generic)
 import Grid (gridify)
 import Parsers
@@ -62,4 +63,4 @@ parser :: Parser (Map (Int, Int) Space)
 parser = gridify <$> some (choice [Empty <$ char '.', Galaxy <$ char '#']) `sepEndBy` eol
 
 day11 :: AoC (Map (Int, Int) Space)
-day11 = mkAoC parser partA partB 11 Y23
+day11 = mkAoC parser partA partB D11 Y23

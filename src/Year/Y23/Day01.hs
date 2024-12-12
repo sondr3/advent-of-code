@@ -2,6 +2,7 @@
 
 module Year.Y23.Day01 where
 
+import AoC (Answer (..), AoC, Year (..), mkAoC)
 import Data.Either (rights)
 import Data.List.NonEmpty (NonEmpty)
 import Data.List.NonEmpty qualified as NE
@@ -9,7 +10,7 @@ import Data.Maybe (fromJust)
 import Data.Text (Text)
 import Data.Text qualified as T
 import Data.Text.Read (decimal)
-import Day (Answer (..), AoC, Year (..), mkAoC)
+import Day (Day (..))
 import Parsers (Parser)
 import Text.Megaparsec
 import Text.Megaparsec qualified as M
@@ -47,4 +48,4 @@ parser :: Parser [Text]
 parser = M.many $ takeWhile1P Nothing (/= '\n') <* optional eol
 
 day01 :: AoC [Text]
-day01 = mkAoC parser partA partB 1 Y23
+day01 = mkAoC parser partA partB D1 Y23

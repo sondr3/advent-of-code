@@ -2,12 +2,13 @@
 
 module Year.Y23.Day03 where
 
+import AoC (Answer (..), AoC, Year (..), mkAoC)
 import Control.Applicative (Alternative (..))
 import Control.DeepSeq (NFData)
 import Data.List (nub)
 import Data.Maybe (fromJust, mapMaybe)
 import Data.Set qualified as S
-import Day (Answer (..), AoC, Year (..), mkAoC)
+import Day (Day (..))
 import GHC.Generics (Generic)
 import Parsers (Parser)
 import Text.Megaparsec hiding (some)
@@ -81,4 +82,4 @@ parsePeriod :: Parser Part
 parsePeriod = Period <$ char '.'
 
 day03 :: AoC [[Part]]
-day03 = mkAoC parser partA partB 3 Y23
+day03 = mkAoC parser partA partB D3 Y23

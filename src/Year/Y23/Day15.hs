@@ -4,17 +4,18 @@
 
 module Year.Y23.Day15 where
 
-import AoC (read')
+import AoC (Answer (..), AoC, Year (..), mkAoC)
 import Control.Applicative (Alternative (..))
 import Data.Char (ord)
 import Data.Map (Map)
 import Data.Map qualified as Map
 import Data.Text (Text)
 import Data.Text qualified as T
-import Day (Answer (..), AoC, Year (..), mkAoC)
+import Day (Day (..))
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
+import Utils (read')
 
 partA :: [Text] -> Answer
 partA xs = IntAnswer . sum $ map hash xs
@@ -50,4 +51,4 @@ parser :: Parser [Text]
 parser = (T.pack <$> some (alphaNumChar <|> char '=' <|> char '-')) `sepEndBy` char ','
 
 day15 :: AoC [Text]
-day15 = mkAoC parser partA partB 15 Y23
+day15 = mkAoC parser partA partB D15 Y23

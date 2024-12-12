@@ -2,6 +2,7 @@
 
 module Year.Y24.Day10 where
 
+import AoC (Answer (..), AoC, Year (..), mkAoC)
 import Control.DeepSeq (NFData)
 import Coordinates (Position, cardinals, neighbours)
 import Data.Char (digitToInt)
@@ -9,7 +10,7 @@ import Data.Map.Strict qualified as Map
 import Data.Set qualified as Set
 import Data.Text (Text)
 import Data.Text.Display (display)
-import Day (Answer (..), AoC, Year (..), mkAoC)
+import Day (Day (..))
 import GHC.Generics (Generic)
 import Grid (Grid, gridify, onGrid)
 import Parsers (Parser, symbol)
@@ -59,4 +60,4 @@ pretty Impassable = "."
 pretty (Path n) = display n
 
 day10 :: AoC Input
-day10 = mkAoC parser partA partB 10 Y24
+day10 = mkAoC parser partA partB D10 Y24

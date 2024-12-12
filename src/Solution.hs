@@ -1,13 +1,13 @@
-module Solutions
+module Solution
   ( Solution (..),
     solveSolution,
     benchmarkSolution,
   )
 where
 
+import AoC (AoC, benchmark, solve)
 import Control.DeepSeq (NFData)
 import Data.Text.IO.Utf8 qualified as TIO
-import Day (AoC, benchmark, solve)
 
 -- wrapper type for AoC
 data Solution = forall i. (Show i, NFData i) => Solution (AoC i)

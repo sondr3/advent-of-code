@@ -3,7 +3,8 @@ module Year.Y24
   )
 where
 
-import Solutions (Solution (..))
+import Day (Day (..))
+import Solution (Solution (..))
 import Year.Y24.Day01 (day01)
 import Year.Y24.Day02 (day02)
 import Year.Y24.Day03 (day03)
@@ -15,16 +16,16 @@ import Year.Y24.Day08 (day08)
 import Year.Y24.Day09 (day09)
 import Year.Y24.Day10 (day10)
 
-solutions :: [Solution]
+solutions :: [(Day, Solution)]
 solutions =
-  [ Solution day01,
-    Solution day02,
-    Solution day03,
-    Solution day04,
-    Solution day05,
-    Solution day06,
-    Solution day07,
-    Solution day08,
-    Solution day09,
-    Solution day10
+  [ (D1, Solution day01),
+    (D2, Solution day02),
+    (D3, Solution day03),
+    (D4, Solution day04),
+    (D5, Solution day05),
+    (D6, Solution day06),
+    (D7, Solution day07),
+    (D8, Solution day08),
+    (D9, Solution day09),
+    (D10, Solution day10)
   ]

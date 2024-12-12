@@ -2,9 +2,10 @@
 
 module Year.Y24.Day05 where
 
+import AoC (Answer (..), AoC, Year (..), mkAoC)
 import Data.Map.Strict (Map)
 import Data.Map.Strict qualified as Map
-import Day (Answer (..), AoC, Year (..), mkAoC)
+import Day (Day (..))
 import Map (fromTuples)
 import Parsers (Parser, number, symbol)
 import Text.Megaparsec
@@ -47,4 +48,4 @@ parser = (,) <$> pageOrder <* eol <*> (number `sepBy` symbol ",") `sepBy` eol <*
     pageOrder = fromTuples <$> some ((,) <$> (number <* symbol "|") <*> number <* eol)
 
 day05 :: AoC Input
-day05 = mkAoC parser partA partB 5 Y24
+day05 = mkAoC parser partA partB D5 Y24

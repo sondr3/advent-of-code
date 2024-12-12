@@ -2,13 +2,14 @@
 
 module Year.Y24.Day06 where
 
+import AoC (Answer (..), AoC, Year (..), mkAoC)
 import Control.DeepSeq (NFData)
 import Coordinates (Dir (East, North, South, West), Position, Turn (..), move, turnCardinal)
 import Data.Map.Strict (Map)
 import Data.Map.Strict qualified as Map
 import Data.Set qualified as Set
 import Data.Text (Text)
-import Day (Answer (..), AoC, Year (..), mkAoC)
+import Day (Day (..))
 import GHC.Generics (Generic)
 import Grid (findSingle, gridify)
 import Parsers (Parser, symbol)
@@ -62,4 +63,4 @@ pretty (Player South) = "∨"
 pretty (Player _) = "*"
 
 day06 :: AoC Input
-day06 = mkAoC parser partA partB 6 Y24
+day06 = mkAoC parser partA partB D6 Y24

@@ -2,7 +2,8 @@
 
 module Year.Y24.Day02 where
 
-import Day (Answer (..), AoC, Year (..), mkAoC)
+import AoC (Answer (..), AoC, Year (..), mkAoC)
+import Day (Day (..))
 import Parsers (Parser, lexeme)
 import Text.Megaparsec
 import Text.Megaparsec.Char
@@ -30,4 +31,4 @@ parser :: Parser Input
 parser = some (some (lexeme L.decimal) <* optional eol) <* eof
 
 day02 :: AoC Input
-day02 = mkAoC parser partA partB 2 Y24
+day02 = mkAoC parser partA partB D2 Y24

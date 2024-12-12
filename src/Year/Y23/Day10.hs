@@ -2,6 +2,7 @@
 
 module Year.Y23.Day10 where
 
+import AoC (Answer (..), AoC, Year (..), mkAoC)
 import Control.Applicative (Alternative (..))
 import Control.DeepSeq (NFData)
 import Coordinates (Dir (..), move)
@@ -9,7 +10,7 @@ import Data.Map (Map)
 import Data.Map qualified as Map
 import Data.Set qualified as Set
 import Data.Text (Text)
-import Day (Answer (..), AoC, Year (..), mkAoC)
+import Day (Day (..))
 import GHC.Generics (Generic)
 import Grid (gridify)
 import Parsers
@@ -84,4 +85,4 @@ pipeParser =
     ]
 
 day10 :: AoC [[Cell]]
-day10 = mkAoC parser partA partB 10 Y23
+day10 = mkAoC parser partA partB D10 Y23

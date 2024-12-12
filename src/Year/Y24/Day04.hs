@@ -2,11 +2,12 @@
 
 module Year.Y24.Day04 where
 
+import AoC (Answer (..), AoC, Year (..), mkAoC)
 import Coordinates (Dir (..), Position, allDirs, allPos, line, move)
 import Data.Functor (($>))
 import Data.Maybe (mapMaybe)
 import Data.Text qualified as T
-import Day (Answer (..), AoC, Year (..), mkAoC)
+import Day (Day (..))
 import Grid (getAtPos)
 import Parsers (Parser)
 import Text.Megaparsec
@@ -52,4 +53,4 @@ parser :: Parser Input
 parser = fmap T.unpack <$> some (takeWhile1P Nothing (/= '\n') <* (eol $> () <|> eof))
 
 day04 :: AoC Input
-day04 = mkAoC parser partA partB 4 Y24
+day04 = mkAoC parser partA partB D4 Y24

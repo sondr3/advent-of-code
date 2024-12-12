@@ -2,6 +2,7 @@
 
 module Year.Y24.Day09 where
 
+import AoC (Answer (..), AoC, Year (..), mkAoC)
 import Control.DeepSeq (NFData)
 import Data.Char (digitToInt)
 import Data.Foldable (toList)
@@ -10,7 +11,7 @@ import Data.Sequence (Seq (..))
 import Data.Sequence qualified as Seq
 import Data.Text (Text)
 import Data.Text.Display (display)
-import Day (Answer (..), AoC, Year (..), mkAoC)
+import Day (Day (..))
 import GHC.Generics (Generic)
 import Parsers (Parser)
 import Text.Megaparsec
@@ -67,4 +68,4 @@ pretty Free = "."
 pretty (File i) = display i
 
 day09 :: AoC Input
-day09 = mkAoC parser partA partB 9 Y24
+day09 = mkAoC parser partA partB D9 Y24

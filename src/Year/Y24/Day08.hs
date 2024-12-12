@@ -3,6 +3,7 @@
 
 module Year.Y24.Day08 where
 
+import AoC (Answer (..), AoC, Year (..), mkAoC)
 import Control.DeepSeq (NFData)
 import Coordinates (Position, distPos, unitVector)
 import Data.Map.Strict (Map)
@@ -10,7 +11,7 @@ import Data.Map.Strict qualified as Map
 import Data.Maybe (isJust)
 import Data.Text (Text)
 import Data.Text qualified as T
-import Day (Answer (..), AoC, Year (..), mkAoC)
+import Day (Day (..))
 import GHC.Generics (Generic)
 import Grid (gridSize, gridify, invertGrid)
 import Parsers (Parser, symbol)
@@ -85,4 +86,4 @@ pretty (Antenna c) = T.singleton c
 pretty Antinode = "#"
 
 day08 :: AoC Input
-day08 = mkAoC parser partA partB 8 Y24
+day08 = mkAoC parser partA partB D8 Y24

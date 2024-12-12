@@ -2,6 +2,7 @@
 
 module Year.Y23.Day02 where
 
+import AoC (Answer (..), AoC, Year (..), mkAoC)
 import Control.Monad (void)
 import Control.Monad.Combinators.NonEmpty qualified as NE
 import Data.List.NonEmpty (NonEmpty)
@@ -9,7 +10,7 @@ import Data.List.NonEmpty qualified as NE
 import Data.Map qualified as Map
 import Data.Text (Text)
 import Data.Text qualified as T
-import Day (Answer (..), AoC, Year (..), mkAoC)
+import Day (Day (..))
 import Parsers (Parser)
 import Text.Megaparsec qualified as T
 import Text.Megaparsec.Char
@@ -41,4 +42,4 @@ parser = NE.some (void "Game " >> T.some digitChar >> ": " >> gameParser <* T.op
     colorParser = L.decimal >>= \num -> void " " *> (T.pack <$> T.many lowerChar) >>= \color -> pure (color, num)
 
 day02 :: AoC Input
-day02 = mkAoC parser partA partB 2 Y23
+day02 = mkAoC parser partA partB D2 Y23

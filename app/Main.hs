@@ -1,15 +1,17 @@
 module Main (main) where
 
-import AoC (Answer (..), Input (Input), Puzzle (..), padNum, writePuzzle)
+import AoC (Answer (..))
 import Data.Aeson (object, (.=))
-import Data.List ((!?))
 import Data.List.NonEmpty qualified as NE
 import Data.Text (Text)
 import Data.Text qualified as T
 import Data.Text.IO.Utf8 qualified as TIO
 import Data.Text.Lazy.IO qualified as TLIO
+import Day (Day, padDay)
 import Options.Applicative
-import Solutions (benchmarkSolution, solveSolution)
+import Puzzle.Types (Input (Input), Puzzle (..))
+import Puzzle.Writer (writePuzzle)
+import Solution (benchmarkSolution, solveSolution)
 import System.Console.Haskeline (InputT, defaultSettings, getInputLine, outputStrLn, runInputT)
 import System.Environment.Blank (withArgs)
 import System.OsPath (encodeUtf)
@@ -22,13 +24,13 @@ import Year.Y24 qualified as Year.Y23
 
 data NewOptions = NewOptions
   { year :: Year,
-    day :: Int,
+    day :: Day,
     skip :: Bool
   }
 
 data SolveOptions = SolveOptions
   { year :: Year,
-    day :: Int
+    day :: Day
   }
 
 data Command
@@ -43,8 +45,8 @@ writeTemplate NewOptions {..} = do
   case compileMustacheText "day" f of
     Left err -> putStrLn (errorBundlePretty err)
     Right t -> do
-      let res = renderMustache t $ object ["day" .= day, "padDay" .= padNum day, "year" .= show year]
-          path = "src/Year/" <> show year <> "/" <> "Day" <> T.unpack (padNum day) <> ".hs"
+      let res = renderMustache t $ object ["day" .= show day, "padDay" .= padDay day, "year" .= show year]
+          path = "src/Year/" <> show year <> "/" <> "Day" <> T.unpack (padDay day) <> ".hs"
       if skip
         then pure ()
         else do
@@ -54,7 +56,7 @@ writeTemplate NewOptions {..} = do
 readPuzzle :: NewOptions -> IO ()
 readPuzzle NewOptions {..} = do
   inputs <- runInputT defaultSettings (loop [])
-  path <- encodeUtf (T.unpack ("inputs/" <> longYear year <> "/day" <> padNum day <> ".aoc"))
+  path <- encodeUtf (T.unpack ("inputs/" <> longYear year <> "/day" <> padDay day <> ".aoc"))
   writePuzzle (Puzzle (NE.fromList $ reverse inputs)) path
   where
     loop :: [Input] -> InputT IO [Input]
@@ -100,8 +102,8 @@ solveDay SolveOptions {..} = do
   let sols = case year of
         Y23 -> Year.Y23.solutions
         Y24 -> Year.Y24.solutions
-  _ <- solveSolution (sols !? (day - 1))
-  _ <- withArgs [] $ benchmarkSolution (sols !? (day - 1))
+  _ <- solveSolution (lookup day sols)
+  _ <- withArgs [] $ benchmarkSolution (lookup day sols)
   pure ()
 
 run :: App -> IO ()
@@ -125,7 +127,7 @@ commands = subparser (newCmd <> runCmd)
     solveOptions = Solve <$> (SolveOptions <$> y <*> d)
     y :: Parser Year
     y = argument auto (metavar "YEAR" <> help "Year")
-    d :: Parser Int
+    d :: Parser Day
     d = argument auto (metavar "DAY" <> help "Day")
     s = switch (long "skip" <> short 's' <> help "Skip IO")
 

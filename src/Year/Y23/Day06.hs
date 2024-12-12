@@ -2,9 +2,10 @@
 
 module Year.Y23.Day06 where
 
+import AoC (Answer (..), AoC, Year (..), mkAoC)
 import Control.Applicative (Alternative (..))
 import Data.Text (Text)
-import Day (Answer (..), AoC, Year (..), mkAoC)
+import Day (Day (..))
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char
@@ -33,4 +34,4 @@ parser = zip <$> lineParser "Time:" <*> lineParser "Distance:"
     lineParser t = lexeme t >> some (lexeme L.decimal) <* optional eol
 
 day06 :: AoC [(Int, Int)]
-day06 = mkAoC parser partA partB 6 Y23
+day06 = mkAoC parser partA partB D6 Y23

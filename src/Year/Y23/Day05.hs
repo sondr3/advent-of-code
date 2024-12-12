@@ -2,11 +2,12 @@
 
 module Year.Y23.Day05 where
 
+import AoC (Answer (..), AoC, Year (..), mkAoC)
 import Control.Applicative (Alternative (..))
 import Control.DeepSeq (NFData)
 import Data.List.NonEmpty (NonEmpty)
 import Data.List.NonEmpty qualified as NE
-import Day (Answer (..), AoC, Year (..), mkAoC)
+import Day (Day (..))
 import GHC.Generics (Generic)
 import Parsers
 import Text.Megaparsec hiding (some)
@@ -55,4 +56,4 @@ parseMap :: Parser [Range]
 parseMap = takeWhileP Nothing (/= ':') >> char ':' >> eol >> parseRange `sepEndBy1` "\n"
 
 day05 :: AoC ([Int], [[Range]])
-day05 = mkAoC parser partA partB 5 Y23
+day05 = mkAoC parser partA partB D5 Y23

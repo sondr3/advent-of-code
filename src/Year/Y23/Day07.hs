@@ -2,10 +2,11 @@
 
 module Year.Y23.Day07 where
 
+import AoC (Answer (..), AoC, Year (..), mkAoC)
 import Control.Applicative (Alternative (..))
 import Control.DeepSeq (NFData)
 import Data.List (group, sort, sortBy)
-import Day (Answer (..), AoC, Year (..), mkAoC)
+import Day (Day (..))
 import GHC.Generics (Generic)
 import Parsers
 import Text.Megaparsec hiding (some)
@@ -80,4 +81,4 @@ cardParser :: Parser Card
 cardParser = choice [A <$ char 'A', K <$ char 'K', Q <$ char 'Q', J <$ char 'J', T <$ char 'T', Nine <$ char '9', Eight <$ char '8', Seven <$ char '7', Six <$ char '6', Five <$ char '5', Four <$ char '4', Three <$ char '3', Two <$ char '2']
 
 day07 :: AoC [([Card], Int)]
-day07 = mkAoC parser partA partB 7 Y23
+day07 = mkAoC parser partA partB D7 Y23

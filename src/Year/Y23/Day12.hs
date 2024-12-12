@@ -5,11 +5,12 @@
 
 module Year.Y23.Day12 where
 
+import AoC (Answer (..), AoC, Year (..), mkAoC)
 import Control.Applicative (Alternative (..))
 import Control.DeepSeq (NFData)
 import Data.List (intercalate)
 import Data.MemoTrie (HasTrie (..), Reg, enumerateGeneric, memo2, trieGeneric, untrieGeneric)
-import Day (Answer (..), AoC, Year (..), mkAoC)
+import Day (Day (..))
 import GHC.Generics (Generic)
 import Parsers
 import Text.Megaparsec hiding (some)
@@ -58,4 +59,4 @@ memo = memo2 go
     damaged _ _ _ = 0
 
 day12 :: AoC [([Spring], [Int])]
-day12 = mkAoC parser partA partB 12 Y23
+day12 = mkAoC parser partA partB D12 Y23
