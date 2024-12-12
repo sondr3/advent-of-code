@@ -6,15 +6,21 @@
 module Year.Y23.Day12 where
 
 import Control.Applicative (Alternative (..))
+import Control.DeepSeq (NFData)
 import Data.List (intercalate)
 import Data.MemoTrie (HasTrie (..), Reg, enumerateGeneric, memo2, trieGeneric, untrieGeneric)
-import Day (Answer (..), AoC, mkAoC)
+import Day (Answer (..), AoC, Year (..), mkAoC)
 import GHC.Generics (Generic)
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
 
-data Spring = Operational | Damaged | Unknown deriving stock (Show, Eq, Ord, Generic)
+data Spring
+  = Operational
+  | Damaged
+  | Unknown
+  deriving stock (Show, Eq, Ord, Generic)
+  deriving anyclass (NFData)
 
 instance HasTrie Spring where
   newtype Spring :->: a = SpringTrie {unSpringTrie :: Reg Spring :->: a}
@@ -52,4 +58,4 @@ memo = memo2 go
     damaged _ _ _ = 0
 
 day12 :: AoC [([Spring], [Int])]
-day12 = mkAoC parser partA partB 12 2023
+day12 = mkAoC parser partA partB 12 Y23

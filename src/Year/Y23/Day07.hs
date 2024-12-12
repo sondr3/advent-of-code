@@ -3,17 +3,22 @@
 module Year.Y23.Day07 where
 
 import Control.Applicative (Alternative (..))
+import Control.DeepSeq (NFData)
 import Data.List (group, sort, sortBy)
-import Day (Answer (..), AoC, mkAoC)
+import Day (Answer (..), AoC, Year (..), mkAoC)
+import GHC.Generics (Generic)
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char
 import Utils (compareLengths)
 
 data Card = Two | Three | Four | Five | Six | Seven | Eight | Nine | T | J | Q | K | A
-  deriving stock (Show, Eq, Ord, Enum, Bounded)
+  deriving stock (Show, Eq, Ord, Enum, Bounded, Generic)
+  deriving anyclass (NFData)
 
-newtype JCard = JCard Card deriving stock (Show, Eq)
+newtype JCard = JCard Card
+  deriving stock (Show, Eq, Generic)
+  deriving anyclass (NFData)
 
 instance Ord JCard where
   compare (JCard J) (JCard J) = EQ
@@ -75,4 +80,4 @@ cardParser :: Parser Card
 cardParser = choice [A <$ char 'A', K <$ char 'K', Q <$ char 'Q', J <$ char 'J', T <$ char 'T', Nine <$ char '9', Eight <$ char '8', Seven <$ char '7', Six <$ char '6', Five <$ char '5', Four <$ char '4', Three <$ char '3', Two <$ char '2']
 
 day07 :: AoC [([Card], Int)]
-day07 = mkAoC parser partA partB 7 2023
+day07 = mkAoC parser partA partB 7 Y23

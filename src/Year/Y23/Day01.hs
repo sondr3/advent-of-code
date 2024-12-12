@@ -9,7 +9,7 @@ import Data.Maybe (fromJust)
 import Data.Text (Text)
 import Data.Text qualified as T
 import Data.Text.Read (decimal)
-import Day (Answer (..), AoC, mkAoC)
+import Day (Answer (..), AoC, Year (..), mkAoC)
 import Parsers (Parser)
 import Text.Megaparsec
 import Text.Megaparsec qualified as M
@@ -47,4 +47,4 @@ parser :: Parser [Text]
 parser = M.many $ takeWhile1P Nothing (/= '\n') <* optional eol
 
 day01 :: AoC [Text]
-day01 = mkAoC parser partA partB 1 2023
+day01 = mkAoC parser partA partB 1 Y23

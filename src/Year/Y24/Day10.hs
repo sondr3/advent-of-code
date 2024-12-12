@@ -2,13 +2,15 @@
 
 module Year.Y24.Day10 where
 
+import Control.DeepSeq (NFData)
 import Coordinates (Position, cardinals, neighbours)
 import Data.Char (digitToInt)
 import Data.Map.Strict qualified as Map
 import Data.Set qualified as Set
 import Data.Text (Text)
 import Data.Text.Display (display)
-import Day (Answer (..), AoC, mkAoC)
+import Day (Answer (..), AoC, Year (..), mkAoC)
+import GHC.Generics (Generic)
 import Grid (Grid, gridify, onGrid)
 import Parsers (Parser, symbol)
 import Text.Megaparsec
@@ -17,7 +19,8 @@ import Text.Megaparsec.Char (digitChar, eol)
 data Trail
   = Path Int
   | Impassable
-  deriving stock (Show, Eq, Ord)
+  deriving stock (Show, Eq, Ord, Generic)
+  deriving anyclass (NFData)
 
 type Location = (Position, Trail)
 
@@ -56,4 +59,4 @@ pretty Impassable = "."
 pretty (Path n) = display n
 
 day10 :: AoC Input
-day10 = mkAoC parser partA partB 10 2024
+day10 = mkAoC parser partA partB 10 Y24

@@ -1,11 +1,10 @@
-{-# LANGUAGE AllowAmbiguousTypes #-}
 {-# LANGUAGE DerivingVia #-}
-{-# LANGUAGE GADTs #-}
 {-# LANGUAGE RoleAnnotations #-}
 
 module Day
   ( AoC (..),
     Answer (..),
+    Year (..),
     mkAoC,
     solve,
     benchmark,
@@ -19,6 +18,7 @@ module Day
   )
 where
 
+import Control.DeepSeq (NFData)
 import Control.Exception (handle)
 import Control.Monad (forM_)
 import Data.List.NonEmpty qualified as NE
@@ -31,11 +31,12 @@ import PrettyPrint (prettyPrint)
 import Puzzle.Parser (parsePuzzle)
 import Puzzle.Types (Answer (..), Input (..), Puzzle (..))
 import System.OsPath (decodeUtf, unsafeEncodeUtf)
-import Test.Tasty.Bench (bench, bgroup, defaultMain, nf)
+import Test.Tasty.Bench (bench, defaultMain, nf)
 import Text.Megaparsec (errorBundlePretty, runParser)
 import Utils (padNum, uHead, whenJust)
+import Year (Year (..), longYear)
 
-parseAoC :: (Show i) => AoC i -> IO ()
+parseAoC :: (Show i, NFData i) => AoC i -> IO ()
 parseAoC m@AoC {parser} = do
   day <- puzzle m
   forM_ (puzzles day) $ \i -> do
@@ -46,25 +47,25 @@ parseAoC m@AoC {parser} = do
 puzzle :: AoC i -> IO Puzzle
 puzzle AoC {day, year} = getDayPuzzle day year
 
-inputs :: (Show i) => AoC i -> IO [i]
+inputs :: (Show i, NFData i) => AoC i -> IO [i]
 inputs AoC {..} = do
   ps <- getDayPuzzle day year
   mapM (parseDay parser) (NE.toList $ puzzles ps)
 
-puzzleExample :: (Show i) => AoC i -> IO i
+puzzleExample :: (Show i, NFData i) => AoC i -> IO i
 puzzleExample aoc = uHead <$> inputs aoc
 
-puzzleInput :: (Show i) => AoC i -> IO i
+puzzleInput :: (Show i, NFData i) => AoC i -> IO i
 puzzleInput aoc = last <$> inputs aoc
 
-puzzleInputN :: (Show i) => AoC i -> Int -> IO i
+puzzleInputN :: (Show i, NFData i) => AoC i -> Int -> IO i
 puzzleInputN aoc i = do
   is <- inputs aoc
   if i >= length is
     then error "invalid input"
     else pure $ is !! i
 
-getDayPuzzle :: Int -> Int -> IO Puzzle
+getDayPuzzle :: Int -> Year -> IO Puzzle
 getDayPuzzle day year = do
   fname <- decodeUtf filename
   file <- TIO.readFile fname
@@ -72,7 +73,7 @@ getDayPuzzle day year = do
     Left err -> error $ "Failed to parse puzzle file: " <> errorBundlePretty err
     Right doc -> pure doc
   where
-    filename = unsafeEncodeUtf $ "inputs/" <> show year <> "/day" <> T.unpack (padNum day) <> ".aoc"
+    filename = unsafeEncodeUtf $ T.unpack $ "inputs/" <> longYear year <> "/day" <> padNum day <> ".aoc"
 
 runPart :: (i -> Answer) -> i -> Answer -> Int -> IO ()
 runPart solver i answer part = do
@@ -85,29 +86,28 @@ runPart solver i answer part = do
       case answer of
         Unanswered -> TIO.putStr " is as of yet unanswered"
         NilAnswer -> TIO.putStr $ " had `nil` as answer, but got " <> display res
-        IntAnswer e ->
-          if res /= undefined
+        r@(IntAnswer e) ->
+          if res /= r
             then TIO.putStr $ " failed: expected " <> display e <> " but got " <> display res
             else
               TIO.putStr $ " correct: " <> display res
       TIO.putStrLn ""
 
-benchmark :: (Show i) => AoC i -> IO ()
+benchmark :: (Show i, NFData i) => AoC i -> IO ()
 benchmark a@AoC {..} = do
-  input <- puzzleInput a
+  parsed <- puzzleInput a
   ps <- puzzle a
 
   handle
     ((\_ -> pure ()) :: ExitCode -> IO ())
     ( defaultMain
-        [ bgroup
-            ("AoC " <> show year <> " - " <> T.unpack (padNum day))
-            [ bench "part 1" $ nf (`p1` ps) input,
-              bench "part 2" $ nf (`p2` ps) input
-            ]
+        [ bench (fmt "parser") $ nf (testParseInput parser Nothing) (input $ NE.last $ puzzles ps),
+          bench (fmt "part 1") $ nf (`p1` ps) parsed,
+          bench (fmt "part 2") $ nf (`p2` ps) parsed
         ]
     )
   where
+    fmt s = "AoC " <> show year <> ", day " <> T.unpack (padNum day) <> " " <> s
     p1 i p = part1 i == answer1 (NE.last $ puzzles p)
     p2 i p = part2 i == answer2 (NE.last $ puzzles p)
 
@@ -119,11 +119,11 @@ solveInput i parser part1 part2 = do
   runPart part2 parsed (answer2 i) 2
 
 data AoC i = AoC
-  { parser :: (Show i) => Parser i,
+  { parser :: (Show i, NFData i) => Parser i,
     part1 :: (Show i) => i -> Answer,
     part2 :: (Show i) => i -> Answer,
     day :: Int,
-    year :: Int
+    year :: Year
   }
 
 type role AoC nominal
@@ -134,7 +134,7 @@ instance (Show i) => Show (AoC i) where
 parseDay :: (Applicative f) => Parser b -> Input -> f b
 parseDay p (Input {input, name}) = either error pure $ testParseInput p name input
 
-solve :: (Show i) => AoC i -> IO ()
+solve :: (Show i, NFData i) => AoC i -> IO ()
 solve AoC {..} = do
   TIO.putStrLn $ "Answer for " <> display year <> ", day " <> padNum day
   docs <- getDayPuzzle day year
@@ -152,7 +152,7 @@ mkAoC ::
   -- | Day
   Int ->
   -- | Year
-  Int ->
+  Year ->
   AoC i
 mkAoC p p1 p2 d y =
   AoC

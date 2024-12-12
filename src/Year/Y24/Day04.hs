@@ -6,7 +6,7 @@ import Coordinates (Dir (..), Position, allDirs, allPos, line, move)
 import Data.Functor (($>))
 import Data.Maybe (mapMaybe)
 import Data.Text qualified as T
-import Day (Answer (..), AoC, mkAoC)
+import Day (Answer (..), AoC, Year (..), mkAoC)
 import Grid (getAtPos)
 import Parsers (Parser)
 import Text.Megaparsec
@@ -52,4 +52,4 @@ parser :: Parser Input
 parser = fmap T.unpack <$> some (takeWhile1P Nothing (/= '\n') <* (eol $> () <|> eof))
 
 day04 :: AoC Input
-day04 = mkAoC parser partA partB 4 2024
+day04 = mkAoC parser partA partB 4 Y24

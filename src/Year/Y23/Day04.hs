@@ -4,7 +4,7 @@ module Year.Y23.Day04 where
 
 import Control.Monad (void)
 import Data.Set qualified as S
-import Day (Answer (..), AoC, mkAoC)
+import Day (Answer (..), AoC, Year (..), mkAoC)
 import Parsers (Parser)
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec qualified as T
@@ -39,4 +39,4 @@ gameParser = do
   pure (winning, yours)
 
 day04 :: AoC [([Int], [Int])]
-day04 = mkAoC parser partA partB 4 2023
+day04 = mkAoC parser partA partB 4 Y23

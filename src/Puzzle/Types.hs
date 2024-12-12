@@ -1,3 +1,6 @@
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
+
 module Puzzle.Types
   ( Answer (..),
     Puzzle (..),
@@ -5,14 +8,18 @@ module Puzzle.Types
   )
 where
 
+import Control.DeepSeq (NFData)
 import Data.List.NonEmpty (NonEmpty)
 import Data.Text (Text)
 import Data.Text.Display (Display (..))
+import GHC.Generics (Generic)
 
 data Answer
   = Unanswered
   | NilAnswer
   | IntAnswer Int
+  deriving stock (Generic)
+  deriving anyclass (NFData)
 
 instance Display Answer where
   displayBuilder (IntAnswer a) = displayBuilder a

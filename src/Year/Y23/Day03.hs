@@ -3,10 +3,12 @@
 module Year.Y23.Day03 where
 
 import Control.Applicative (Alternative (..))
+import Control.DeepSeq (NFData)
 import Data.List (nub)
 import Data.Maybe (fromJust, mapMaybe)
 import Data.Set qualified as S
-import Day (Answer (..), AoC, mkAoC)
+import Day (Answer (..), AoC, Year (..), mkAoC)
+import GHC.Generics (Generic)
 import Parsers (Parser)
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char
@@ -17,7 +19,8 @@ data Part
   = Symbol Char
   | Period
   | Part Int (Int, Int)
-  deriving stock (Show, Eq, Ord)
+  deriving stock (Show, Eq, Ord, Generic)
+  deriving anyclass (NFData)
 
 isSymbol :: Part -> Bool
 isSymbol (Symbol _) = True
@@ -78,4 +81,4 @@ parsePeriod :: Parser Part
 parsePeriod = Period <$ char '.'
 
 day03 :: AoC [[Part]]
-day03 = mkAoC parser partA partB 3 2023
+day03 = mkAoC parser partA partB 3 Y23

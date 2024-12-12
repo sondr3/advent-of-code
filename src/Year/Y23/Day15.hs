@@ -11,7 +11,7 @@ import Data.Map (Map)
 import Data.Map qualified as Map
 import Data.Text (Text)
 import Data.Text qualified as T
-import Day (Answer (..), AoC, mkAoC)
+import Day (Answer (..), AoC, Year (..), mkAoC)
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
@@ -50,4 +50,4 @@ parser :: Parser [Text]
 parser = (T.pack <$> some (alphaNumChar <|> char '=' <|> char '-')) `sepEndBy` char ','
 
 day15 :: AoC [Text]
-day15 = mkAoC parser partA partB 15 2023
+day15 = mkAoC parser partA partB 15 Y23

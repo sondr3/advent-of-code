@@ -3,18 +3,22 @@
 module Year.Y23.Day08 where
 
 import Control.Applicative (Alternative (..))
+import Control.DeepSeq (NFData)
 import Data.Map (Map)
 import Data.Map qualified as M
 import Data.Text (Text)
 import Data.Text qualified as T
-import Day (Answer (..), AoC, mkAoC)
+import Day (Answer (..), AoC, Year (..), mkAoC)
 import GHC.Exts (sortWith)
+import GHC.Generics (Generic)
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
 import Utils (uHead)
 
-data Dir = R | L deriving stock (Show, Eq, Ord)
+data Dir = R | L
+  deriving stock (Show, Eq, Ord, Generic)
+  deriving anyclass (NFData)
 
 step :: [Dir] -> Map Text (Text, Text) -> Text -> [Text]
 step [] _ _ = error "impossible"
@@ -47,4 +51,4 @@ dirParser :: Parser [Dir]
 dirParser = some $ choice [R <$ char 'R', L <$ char 'L']
 
 day08 :: AoC ([Dir], Map Text (Text, Text))
-day08 = mkAoC parser partA partB 8 2023
+day08 = mkAoC parser partA partB 8 Y23

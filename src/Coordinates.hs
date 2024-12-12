@@ -22,10 +22,14 @@ module Coordinates
   )
 where
 
+import Control.DeepSeq (NFData)
+import GHC.Generics (Generic)
+
 data Turn
   = TLeft
   | TRight
-  deriving stock (Show, Eq, Ord, Enum, Bounded)
+  deriving stock (Show, Eq, Ord, Enum, Bounded, Generic)
+  deriving anyclass (NFData)
 
 turnOffset :: Turn -> Int
 turnOffset TLeft = -1
@@ -44,7 +48,8 @@ data Dir
   | SouthWest
   | West
   | NorthWest
-  deriving stock (Show, Eq, Ord, Enum, Bounded)
+  deriving stock (Show, Eq, Ord, Enum, Bounded, Generic)
+  deriving anyclass (NFData)
 
 turn :: Dir -> Turn -> Dir
 turn dir t = toEnum $ (fromEnum dir + turnOffset t) `mod` length allDirs

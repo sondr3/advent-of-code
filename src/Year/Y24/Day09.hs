@@ -2,6 +2,7 @@
 
 module Year.Y24.Day09 where
 
+import Control.DeepSeq (NFData)
 import Data.Char (digitToInt)
 import Data.Foldable (toList)
 import Data.Maybe (fromJust)
@@ -9,14 +10,16 @@ import Data.Sequence (Seq (..))
 import Data.Sequence qualified as Seq
 import Data.Text (Text)
 import Data.Text.Display (display)
-import Day (Answer (..), AoC, mkAoC)
+import Day (Answer (..), AoC, Year (..), mkAoC)
+import GHC.Generics (Generic)
 import Parsers (Parser)
 import Text.Megaparsec
 
 data FileSystem
   = Free
   | File Int
-  deriving stock (Show, Eq)
+  deriving stock (Show, Eq, Generic)
+  deriving anyclass (NFData)
 
 value :: FileSystem -> Int
 value Free = 0
@@ -64,4 +67,4 @@ pretty Free = "."
 pretty (File i) = display i
 
 day09 :: AoC Input
-day09 = mkAoC parser partA partB 9 2024
+day09 = mkAoC parser partA partB 9 Y24

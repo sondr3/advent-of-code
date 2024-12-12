@@ -2,7 +2,7 @@
 
 module Year.Y24.Day07 where
 
-import Day (Answer (..), AoC, mkAoC)
+import Day (Answer (..), AoC, Year (..), mkAoC)
 import Parsers (Parser, number, symbol)
 import Text.Megaparsec
 import Text.Megaparsec.Char
@@ -29,4 +29,4 @@ parser :: Parser Input
 parser = ((,) <$> number <* symbol ":" <*> number `sepBy` hspace) `sepBy` eol
 
 day07 :: AoC Input
-day07 = mkAoC parser partA partB 7 2024
+day07 = mkAoC parser partA partB 7 Y24

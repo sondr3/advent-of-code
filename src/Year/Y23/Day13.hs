@@ -3,16 +3,21 @@
 module Year.Y23.Day13 where
 
 import Control.Applicative (Alternative (..))
+import Control.DeepSeq (NFData)
 import Data.IntMap qualified as IntMap
 import Data.List (find, inits, tails, transpose)
 import Data.Maybe (fromMaybe, mapMaybe)
-import Day (Answer (..), AoC, mkAoC)
+import Day (Answer (..), AoC, Year (..), mkAoC)
 import GHC.Generics (Generic)
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
 
-data Pattern = Ash | Rock deriving stock (Show, Eq, Ord, Generic)
+data Pattern
+  = Ash
+  | Rock
+  deriving stock (Show, Eq, Ord, Generic)
+  deriving anyclass (NFData)
 
 type Input = [[[Pattern]]]
 
@@ -41,4 +46,4 @@ parser :: Parser Input
 parser = ((some . choice) [Ash <$ char '.', Rock <$ char '#'] `sepEndBy` eol) `sepEndBy` some eol
 
 day13 :: AoC Input
-day13 = mkAoC parser partA partB 13 2023
+day13 = mkAoC parser partA partB 13 Y23

@@ -3,19 +3,25 @@
 module Year.Y23.Day11 where
 
 import Control.Applicative (Alternative (..))
+import Control.DeepSeq (NFData)
 import Data.Map (Map)
 import Data.Map qualified as Map
 import Data.Set (Set)
 import Data.Set qualified as Set
 import Data.Text (Text)
-import Day (Answer (..), AoC, mkAoC)
+import Day (Answer (..), AoC, Year (..), mkAoC)
+import GHC.Generics (Generic)
 import Grid (gridify)
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
 import Utils (pick)
 
-data Space = Empty | Galaxy deriving stock (Show, Eq, Ord)
+data Space
+  = Empty
+  | Galaxy
+  deriving stock (Show, Eq, Ord, Generic)
+  deriving anyclass (NFData)
 
 prettySpace :: Space -> Text
 prettySpace Empty = "."
@@ -56,4 +62,4 @@ parser :: Parser (Map (Int, Int) Space)
 parser = gridify <$> some (choice [Empty <$ char '.', Galaxy <$ char '#']) `sepEndBy` eol
 
 day11 :: AoC (Map (Int, Int) Space)
-day11 = mkAoC parser partA partB 11 2023
+day11 = mkAoC parser partA partB 11 Y23

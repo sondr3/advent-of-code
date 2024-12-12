@@ -3,18 +3,26 @@
 module Year.Y23.Day10 where
 
 import Control.Applicative (Alternative (..))
+import Control.DeepSeq (NFData)
+import Coordinates (Dir (..), move)
 import Data.Map (Map)
 import Data.Map qualified as Map
 import Data.Set qualified as Set
 import Data.Text (Text)
-import Day (Answer (..), AoC, mkAoC)
+import Day (Answer (..), AoC, Year (..), mkAoC)
+import GHC.Generics (Generic)
 import Grid (gridify)
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
 import Utils (uHead, uTail)
 
-data Cell = Start | Ground | Pipe (Dir, Dir) deriving stock (Show, Eq, Ord)
+data Cell
+  = Start
+  | Ground
+  | Pipe (Dir, Dir)
+  deriving stock (Show, Eq, Ord, Generic)
+  deriving anyclass (NFData)
 
 prettyCell :: Cell -> Text
 prettyCell Start = "S"
@@ -26,14 +34,6 @@ prettyCell (Pipe (North, West)) = "┘"
 prettyCell (Pipe (South, West)) = "┐"
 prettyCell (Pipe (South, East)) = "┌"
 prettyCell _ = "?"
-
-data Dir = North | South | East | West deriving stock (Show, Eq, Ord)
-
-move :: (Int, Int) -> Dir -> (Int, Int)
-move (x, y) North = (x, y - 1)
-move (x, y) South = (x, y + 1)
-move (x, y) East = (x + 1, y)
-move (x, y) West = (x - 1, y)
 
 dfs :: Map (Int, Int) Cell -> [(Int, Int)]
 dfs g = go (filterGround g) (findStart g) Set.empty [] ++ [findStart g]
@@ -84,4 +84,4 @@ pipeParser =
     ]
 
 day10 :: AoC [[Cell]]
-day10 = mkAoC parser partA partB 10 2023
+day10 = mkAoC parser partA partB 10 Y23

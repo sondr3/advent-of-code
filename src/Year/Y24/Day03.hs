@@ -2,9 +2,11 @@
 
 module Year.Y24.Day03 where
 
+import Control.DeepSeq (NFData)
 import Data.Functor (($>))
 import Data.Maybe (catMaybes)
-import Day (Answer (..), AoC, mkAoC)
+import Day (Answer (..), AoC, Year (..), mkAoC)
+import GHC.Generics (Generic)
 import Parsers (Parser, lexeme, parens, symbol)
 import Text.Megaparsec
 import Text.Megaparsec.Char
@@ -16,7 +18,8 @@ data Instruction
   = Mul Int Int
   | Enable
   | Disable
-  deriving stock (Show, Eq)
+  deriving stock (Show, Eq, Generic)
+  deriving anyclass (NFData)
 
 insValue :: Instruction -> Int
 insValue (Mul x y) = x * y
@@ -48,4 +51,4 @@ parseMul :: Parser Instruction
 parseMul = symbol "mul" *> parens (Mul <$> (lexeme L.decimal <* symbol ",") <*> lexeme L.decimal)
 
 day03 :: AoC Input
-day03 = mkAoC parser partA partB 3 2024
+day03 = mkAoC parser partA partB 3 Y24

@@ -2,18 +2,16 @@
 
 module Year.Y23.Day09 where
 
-import Day (Answer (..), AoC, mkAoC)
+import Day (Answer (..), AoC, Year (..), mkAoC)
 import Parsers
 import Text.Megaparsec hiding (some)
 import Text.Megaparsec.Char hiding (string)
 import Utils (uTail)
 
-partB :: [[Int]] -> Answer
-
+partA :: [[Int]] -> Answer
 partA xs = IntAnswer . sum $ map subseq xs
 
-partA :: [[Int]] -> Answer
-
+partB :: [[Int]] -> Answer
 partB xs = IntAnswer . sum $ map (subseq . reverse) xs
 
 subseq :: [Int] -> Int
@@ -26,4 +24,4 @@ parser :: Parser [[Int]]
 parser = (number `sepBy` hspace) `sepBy` eol
 
 day09 :: AoC [[Int]]
-day09 = mkAoC parser partA partB 9 2023
+day09 = mkAoC parser partA partB 9 Y23
