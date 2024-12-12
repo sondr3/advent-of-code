@@ -1,5 +1,3 @@
-{-# LANGUAGE FlexibleContexts #-}
-
 module Y23Spec (spec) where
 
 import Test.Hspec (Spec, parallel)

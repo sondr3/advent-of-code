@@ -1,5 +1,3 @@
-{-# LANGUAGE FlexibleContexts #-}
-
 module TestUtils (testDay, testInput) where
 
 import AoC (AoC (..), getDayPuzzle)
