@@ -1,19 +1,22 @@
 module Utils
-  ( padNum,
-    isDigit,
-    pairs,
-    read',
-    getRight,
+  ( combinations,
     compareLengths,
-    readConcat,
-    pick,
-    listToMaybe,
-    whenJust,
-    uTail,
-    uHead,
-    pairwise,
     dropped,
-    combinations,
+    getRight,
+    isDigit,
+    listToMaybe,
+    nDigits,
+    padNum,
+    pairs,
+    pairwise,
+    pick,
+    read',
+    readConcat,
+    splitNum,
+    tupToList,
+    uHead,
+    uTail,
+    whenJust,
   )
 where
 
@@ -27,6 +30,15 @@ import Text.Read (readEither)
 -- create a sliding window over a list
 pairwise :: [a] -> [(a, a)]
 pairwise xs = zip xs (uTail xs)
+
+tupToList :: (a, a) -> [a]
+tupToList (x, y) = [x, y]
+
+nDigits :: (Integral a) => a -> Int
+nDigits n = floor (logBase (10 :: Double) (fromIntegral n)) + 1
+
+splitNum :: (Integral a) => a -> (a, a)
+splitNum n = divMod n (10 ^ (nDigits n `div` 2))
 
 dropped :: [a] -> [[a]]
 dropped xs = [take i xs ++ drop (i + 1) xs | i <- [0 .. length xs - 1]]
