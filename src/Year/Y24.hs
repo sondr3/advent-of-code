@@ -16,7 +16,6 @@ import Year.Y24.Day08 (day08)
 import Year.Y24.Day09 (day09)
 import Year.Y24.Day10 (day10)
 import Year.Y24.Day11 (day11)
-import Year.Y24.Day12 (day12)
 
 solutions :: [(Day, Solution)]
 solutions =
@@ -30,6 +29,5 @@ solutions =
     (D8, Solution day08),
     (D9, Solution day09),
     (D10, Solution day10),
-    (D11, Solution day11),
-    (D12, Solution day12)
+    (D11, Solution day11)
   ]
