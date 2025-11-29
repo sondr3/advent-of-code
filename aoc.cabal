@@ -12,7 +12,7 @@ extra-doc-files: CHANGELOG.md
 build-type: Simple
 
 common config
-  build-depends: base ^>=4.20
+  build-depends: base ^>=4.21
   default-language: GHC2024
   default-extensions:
     DeriveAnyClass
@@ -94,7 +94,7 @@ library
     pretty-simple ^>=4.1,
     tasty-bench ^>=0.4,
     text ^>=2.1,
-    text-display ^>=0.0,
+    text-display ^>=1.0,
 
 executable aoc
   import: config
@@ -106,11 +106,11 @@ executable aoc
     filepath ^>=1.5,
     haskeline ^>=0.8,
     megaparsec ^>=9.7,
-    optparse-applicative ^>=0.18,
+    optparse-applicative ^>=0.19,
     process ^>=1.6,
     stache ^>=2.3,
     text ^>=2.1,
-    text-display ^>=0.0,
+    text-display ^>=1.0,
 
 test-suite aoc-test
   import: config
