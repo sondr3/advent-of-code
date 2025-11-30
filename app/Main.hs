@@ -19,8 +19,9 @@ import System.Process (callCommand)
 import Text.Megaparsec (errorBundlePretty)
 import Text.Mustache (compileMustacheText, renderMustache)
 import Year (Year (..), longYear)
+import Year.Y23 qualified
 import Year.Y24 qualified
-import Year.Y24 qualified as Year.Y23
+import Year.Y25 qualified
 
 data NewOptions = NewOptions
   { year :: Year,
@@ -102,6 +103,7 @@ solveDay SolveOptions {..} = do
   let sols = case year of
         Y23 -> Year.Y23.solutions
         Y24 -> Year.Y24.solutions
+        Y25 -> Year.Y25.solutions
   _ <- solveSolution (lookup day sols)
   _ <- withArgs [] $ benchmarkSolution (lookup day sols)
   pure ()
