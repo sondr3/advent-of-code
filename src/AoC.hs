@@ -122,7 +122,7 @@ solveInput i parser part1 part2 = do
 parseDay :: (Applicative f) => Parser b -> Input -> f b
 parseDay p (Input {input, name}) = either error pure $ testParseInput p name input
 
-solve :: (NFData i) => AoC i -> IO ()
+solve :: (Show i, NFData i) => AoC i -> IO ()
 solve AoC {..} = do
   TIO.putStrLn $ "Answer for " <> display year <> ", day " <> padDay day
   docs <- getDayPuzzle day year
@@ -131,9 +131,9 @@ solve AoC {..} = do
     solveInput input parser part1 part2
 
 data AoC i = AoC
-  { parser :: (NFData i) => Parser i,
-    part1 :: i -> Answer,
-    part2 :: i -> Answer,
+  { parser :: (Show i, NFData i) => Parser i,
+    part1 :: (Show i) => i -> Answer,
+    part2 :: (Show i) => i -> Answer,
     day :: Day,
     year :: Year
   }
