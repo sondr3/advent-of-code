@@ -124,6 +124,7 @@ test-suite aoc-test
     TestUtils
     Y23Spec
     Y24Spec
+    Y25Spec
 
   build-depends:
     aoc,

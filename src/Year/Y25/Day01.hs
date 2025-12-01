@@ -25,11 +25,14 @@ build :: [(Dir, Int)] -> [Int]
 build = scanl (\curr (op, n) -> go op curr n `mod` 100) 50
 
 partA :: Input -> Answer
-partA xs = IntAnswer . length . filter (== 0) $ build xs
+partA xs = IntAnswer . length . filter (== 0) $ scanl (\curr (op, n) -> go op curr n `mod` 100) 50 xs
 
 partB :: Input -> Answer
-partB xs = IntAnswer $ sum . map (abs . fst) $ scanl (\(_, curr) (op, n) -> go op curr n `divMod` 100) (0, 50) xs
+partB xs = IntAnswer $ snd $ foldl' step (50, 0) xs
   where
+    step (curr, total) (op, n) = (go op curr n `mod` 100, total + cnt op n curr)
+    cnt L n curr = (curr - 1) `div` 100 - (curr - n - 1) `div` 100
+    cnt R n curr = (curr + n) `div` 100 - curr `div` 100
 
 parser :: Parser Input
 parser = liftA2 (,) (L <$ symbol "L" <|> R <$ symbol "R") (lexeme L.decimal) `sepBy` eol
