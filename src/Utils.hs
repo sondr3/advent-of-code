@@ -9,8 +9,11 @@ module Utils
     padNum,
     pairs,
     pairwise,
+    chunksOf,
     pick,
     read',
+    intToText,
+    textToInt,
     readConcat,
     splitNum,
     tupToList,
@@ -21,10 +24,14 @@ module Utils
 where
 
 import Data.Char (ord)
-import Data.List (subsequences)
+import Data.List (subsequences, unfoldr)
 import Data.Text (Text)
 import Data.Text qualified as T
 import Data.Text.Display (Display, display)
+import Data.Text.Lazy qualified as TL
+import Data.Text.Lazy.Builder qualified as B
+import Data.Text.Lazy.Builder.Int qualified as BI
+import Data.Text.Read (decimal)
 import Text.Read (readEither)
 
 -- create a sliding window over a list
@@ -58,11 +65,20 @@ pairs _ = error "uneven list"
 combinations :: Int -> [a] -> [[a]]
 combinations k ns = filter ((k ==) . length) $ subsequences ns
 
+chunksOf :: Int -> [a] -> [[a]]
+chunksOf n xs = takeWhile (not . null) $ unfoldr (Just . splitAt n) xs
+
 readConcat :: (Read a, Display a) => [a] -> a
 readConcat xs = read' $ foldl (<>) "" $ map display xs
 
 read' :: (Read a) => Text -> a
 read' = getRight . readEither . T.unpack
+
+intToText :: (Integral a) => a -> T.Text
+intToText = TL.toStrict . B.toLazyText . BI.decimal
+
+textToInt :: T.Text -> Int
+textToInt = fst . getRight . decimal
 
 getRight :: Either a b -> b
 getRight (Right x) = x
