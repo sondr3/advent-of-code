@@ -1,5 +1,6 @@
 module Utils
-  ( combinations,
+  ( allEq,
+    combinations,
     compareLengths,
     dropped,
     getRight,
@@ -55,6 +56,11 @@ padNum n = T.justifyRight 2 '0' $ display n
 
 isDigit :: Char -> Bool
 isDigit c = (fromIntegral (ord c - ord '0') :: Word) <= 9
+
+-- are all elements equal in the list
+allEq :: (Eq a) => [a] -> Bool
+allEq [] = True
+allEq (x : xs) = all (== x) xs
 
 -- take two and two items from a list
 pairs :: [a] -> [(a, a)]
