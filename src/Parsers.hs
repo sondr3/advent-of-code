@@ -2,13 +2,14 @@
 
 module Parsers where
 
+import Data.Functor (($>))
 import Data.Maybe (fromMaybe)
 import Data.Text (Text)
 import Data.Text qualified as T
 import Data.Void (Void)
 import Text.Megaparsec
 import Text.Megaparsec qualified as M hiding (getInput)
-import Text.Megaparsec.Char (alphaNumChar, hspace)
+import Text.Megaparsec.Char (alphaNumChar, eol, hspace)
 import Text.Megaparsec.Char.Lexer qualified as L
 
 type Parser = Parsec Void Text
@@ -27,6 +28,10 @@ parens = between (symbol "(") (symbol ")")
 
 string :: Parser Text
 string = T.pack <$> lexeme (some alphaNumChar)
+
+-- utility for input that ends in newlines and terminates with EOF
+eolf :: Parser ()
+eolf = eol $> () <|> eof
 
 testParseInput :: Parser i -> Maybe Text -> Text -> Either String i
 testParseInput parser name input = case M.parse parser (T.unpack $ fromMaybe "input" name) (T.strip input) of
