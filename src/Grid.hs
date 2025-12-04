@@ -1,7 +1,10 @@
 module Grid
   ( Grid,
     padGrid,
+    paddedGridPos,
     getAtPos,
+    find,
+    find',
     gridify,
     invertGrid,
     findOnGrid,
@@ -18,7 +21,7 @@ import Coordinates (Position)
 import Data.List (transpose, (!?))
 import Data.Map.Strict (Map)
 import Data.Map.Strict qualified as Map
-import Data.Maybe (isJust)
+import Data.Maybe (fromJust, isJust)
 import Data.Text (Text)
 import Data.Text qualified as T
 import Data.Text.IO qualified as TIO
@@ -32,10 +35,22 @@ padGrid p c grid = transpose $ map pad $ transpose $ map pad grid
   where
     pad l = replicate p c ++ l ++ replicate p c
 
+paddedGridPos :: Grid a -> Int -> (Position, Position)
+paddedGridPos g p =
+  let (maxX, maxY) = fst $ Map.findMax g
+      (minX, minY) = fst $ Map.findMin g
+   in ((minX + p, minY + p), (maxX - p, maxY - p))
+
 getAtPos :: Position -> [[a]] -> Maybe a
 getAtPos (x, y) g = do
   row <- g !? y
   row !? x
+
+find :: Position -> Grid a -> Maybe a
+find = Map.lookup
+
+find' :: Position -> Grid a -> a
+find' pos g = fromJust $ find pos g
 
 gridify :: [[a]] -> Map (Int, Int) a
 gridify xs = Map.fromList [((j, i), x) | (i, row) <- zip [0 ..] xs, (j, x) <- zip [0 ..] row]
