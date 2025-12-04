@@ -1,7 +1,8 @@
 module Main (main) where
 
-import AoC (Answer (..))
+import AoC (Answer (..), AoC (..))
 import Data.Aeson (object, (.=))
+import Data.List (find)
 import Data.List.NonEmpty qualified as NE
 import Data.Text (Text)
 import Data.Text qualified as T
@@ -11,7 +12,7 @@ import Day (Day, padDay)
 import Options.Applicative
 import Puzzle.Types (Input (Input), Puzzle (..))
 import Puzzle.Writer (writePuzzle)
-import Solution (benchmarkSolution, solveSolution)
+import Solution (Solution (..), benchmarkSolution, solveSolution)
 import System.Console.Haskeline (InputT, defaultSettings, getInputLine, outputStrLn, runInputT)
 import System.Environment.Blank (withArgs)
 import System.OsPath (encodeUtf)
@@ -104,9 +105,14 @@ solveDay SolveOptions {..} = do
         Y23 -> Year.Y23.solutions
         Y24 -> Year.Y24.solutions
         Y25 -> Year.Y25.solutions
-  _ <- solveSolution (lookup day sols)
-  _ <- withArgs [] $ benchmarkSolution (lookup day sols)
+  _ <- solveSolution (findDay day sols)
+  _ <- withArgs [] $ benchmarkSolution (findDay day sols)
   pure ()
+
+findDay :: Day -> [Solution] -> Maybe Solution
+findDay d = find go
+  where
+    go (Solution (AoC {..})) = day == d
 
 run :: App -> IO ()
 run (App (Solve o) _) = solveDay o
