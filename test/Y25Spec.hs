@@ -5,9 +5,11 @@ import TestUtils (testDay)
 import Year.Y25.Day01 (day01)
 import Year.Y25.Day02 (day02)
 import Year.Y25.Day03 (day03)
+import Year.Y25.Day04 (day04)
 
 spec :: Spec
 spec = parallel $ do
   testDay day01
   testDay day02
   testDay day03
+  testDay day04
