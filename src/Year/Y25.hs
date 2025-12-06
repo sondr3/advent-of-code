@@ -9,6 +9,7 @@ import Year.Y25.Day02 (day02)
 import Year.Y25.Day03 (day03)
 import Year.Y25.Day04 (day04)
 import Year.Y25.Day05 (day05)
+import Year.Y25.Day06 (day06)
 
 solutions :: [Solution]
 solutions =
@@ -16,5 +17,6 @@ solutions =
     Solution day02,
     Solution day03,
     Solution day04,
-    Solution day05
+    Solution day05,
+    Solution day06
   ]
