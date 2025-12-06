@@ -8,6 +8,9 @@ module Utils
     listToMaybe,
     nDigits,
     padNum,
+    rotate,
+    leftPad,
+    rightPad,
     pairs,
     pairwise,
     chunksOf,
@@ -53,6 +56,19 @@ dropped xs = [take i xs ++ drop (i + 1) xs | i <- [0 .. length xs - 1]]
 
 padNum :: Int -> Text
 padNum n = T.justifyRight 2 '0' $ display n
+
+leftPad :: Int -> a -> [a] -> [a]
+leftPad n x xs = replicate (n - length ys) x ++ ys
+  where
+    ys = take n xs
+
+rightPad :: Int -> a -> [a] -> [a]
+rightPad n x xs = ys ++ replicate (n - length ys) x
+  where
+    ys = take n xs
+
+rotate :: [a] -> [a]
+rotate xs = last xs : init xs
 
 isDigit :: Char -> Bool
 isDigit c = (fromIntegral (ord c - ord '0') :: Word) <= 9
