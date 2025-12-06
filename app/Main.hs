@@ -70,7 +70,7 @@ readPuzzle NewOptions {..} = do
           p1 <- readAnswer "p1: "
           p2 <- readAnswer "p2: "
           input <- readInput "input: "
-          loop $ Input p1 p2 Nothing name (T.strip input) : xs
+          loop $ Input p1 p2 Nothing name (T.stripStart input) : xs
 
 readAnswer :: String -> InputT IO Answer
 readAnswer prompt = do
@@ -97,7 +97,7 @@ readInput prompt = outputStrLn (T.unpack prompt) *> loop []
       minput <- getInputLine ""
       case minput of
         Nothing -> return $ T.unlines $ reverse acc
-        Just line -> loop ((T.strip . T.pack) line : acc)
+        Just line -> loop (T.pack line : acc)
 
 solveDay :: SolveOptions -> IO ()
 solveDay SolveOptions {..} = do

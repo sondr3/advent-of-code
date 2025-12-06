@@ -34,7 +34,7 @@ eolf :: Parser ()
 eolf = eol $> () <|> eof
 
 testParseInput :: Parser i -> Maybe Text -> Text -> Either String i
-testParseInput parser name input = case M.parse parser (T.unpack $ fromMaybe "input" name) (T.strip input) of
+testParseInput parser name input = case M.parse parser (T.unpack $ fromMaybe "input" name) input of
   Left err -> Left $ M.errorBundlePretty err
   Right a -> Right a
 

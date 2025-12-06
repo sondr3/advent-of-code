@@ -45,7 +45,7 @@ braces :: Parser a -> Parser a
 braces = between (symbol "{") (symbol "}")
 
 parseBody :: Parser Text
-parseBody = T.strip . T.concat <$> some (notFollowedBy (chunk "#{") >> takeWhileP (Just "body") (/= '\n') <> eol <?> "File body")
+parseBody = T.dropWhileEnd (== '\n') . T.concat <$> some (notFollowedBy (chunk "#{") >> takeWhileP (Just "body") (/= '\n') <> eol <?> "File body")
 
 parsePuzzle :: Parser Puzzle
 parsePuzzle = Puzzle <$> NE.some parseInput <* eof
