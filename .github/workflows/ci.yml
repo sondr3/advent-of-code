@@ -48,7 +48,7 @@ jobs:
           key: ${{ steps.cache.outputs.cache-primary-key }}
 
       - name: Formatting
-        uses: haskell-actions/run-ormolu@v17
+        uses: haskell-actions/run-ormolu@v18
         with:
           pattern: |
             **/*.hs
