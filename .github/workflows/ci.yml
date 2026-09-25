@@ -15,7 +15,7 @@ jobs:
 
       - name: Setup Haskell
         id: setup
-        uses: haskell-actions/setup@v2.12.0
+        uses: haskell-actions/setup@v2.12.1
         with:
           ghc-version: "9.12"
           cabal-version: "3.16"
